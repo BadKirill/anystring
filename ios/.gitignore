@@ -2,6 +2,8 @@ App/build
 App/Pods
 App/output
 App/App/public
+App/CapApp-SPM/build
+App/CapApp-SPM/.build
 DerivedData
 xcuserdata
 
