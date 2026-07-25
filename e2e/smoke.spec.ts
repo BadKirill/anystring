@@ -10,7 +10,7 @@ import { APP_URL } from './helpers'
 test.describe('live deploy smoke', () => {
   test('app loads with title, tuning picker, and string buttons', async ({ page }) => {
     await page.goto(APP_URL)
-    await expect(page).toHaveTitle(/Anytune/)
+    await expect(page).toHaveTitle(/Anystring/)
     await expect(page.getByRole('button', { name: 'Standard E' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
     await expect(page.getByRole('button', { name: '1 E2' })).toBeVisible()

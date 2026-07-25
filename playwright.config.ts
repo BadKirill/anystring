@@ -28,7 +28,7 @@ export default defineConfig({
     ? undefined
     : {
         command: 'npm run dev',
-        url: 'http://localhost:5173/anytune/',
+        url: 'http://localhost:5173/anystring/',
         reuseExistingServer: !process.env.CI,
       },
 })

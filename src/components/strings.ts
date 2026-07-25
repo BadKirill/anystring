@@ -1,6 +1,6 @@
 /** All user-facing text, centralized for future RU/EN localization. */
 export const UI = {
-  appName: 'Anytune',
+  appName: 'Anystring',
   screenStrings: 'Strings',
   screenChromatic: 'Chromatic',
   auto: 'Auto',

@@ -59,7 +59,7 @@ export async function stubMicrophoneDenied(page: Page): Promise<void> {
   })
 }
 
-export const APP_URL = '/anytune/'
+export const APP_URL = '/anystring/'
 
 /** Clears persisted tunings so e2e tests start from a known empty state. */
 export async function clearTuningStorage(page: Page): Promise<void> {

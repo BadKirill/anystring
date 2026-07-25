@@ -1,12 +1,12 @@
-# AnyTune knowledge catalog
+# Anystring knowledge catalog
 
 Human-readable map of the whole project: what exists, how it is written, and
 which rules apply. Agents start at [INDEX.md](INDEX.md). This file is mirrored
 to the GitHub Wiki home page.
 
-**Live app:** https://badkirill.github.io/anytune/  
-**Repo:** https://github.com/BadKirill/anytune  
-**Wiki:** https://github.com/BadKirill/anytune/wiki
+**Live app:** https://badkirill.github.io/anystring/  
+**Repo:** https://github.com/BadKirill/anystring  
+**Wiki:** https://github.com/BadKirill/anystring/wiki
 
 ---
 

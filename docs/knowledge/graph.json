@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "project": "anytune",
-  "wiki": "https://github.com/BadKirill/anytune/wiki",
+  "project": "anystring",
+  "wiki": "https://github.com/BadKirill/anystring/wiki",
   "entry": "docs/knowledge/INDEX.md",
   "catalog": "docs/knowledge/CATALOG.md",
   "nodes": [

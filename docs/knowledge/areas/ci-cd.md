@@ -19,8 +19,8 @@ On `master` (paths under `docs/knowledge/**`): **Knowledge wiki** workflow runs
 
 ## Deploy (`deploy.yml`) — push to `master`
 
-1. Build Vite → Pages artifact (`base: /anytune/`)
-2. Deploy GitHub Pages → https://badkirill.github.io/anytune/
+1. Build Vite → Pages artifact (`base: /anystring/`)
+2. Deploy GitHub Pages → https://badkirill.github.io/anystring/
 3. Live UI smoke — `npm run test:e2e:live`
 
 ## Agent notes

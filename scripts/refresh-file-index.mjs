@@ -119,7 +119,7 @@ function applyBlock(current, block) {
 }
 
 function prettierFormat(contents) {
-  const dir = mkdtempSync(join(tmpdir(), 'anytune-file-index-'))
+  const dir = mkdtempSync(join(tmpdir(), 'anystring-file-index-'))
   const tmp = join(dir, 'file-index.md')
   try {
     writeFileSync(tmp, contents)

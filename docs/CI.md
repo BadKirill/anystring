@@ -12,14 +12,14 @@ Every push and pull request runs the **CI** workflow with five separate checks v
 | E2E (Playwright local) | `npm run test:e2e` against dev server |
 
 Pushes to `master` that touch `docs/knowledge/**` also run **Knowledge wiki**,
-which mirrors the catalog to https://github.com/BadKirill/anytune/wiki.
+which mirrors the catalog to https://github.com/BadKirill/anystring/wiki.
 
 Pushes to `master` also run the **Deploy** workflow:
 
 | Job                   | What it runs                                                         |
 | --------------------- | -------------------------------------------------------------------- |
 | Build (Vite)          | `npm run build` → upload Pages artifact                              |
-| Deploy (GitHub Pages) | Publish to https://badkirill.github.io/anytune/                      |
+| Deploy (GitHub Pages) | Publish to https://badkirill.github.io/anystring/                    |
 | UI check (live site)  | `npm run test:e2e:live` — Playwright smoke tests on the deployed URL |
 
 ## UI check after deploy
