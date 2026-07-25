@@ -60,12 +60,31 @@ Capacitor. The PWA install hint is hidden when it returns true.
 
 WebKit bug 230902: a `getUserMedia` stream inside `WKWebView` can deliver silent
 samples to the Web Audio graph while iOS is capturing. Safari is unaffected, so
-the PWA works and only the shell is unknown. Verify on a real iPhone before
-trusting the web mic path: log `Math.max(...samples.map(Math.abs))` from the
-worklet callback in `src/audio/micStream.ts` and confirm it is non-zero.
-If it is zero, add `src/audio/micSource.ts` selecting an `AVAudioEngine` plugin
-that posts 8192-sample Float32 windows; `detectPitch` and everything above it
-stay unchanged.
+the PWA works and only the shell is unknown. This must be checked on a real
+iPhone — the simulator does not reproduce the bug either way.
+
+1. `npm run cap:ios`, set a signing team, run on a connected iPhone.
+2. Start tuning in the app, then attach Safari on the Mac:
+   Develop → iPhone → App, and run in the console:
+
+```js
+const stream = await navigator.mediaDevices.getUserMedia({
+  audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+})
+const ctx = new AudioContext()
+const analyser = ctx.createAnalyser()
+ctx.createMediaStreamSource(stream).connect(analyser)
+const buf = new Float32Array(analyser.fftSize)
+setInterval(() => {
+  analyser.getFloatTimeDomainData(buf)
+  console.log(Math.max(...Array.from(buf, Math.abs)))
+}, 500)
+```
+
+Non-zero peaks while playing a string mean the web mic path is fine and nothing
+else is needed. All zeros mean the bug is present: add `src/audio/micSource.ts`
+selecting an `AVAudioEngine` plugin that posts 8192-sample Float32 windows.
+`detectPitch` and everything above it stay unchanged either way.
 
 ## Store answers (both consoles)
 
