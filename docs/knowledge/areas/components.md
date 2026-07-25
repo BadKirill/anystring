@@ -8,10 +8,11 @@ Paths: `src/components/`, `src/App.tsx`, `src/App.css`, `src/index.css`
 `App.tsx` owns modal union (`none` | `presets` | `edit`) and screen tabs
 (`strings` | `chromatic`).
 
-**Strings:** Header (title + tuning name) → ScreenTabs → ModeControls (Auto +
-Listen) → TunerGauge → TuneDirectionHint → StringList → InstallHint → modals.
+**Strings:** Header (title + tuning name + About) → ScreenTabs → ModeControls
+(Auto + Listen) → TunerGauge → TuneDirectionHint → StringList → InstallHint →
+modals.
 
-**Chromatic:** Header (title + Chromatic label) → ScreenTabs → Listen only →
+**Chromatic:** Header (title + Chromatic label + About) → ScreenTabs → Listen only →
 TunerGauge (♭/# marks, live cents, no latch-to-center) → hint with cents /
 flat·sharp. No StringList, Auto, or tuning picker.
 
@@ -28,7 +29,8 @@ flat·sharp. No StringList, Auto, or tuning picker.
 | `Sheet.tsx`                                    | Bottom sheet modal shell                                         |
 | `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                       |
 | `TextField.tsx`                                | Named input for save/rename                                      |
-| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage                      |
+| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native    |
+| `AboutSheet.tsx`                               | Version, privacy summary, policy/support/source links            |
 | `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                      |
 | `strings.ts`                                   | **All** user-facing English strings (`UI`)                       |
 

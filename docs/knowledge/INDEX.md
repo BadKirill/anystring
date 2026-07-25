@@ -36,6 +36,7 @@ Refresh inventory: `npm run knowledge:refresh`.
 | localStorage, v2 keys, migrate, persist                                      | [storage.md](areas/storage.md)                       |
 | vitest, playwright, stub mic, e2e                                            | [testing.md](areas/testing.md)                       |
 | CI, deploy, Pages, workflows                                                 | [ci-cd.md](areas/ci-cd.md)                           |
+| Capacitor, iOS, Android, native build, permissions, store submission         | [native-shell.md](areas/native-shell.md)             |
 | eslint, prettier, complexity, stack limits                                   | [patterns-and-rules.md](areas/patterns-and-rules.md) |
 | vite, PWA, tsconfig, package scripts                                         | [tooling.md](areas/tooling.md)                       |
 | architecture, data flow, layers                                              | [architecture.md](areas/architecture.md)             |

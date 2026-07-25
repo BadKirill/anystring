@@ -76,6 +76,19 @@
       "roots": [".github/workflows/", "docs/CI.md"]
     },
     {
+      "id": "native-shell",
+      "title": "Capacitor native shell",
+      "path": "docs/knowledge/areas/native-shell.md",
+      "tags": ["capacitor", "ios", "android", "native", "store", "permissions"],
+      "roots": [
+        "capacitor.config.ts",
+        "ios/",
+        "android/",
+        "src/platform/",
+        "public/privacy.html"
+      ]
+    },
+    {
       "id": "patterns",
       "title": "Patterns & hard rules",
       "path": "docs/knowledge/areas/patterns-and-rules.md",
@@ -114,7 +127,10 @@
     { "from": "testing", "to": "core-tunings", "rel": "unit-tests" },
     { "from": "ci-cd", "to": "testing", "rel": "runs" },
     { "from": "patterns", "to": "architecture", "rel": "enforces" },
-    { "from": "tooling", "to": "ci-cd", "rel": "scripts-used-by" }
+    { "from": "tooling", "to": "ci-cd", "rel": "scripts-used-by" },
+    { "from": "native-shell", "to": "tooling", "rel": "reuses-vite-build" },
+    { "from": "native-shell", "to": "audio", "rel": "hosts-mic-pipeline" },
+    { "from": "components", "to": "native-shell", "rel": "checks-isNativePlatform" }
   ],
   "dataFlow": [
     "getUserMedia(micStream)",
