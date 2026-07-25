@@ -47,6 +47,47 @@
   color: var(--accent);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.about-text {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.about-version {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.about-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.about-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .screen-label {
   background: var(--surface);
   border-radius: 999px;

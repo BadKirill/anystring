@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import './App.css'
+import { AboutSheet } from './components/AboutSheet'
 import { InstallHint } from './components/InstallHint'
 import { NotePicker } from './components/NotePicker'
 import { PresetPicker } from './components/PresetPicker'
@@ -17,7 +18,11 @@ import {
   type TunerState,
 } from './state/appState'
 
-type Modal = { kind: 'none' } | { kind: 'presets' } | { kind: 'edit'; index: number }
+type Modal =
+  | { kind: 'none' }
+  | { kind: 'presets' }
+  | { kind: 'about' }
+  | { kind: 'edit'; index: number }
 
 function gaugeCentsFor(analysis: DisplayAnalysis | null): number | null {
   if (!analysis) {
@@ -73,24 +78,32 @@ function ScreenTabs({ state }: { state: TunerState }) {
 function Header({
   state,
   onOpenPresets,
+  onOpenAbout,
 }: {
   state: TunerState
   onOpenPresets: () => void
+  onOpenAbout: () => void
 }) {
-  if (state.screen === 'chromatic') {
-    return (
-      <header className="app-header">
-        <h1 className="app-title">{UI.appName}</h1>
-        <span className="screen-label">{UI.screenChromatic}</span>
-      </header>
-    )
-  }
   return (
     <header className="app-header">
       <h1 className="app-title">{UI.appName}</h1>
-      <button type="button" className="tuning-picker-button" onClick={onOpenPresets}>
-        {state.tuning.name}
-      </button>
+      <div className="header-actions">
+        {state.screen === 'chromatic' ? (
+          <span className="screen-label">{UI.screenChromatic}</span>
+        ) : (
+          <button type="button" className="tuning-picker-button" onClick={onOpenPresets}>
+            {state.tuning.name}
+          </button>
+        )}
+        <button
+          type="button"
+          className="about-button"
+          aria-label={UI.about}
+          onClick={onOpenAbout}
+        >
+          i
+        </button>
+      </div>
     </header>
   )
 }
@@ -202,6 +215,9 @@ function App() {
   const [modal, setModal] = useState<Modal>({ kind: 'none' })
   const { analysis, pitch, manualStringIndex, screen } = state
   const chromatic = screen === 'chromatic'
+  const closeModal = () => {
+    setModal({ kind: 'none' })
+  }
 
   return (
     <div className="app">
@@ -211,6 +227,9 @@ function App() {
         onOpenPresets={() => {
           state.refreshMyTunings()
           setModal({ kind: 'presets' })
+        }}
+        onOpenAbout={() => {
+          setModal({ kind: 'about' })
         }}
       />
       <ScreenTabs state={state} />
@@ -229,15 +248,8 @@ function App() {
         chromatic={chromatic}
       />
       {!chromatic && <StringsExtras state={state} setModal={setModal} />}
-      {!chromatic && (
-        <Modals
-          state={state}
-          modal={modal}
-          onClose={() => {
-            setModal({ kind: 'none' })
-          }}
-        />
-      )}
+      {!chromatic && <Modals state={state} modal={modal} onClose={closeModal} />}
+      {modal.kind === 'about' && <AboutSheet onClose={closeModal} />}
     </div>
   )
 }
