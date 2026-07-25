@@ -1,8 +1,8 @@
-# anytune
+# anystring
 
 Free tuner for guitar and bass with **fully editable per-string tunings**.
 
-**Live app:** https://badkirill.github.io/anytune/ — open it on your phone and
+**Live app:** https://badkirill.github.io/anystring/ — open it on your phone and
 add it to the home screen to install. Deploys automatically from `master` via
 GitHub Actions (see [docs/CI.md](docs/CI.md)).
 
@@ -39,6 +39,6 @@ and the development roadmap, and [AGENTS.md](AGENTS.md) for contributor/agent ru
 
 **Knowledge graph:** [docs/knowledge/AGENT_PROTOCOL.md](docs/knowledge/AGENT_PROTOCOL.md)
 (all agents) · [INDEX.md](docs/knowledge/INDEX.md) · [CATALOG.md](docs/knowledge/CATALOG.md) ·
-wiki https://github.com/BadKirill/anytune/wiki  
+wiki https://github.com/BadKirill/anystring/wiki  
 For ChatGPT without repo access: pin those three files in Project knowledge.
 With Codex/repo: `AGENTS.md` is loaded first.

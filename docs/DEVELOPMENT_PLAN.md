@@ -1,4 +1,4 @@
-# AnyTune — Custom-Tuning Guitar & Bass Tuner (Mobile)
+# Anystring — Custom-Tuning Guitar & Bass Tuner (Mobile)
 
 ## Status
 
@@ -160,7 +160,7 @@ Pure math, no dependencies — write tests first.
 
 ### 8. Capacitor shell (store builds)
 
-1. `npm install @capacitor/core @capacitor/cli`, `npx cap init anytune`, add `android` and `ios` platforms.
+1. `npm install @capacitor/core @capacitor/cli`, `npx cap init anystring`, add `android` and `ios` platforms.
 2. Android: add `RECORD_AUDIO` permission to the manifest. iOS: add `NSMicrophoneUsageDescription` to `Info.plist`.
 3. `npx cap sync && npx cap run android` (emulator) and `npx cap run ios` (simulator) — verify mic capture works inside the webview.
 4. Store submission itself is a later, separate effort (accounts, signing, listings).

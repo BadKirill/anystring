@@ -1,6 +1,6 @@
-# AnyTune — agent guide
+# Anystring — agent guide
 
-AnyTune is a mobile-first guitar/bass tuner with fully editable per-string tunings.
+Anystring is a mobile-first guitar/bass tuner with fully editable per-string tunings.
 One TypeScript codebase: Vite + React PWA, wrapped with Capacitor for the app stores.
 
 This file is the **tool-agnostic** entry for Cursor, ChatGPT/Codex, Claude Code,

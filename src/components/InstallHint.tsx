@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { UI } from './strings'
 
-const DISMISSED_KEY = 'anytune.installHintDismissed'
+const DISMISSED_KEY = 'anystring.installHintDismissed'
 
 function shouldShow(): boolean {
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent)

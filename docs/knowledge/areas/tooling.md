@@ -17,18 +17,18 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 
 ## Config files
 
-| File                                                         | Notes                                                             |
-| ------------------------------------------------------------ | ----------------------------------------------------------------- |
-| `vite.config.ts`                                             | `base: '/anytune/'`, PWA precache all assets, Vitest excludes e2e |
-| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                                    |
-| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability                    |
-| `.prettierrc` / `.prettierignore`                            | Format ownership                                                  |
-| `playwright.config.ts`                                       | E2E; live URL override via env                                    |
-| `index.html`                                                 | SPA shell                                                         |
-| `scripts/generate-icons.mjs`                                 | PWA icon generation                                               |
-| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                               |
-| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                               |
-| `scripts/sync-knowledge-wiki.mjs`                            | Wiki mirror                                                       |
+| File                                                         | Notes                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `vite.config.ts`                                             | `base: '/anystring/'`, PWA precache all assets, Vitest excludes e2e |
+| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                                      |
+| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability                      |
+| `.prettierrc` / `.prettierignore`                            | Format ownership                                                    |
+| `playwright.config.ts`                                       | E2E; live URL override via env                                      |
+| `index.html`                                                 | SPA shell                                                           |
+| `scripts/generate-icons.mjs`                                 | PWA icon generation                                                 |
+| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                                 |
+| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                                 |
+| `scripts/sync-knowledge-wiki.mjs`                            | Wiki mirror                                                         |
 
 ## PWA
 

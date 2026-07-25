@@ -10,13 +10,16 @@ sessionStorage with legacy key absorption.
 
 ## Keys (v2)
 
-| Key                                                                    | Purpose                       |
-| ---------------------------------------------------------------------- | ----------------------------- |
-| `anytune.v2.customTunings`                                             | `{ v: 2, tunings: Tuning[] }` |
-| `anytune.v2.activeTuning`                                              | Active `Tuning` JSON          |
-| `anytune.v2.customTunings.session` / `anytune.v2.activeTuning.session` | Same in sessionStorage        |
+| Key                                                                        | Purpose                       |
+| -------------------------------------------------------------------------- | ----------------------------- |
+| `anystring.v2.customTunings`                                               | `{ v: 2, tunings: Tuning[] }` |
+| `anystring.v2.activeTuning`                                                | Active `Tuning` JSON          |
+| `anystring.v2.customTunings.session` / `anystring.v2.activeTuning.session` | Same in sessionStorage        |
 
-Legacy absorbed: `anytune.customTunings`, `anytune.lastActiveTuning` (+ `.session`).
+Legacy absorbed (pre-rename and pre-v2): `anytune.v2.customTunings`,
+`anytune.v2.activeTuning`, `anytune.customTunings`, `anytune.lastActiveTuning`
+(+ `.session` variants). Reading any of them rewrites the data under the
+`anystring.*` keys.
 
 ## Public API (`customTuningsStore.ts`)
 

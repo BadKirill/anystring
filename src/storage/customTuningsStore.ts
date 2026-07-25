@@ -8,15 +8,28 @@ import {
   isUnmodifiedPreset,
 } from '../core/tunings/custom'
 
-const LIST_KEY = 'anytune.v2.customTunings'
-const ACTIVE_KEY = 'anytune.v2.activeTuning'
-const LIST_SESSION_KEY = 'anytune.v2.customTunings.session'
-const ACTIVE_SESSION_KEY = 'anytune.v2.activeTuning.session'
+const LIST_KEY = 'anystring.v2.customTunings'
+const ACTIVE_KEY = 'anystring.v2.activeTuning'
+const LIST_SESSION_KEY = 'anystring.v2.customTunings.session'
+const ACTIVE_SESSION_KEY = 'anystring.v2.activeTuning.session'
 
-const LEGACY_LIST_KEY = 'anytune.customTunings'
-const LEGACY_LIST_SESSION_KEY = 'anytune.customTunings.session'
-const LEGACY_ACTIVE_KEY = 'anytune.lastActiveTuning'
-const LEGACY_ACTIVE_SESSION_KEY = 'anytune.lastActiveTuning.session'
+// Pre-rename keys: users who installed the PWA as "anytune" keep their tunings.
+const LEGACY_LIST_KEYS = ['anytune.v2.customTunings', 'anytune.customTunings']
+const LEGACY_LIST_SESSION_KEYS = [
+  'anytune.v2.customTunings.session',
+  'anytune.customTunings.session',
+]
+const LEGACY_ACTIVE_KEYS = ['anytune.v2.activeTuning', 'anytune.lastActiveTuning']
+const LEGACY_ACTIVE_SESSION_KEYS = [
+  'anytune.v2.activeTuning.session',
+  'anytune.lastActiveTuning.session',
+]
+const ACTIVE_KEYS = [
+  ACTIVE_KEY,
+  ACTIVE_SESSION_KEY,
+  ...LEGACY_ACTIVE_KEYS,
+  ...LEGACY_ACTIVE_SESSION_KEYS,
+]
 
 interface TuningListFile {
   v: 2
@@ -158,12 +171,7 @@ function absorbTunings(merged: Map<string, Tuning>, raw: unknown): void {
 
 function absorbActiveTunings(merged: Map<string, Tuning>): void {
   for (const storage of [localStorage, sessionStorage]) {
-    for (const key of [
-      ACTIVE_KEY,
-      ACTIVE_SESSION_KEY,
-      LEGACY_ACTIVE_KEY,
-      LEGACY_ACTIVE_SESSION_KEY,
-    ]) {
+    for (const key of ACTIVE_KEYS) {
       const parsed = normalizeTuning(readRaw(storage, key))
       if (parsed && appearsInPicker(parsed)) {
         const stored = ensureStoredId(parsed)
@@ -173,12 +181,20 @@ function absorbActiveTunings(merged: Map<string, Tuning>): void {
   }
 }
 
+function absorbLegacyLists(merged: Map<string, Tuning>): void {
+  for (const key of LEGACY_LIST_KEYS) {
+    absorbTunings(merged, readRaw(localStorage, key))
+  }
+  for (const key of LEGACY_LIST_SESSION_KEYS) {
+    absorbTunings(merged, readRaw(sessionStorage, key))
+  }
+}
+
 function readTuningListSourcesOnly(): Tuning[] {
   const merged = new Map<string, Tuning>()
   absorbTunings(merged, readRaw(localStorage, LIST_KEY))
   absorbTunings(merged, readRaw(sessionStorage, LIST_SESSION_KEY))
-  absorbTunings(merged, readRaw(localStorage, LEGACY_LIST_KEY))
-  absorbTunings(merged, readRaw(sessionStorage, LEGACY_LIST_SESSION_KEY))
+  absorbLegacyLists(merged)
   absorbActiveTunings(merged)
   return [...merged.values()]
 }
@@ -222,7 +238,7 @@ function readTuningList(): Tuning[] {
 }
 
 function readLegacyActive(): Tuning | null {
-  const keys = [LEGACY_ACTIVE_KEY, LEGACY_ACTIVE_SESSION_KEY]
+  const keys = [...LEGACY_ACTIVE_KEYS, ...LEGACY_ACTIVE_SESSION_KEYS]
   for (const storage of [localStorage, sessionStorage]) {
     for (const key of keys) {
       const parsed = normalizeTuning(readRaw(storage, key))
@@ -236,21 +252,15 @@ function readLegacyActive(): Tuning | null {
 
 function clearActiveTuning(): void {
   for (const storage of [localStorage, sessionStorage]) {
-    storage.removeItem(ACTIVE_KEY)
-    storage.removeItem(ACTIVE_SESSION_KEY)
-    storage.removeItem(LEGACY_ACTIVE_KEY)
-    storage.removeItem(LEGACY_ACTIVE_SESSION_KEY)
+    for (const key of ACTIVE_KEYS) {
+      storage.removeItem(key)
+    }
   }
 }
 
 function activeTuningId(): string | null {
   for (const storage of [localStorage, sessionStorage]) {
-    for (const key of [
-      ACTIVE_KEY,
-      ACTIVE_SESSION_KEY,
-      LEGACY_ACTIVE_KEY,
-      LEGACY_ACTIVE_SESSION_KEY,
-    ]) {
+    for (const key of ACTIVE_KEYS) {
       const parsed = readStoredActive(storage, key)
       if (parsed) {
         return parsed.id

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Mirrors docs/knowledge/* into the GitHub Wiki (anytune.wiki).
+ * Mirrors docs/knowledge/* into the GitHub Wiki (anystring.wiki).
  * Source of truth stays in the main repo; wiki is the human-readable external copy.
  */
 import { execFileSync } from 'node:child_process'
@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const KNOWLEDGE = join(ROOT, 'docs', 'knowledge')
-const REPO = 'https://github.com/BadKirill/anytune'
-const WIKI_SLUG = 'BadKirill/anytune.wiki.git'
+const REPO = 'https://github.com/BadKirill/anystring'
+const WIKI_SLUG = 'BadKirill/anystring.wiki.git'
 
 function wikiRemoteUrl() {
   const token = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN
@@ -137,7 +137,7 @@ function writeGraphPage(wikiDir) {
 
 function writeSidebar(wikiDir, areaFiles) {
   const lines = [
-    '**AnyTune knowledge**',
+    '**Anystring knowledge**',
     '',
     '* [Catalog (Home)](Home)',
     '* [Agent protocol](Agent-Protocol)',
@@ -224,7 +224,7 @@ function ensureKnowledgePresent() {
 }
 
 function cloneWiki() {
-  const dir = mkdtempSync(join(tmpdir(), 'anytune-wiki-'))
+  const dir = mkdtempSync(join(tmpdir(), 'anystring-wiki-'))
   run('git', ['clone', '--depth', '1', wikiRemoteUrl(), dir], ROOT)
   return dir
 }
@@ -240,7 +240,7 @@ function commitAndPush(wikiDir) {
     'git',
     [
       '-c',
-      'user.name=anytune-knowledge-bot',
+      'user.name=anystring-knowledge-bot',
       '-c',
       'user.email=bot@local',
       'commit',
@@ -250,7 +250,7 @@ function commitAndPush(wikiDir) {
     wikiDir,
   )
   run('git', ['push', 'origin', 'HEAD'], wikiDir)
-  console.log('Wiki synced: https://github.com/BadKirill/anytune/wiki')
+  console.log('Wiki synced: https://github.com/BadKirill/anystring/wiki')
 }
 
 function main() {

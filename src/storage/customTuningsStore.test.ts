@@ -68,7 +68,7 @@ describe('customTuningsStore', () => {
   })
 
   it('recovers from corrupted storage', () => {
-    localStorage.setItem('anytune.v2.customTunings', 'not json {')
+    localStorage.setItem('anystring.v2.customTunings', 'not json {')
     expect(readCustomTunings()).toEqual([])
   })
 
@@ -93,7 +93,7 @@ describe('customTuningsStore', () => {
 
   it('falls back to session storage when local storage is empty', () => {
     sessionStorage.setItem(
-      'anytune.v2.customTunings.session',
+      'anystring.v2.customTunings.session',
       JSON.stringify({ v: 2, tunings: [TUNING] }),
     )
     expect(readCustomTunings()).toEqual([TUNING])
@@ -164,9 +164,23 @@ describe('customTuningsStore', () => {
   })
 
   it('lists the active tuning when only the active key is set', () => {
-    localStorage.setItem('anytune.v2.activeTuning', JSON.stringify(TUNING))
+    localStorage.setItem('anystring.v2.activeTuning', JSON.stringify(TUNING))
     expect(readCustomTunings()).toEqual([TUNING])
     expect(mergePickerTunings(readCustomTunings(), TUNING)).toEqual([TUNING])
+  })
+
+  it('adopts tunings saved before the Anystring rename', () => {
+    localStorage.setItem(
+      'anytune.v2.customTunings',
+      JSON.stringify({ v: 2, tunings: [TUNING] }),
+    )
+    expect(readCustomTunings()).toEqual([TUNING])
+    expect(localStorage.getItem('anystring.v2.customTunings')).toContain(TUNING.name)
+  })
+
+  it('adopts the active tuning saved before the Anystring rename', () => {
+    localStorage.setItem('anytune.v2.activeTuning', JSON.stringify(TUNING))
+    expect(readActiveTuning()).toEqual(TUNING)
   })
 
   it('persists the live selection before building the picker list', () => {

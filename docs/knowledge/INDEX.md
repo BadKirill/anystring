@@ -1,4 +1,4 @@
-# AnyTune knowledge index (agent entry)
+# Anystring knowledge index (agent entry)
 
 Portable protocol (all tools): [`AGENT_PROTOCOL.md`](AGENT_PROTOCOL.md)
 
@@ -53,11 +53,11 @@ Refresh inventory: `npm run knowledge:refresh`.
 ## Wiki mirror
 
 Repo catalog is the source of truth. External human wiki:
-https://github.com/BadKirill/anytune/wiki
+https://github.com/BadKirill/anystring/wiki
 
 Sync command: `npm run knowledge:wiki` (pushes markdown + `_Sidebar.md`, removes
 stale wiki pages). Banner links point at a branch where the source file exists on
 `origin` (falls back to path-only if unpushed).
 
 There is no GitHub Wiki MCP in the current Cursor MCP set — agents use the script
-(or equivalent `git` push to `anytune.wiki`).
+(or equivalent `git` push to `anystring.wiki`).
