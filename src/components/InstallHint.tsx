@@ -1,10 +1,14 @@
 import { useState } from 'react'
 
+import { isNativePlatform } from '../platform/runtime'
 import { UI } from './strings'
 
 const DISMISSED_KEY = 'anystring.installHintDismissed'
 
 function shouldShow(): boolean {
+  if (isNativePlatform()) {
+    return false
+  }
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent)
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
   return isIos && !isStandalone && localStorage.getItem(DISMISSED_KEY) === null
