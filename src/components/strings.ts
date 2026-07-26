@@ -11,7 +11,7 @@ export const UI = {
   playSelectedString: 'Play the selected string',
   playANote: 'Play a note to begin',
   tapAgainToEdit: 'Tap a string to target it, tap again to change its note',
-  micDenied: 'Microphone access denied. Allow it in browser settings and retry.',
+  micDenied: 'Microphone access denied. Allow it in settings and retry.',
   micMissing: 'No microphone found on this device.',
   micUnavailable: 'Microphone is unavailable.',
   inTune: 'in tune',
