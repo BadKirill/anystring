@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 
+import { setAudioSessionMode } from '../platform/audioSession'
 import { MicStreamError, startMicSession, type MicSession } from './micStream'
 import type { PitchState } from './pitchState'
 
@@ -38,10 +39,12 @@ export function beginMicSession(
         return
       }
       refs.session.current = session
+      void setAudioSessionMode('capture')
       setState({ ...IDLE_STATE, status: 'listening' })
     },
     (error: unknown) => {
       const reason = error instanceof MicStreamError ? error.reason : 'unavailable'
+      void setAudioSessionMode('playback')
       setState({ ...IDLE_STATE, status: 'error', error: reason })
     },
   )
@@ -56,4 +59,7 @@ export function stopMicSession(
   setState(IDLE_STATE)
   refs.session.current?.stop()
   refs.session.current = null
+  // WebKit hands the session back to iOS defaults here, which would mute the
+  // reference tones under the silent switch.
+  void setAudioSessionMode('playback')
 }

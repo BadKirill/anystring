@@ -1,5 +1,6 @@
 import { pitchToFrequency, type Pitch } from '../core/music'
 import { normalizePluck, synthesizePluck } from '../core/signal/pluckedTone'
+import { reassertAudioSession } from '../platform/audioSession'
 import { onAppResume } from './appResume'
 import { suppressPitchDetection } from './pitchGate'
 
@@ -78,6 +79,7 @@ function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): A
 
 /** Resumes or recreates the shared AudioContext after idle suspend. */
 export async function warmReferenceAudio(): Promise<void> {
+  await reassertAudioSession()
   let ctx = getContext()
   if (ctx.state === 'suspended') {
     await ctx.resume()
