@@ -40,6 +40,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--
+        Capacitor's WebChromeClient requests MODIFY_AUDIO_SETTINGS together with
+        RECORD_AUDIO for every getUserMedia call and denies the WebView request
+        unless both come back granted. Undeclared permissions always report
+        denied, so omitting this one breaks the microphone even after the user
+        allows recording.
+    -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-feature android:name="android.hardware.microphone" android:required="true" />
 </manifest>
