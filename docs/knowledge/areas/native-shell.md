@@ -31,13 +31,19 @@ Pages sub-path would 404 and a service worker only adds stale-asset risk.
 
 ## Platform configuration
 
-| Concern        | iOS                                                                      | Android                                                        |
-| -------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                           | `RECORD_AUDIO` + `android.hardware.microphone`                 |
-| Orientation    | portrait only, `UIRequiresFullScreen`                                    | `android:screenOrientation="portrait"`                         |
-| Privacy        | `App/App/PrivacyInfo.xcprivacy` (no data collected, UserDefaults CA92.1) | Data Safety form in Play Console                               |
-| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                  | n/a                                                            |
-| SDK target     | deployment target 15.0                                                   | `targetSdkVersion 36` (required for new apps from 31 Aug 2026) |
+| Concern        | iOS                                                                      | Android                                                                  |
+| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                           | `RECORD_AUDIO` + `MODIFY_AUDIO_SETTINGS` + `android.hardware.microphone` |
+| Orientation    | portrait only, `UIRequiresFullScreen`                                    | `android:screenOrientation="portrait"`                                   |
+| Privacy        | `App/App/PrivacyInfo.xcprivacy` (no data collected, UserDefaults CA92.1) | Data Safety form in Play Console                                         |
+| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                  | n/a                                                                      |
+| SDK target     | deployment target 15.0                                                   | `targetSdkVersion 36` (required for new apps from 31 Aug 2026)           |
+
+Android `getUserMedia` needs **both** audio permissions. `BridgeWebChromeClient`
+launches `MODIFY_AUDIO_SETTINGS` + `RECORD_AUDIO` on every `onPermissionRequest`
+and grants the WebView only if each result is `true`; a permission missing from
+the manifest always returns `false`, so the mic stays denied no matter what the
+user taps in the system dialog.
 
 Version numbers: `package.json` `version` is the single source; Vite injects it as
 `__APP_VERSION__` for the About sheet. Keep `MARKETING_VERSION` (iOS) and
