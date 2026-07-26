@@ -31,7 +31,7 @@ Refresh inventory: `npm run knowledge:refresh`.
 | note, MIDI, Hz, cents, octave, nearestPitch                                  | [core-music.md](areas/core-music.md)                 |
 | stabilizer, pluck synth, jitter, lock                                        | [core-signal.md](areas/core-signal.md)               |
 | tuning, preset, analyzer, string target, chromatic, custom draft, My tunings | [core-tunings.md](areas/core-tunings.md)             |
-| gauge, sheet, picker, swipe, InstallHint, UI copy, screen tabs               | [components.md](areas/components.md)                 |
+| gauge, sheet, picker, swipe, InstallHint, UI copy, screen tabs, splash       | [components.md](areas/components.md)                 |
 | useTunerState, draft save, manual/auto string, Strings/Chromatic screen      | [state.md](areas/state.md)                           |
 | localStorage, v2 keys, migrate, persist                                      | [storage.md](areas/storage.md)                       |
 | vitest, playwright, stub mic, e2e                                            | [testing.md](areas/testing.md)                       |

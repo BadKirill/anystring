@@ -1,7 +1,7 @@
 # Components / UI
 
-Tags: `ui`, `gauge`, `picker`, `sheet`, `strings`, `chromatic`  
-Paths: `src/components/`, `src/App.tsx`, `src/App.css`, `src/index.css`
+Tags: `ui`, `gauge`, `picker`, `sheet`, `strings`, `chromatic`, `splash`  
+Paths: `src/components/`, `src/App.tsx`, `src/App.css`, `src/index.css`, `index.html`
 
 ## Composition
 
@@ -15,6 +15,14 @@ modals.
 **Chromatic:** Header (title + Chromatic label + About) → ScreenTabs → Listen only →
 TunerGauge (♭/# marks, live cents, no latch-to-center) → hint with cents /
 flat·sharp. No StringList, Auto, or tuning picker.
+
+## Launch cover
+
+`index.html` ships the cover markup plus inlined styles so it paints on the
+first frame; `main.tsx` fades `#splash` out after React's first paint. The mark
+is sized to `30vh` because `ios/App/App/Base.lproj/LaunchScreen.storyboard`
+renders the same art at 30% of screen height, so the native launch image hands
+over without a jump — and without the black gap that used to sit between them.
 
 ## Components
 
@@ -43,7 +51,8 @@ flat·sharp. No StringList, Auto, or tuning picker.
 
 ## Open when
 
-Layout, gauge feel, screen tabs, picker lists, swipe UX, install hint, copy.
+Layout, gauge feel, screen tabs, picker lists, swipe UX, install hint, copy,
+launch cover.
 
 ## See also
 
