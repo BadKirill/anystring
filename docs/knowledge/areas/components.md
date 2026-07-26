@@ -33,7 +33,7 @@ over without a jump — and without the black gap that used to sit between them.
 | `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)           |
 | `PresetPicker.tsx`                             | Presets by instrument + My tunings + save draft                  |
 | `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                               |
-| `NotePicker.tsx`                               | Note + octave chips in Sheet                                     |
+| `NotePicker.tsx`                               | Note + octave chips in Sheet; plays a reference tone per pick    |
 | `Sheet.tsx`                                    | Bottom sheet modal shell                                         |
 | `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                       |
 | `TextField.tsx`                                | Named input for save/rename                                      |
