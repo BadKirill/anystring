@@ -53,27 +53,22 @@ after long idle.
 
 ## iOS ring/silent switch
 
-WKWebView runs in a separate process with its own audio session. Setting the
-app `AVAudioSession` does **not** unmute Web Audio under the hardware switch.
+WKWebView defaults Web Audio to an Ambient session, so the hardware ring/silent
+switch mutes reference tones even when `AudioContext.state === "running"`.
 
-`src/platform/audioSession.ts` therefore:
+Fix (web only): `src/platform/audioSession.ts` sets
+`navigator.audioSession.type` to `playback` before each tone, or
+`play-and-record` while the mic is open (Web Audio Session API, iOS 17+).
 
-1. Sets `navigator.audioSession.type` to `playback` (or `play-and-record` while
-   the mic is open) — Web Audio Session API, iOS 17+ / Safari.
-2. Keeps a muted looping silent `<audio>` playing so WKWebView's internal
-   category flips from Ambient to Playback (and stays there).
-3. Still calls the Capacitor `AudioSession` Swift plugin as a best-effort native
-   hint (`ios/App/App/AudioSession.swift`).
+Do **not** reconfigure the app `AVAudioSession` from JS/native around tones —
+that interrupts WebKit's separate session and can silence output entirely
+(observed on iOS 26). The Capacitor `AudioSession` plugin is a no-op stub.
 
-| Trigger                        | Call                              |
-| ------------------------------ | --------------------------------- |
-| Before every tone (`warm…`)    | `reassertAudioSession()`          |
-| Mic session listening          | `setAudioSessionMode('capture')`  |
-| Mic session stopped / failed   | `setAudioSessionMode('playback')` |
-| App launch, app becomes active | native `AppDelegate` (hint only)  |
-
-Web steps run on every platform (including the iOS PWA). The native plugin is a
-no-op off Capacitor.
+| Trigger                      | Call                              |
+| ---------------------------- | --------------------------------- |
+| Before every tone (`warm…`)  | `reassertAudioSession()`          |
+| Mic session listening        | `setAudioSessionMode('capture')`  |
+| Mic session stopped / failed | `setAudioSessionMode('playback')` |
 
 ## Patterns
 
