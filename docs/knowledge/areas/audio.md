@@ -53,24 +53,27 @@ after long idle.
 
 ## iOS ring/silent switch
 
-WKWebView plays Web Audio on an ambient session, so on iOS the reference tone is
-muted whenever the hardware switch is set to silent, and flipping the switch back
-does not always un-mute the running context.
+WKWebView runs in a separate process with its own audio session. Setting the
+app `AVAudioSession` does **not** unmute Web Audio under the hardware switch.
 
-`src/platform/audioSession.ts` talks to the `AudioSession` Swift plugin in
-`ios/App/App/AudioSession.swift`, which arms `AVAudioSession` with `playback` +
-`mixWithOthers` — a category iOS keeps audible under the switch.
+`src/platform/audioSession.ts` therefore:
+
+1. Sets `navigator.audioSession.type` to `playback` (or `play-and-record` while
+   the mic is open) — Web Audio Session API, iOS 17+ / Safari.
+2. Keeps a muted looping silent `<audio>` playing so WKWebView's internal
+   category flips from Ambient to Playback (and stays there).
+3. Still calls the Capacitor `AudioSession` Swift plugin as a best-effort native
+   hint (`ios/App/App/AudioSession.swift`).
 
 | Trigger                        | Call                              |
 | ------------------------------ | --------------------------------- |
 | Before every tone (`warm…`)    | `reassertAudioSession()`          |
 | Mic session listening          | `setAudioSessionMode('capture')`  |
 | Mic session stopped / failed   | `setAudioSessionMode('playback')` |
-| App launch, app becomes active | native `AppDelegate`              |
+| App launch, app becomes active | native `AppDelegate` (hint only)  |
 
-In `capture` mode the shell leaves the session alone: WebKit owns a
-play-and-record session that already ignores the switch, and re-categorising it
-can drop the microphone. Everything is a no-op off native.
+Web steps run on every platform (including the iOS PWA). The native plugin is a
+no-op off Capacitor.
 
 ## Patterns
 

@@ -4,10 +4,10 @@ import Foundation
 
 /// Keeps Anystring audible when the ring/silent switch is set to silent.
 ///
-/// WKWebView plays Web Audio on an ambient session, which iOS mutes, and it
-/// falls back to one every time media stops. Arming a playback category on
-/// launch, on foreground, and before each reference tone keeps tones audible
-/// whatever the switch is set to.
+/// WKWebView runs in a separate process with its *own* audio session, so this
+/// native category alone does not unmute Web Audio. The web layer also sets
+/// `navigator.audioSession.type` and holds a muted silent `<audio>` element.
+/// This plugin is a best-effort hint for any non-WebKit audio path.
 enum AudioSessionConfigurator {
     /// True while WebKit captures the microphone.
     private static var capturing = false
