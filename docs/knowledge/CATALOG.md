@@ -13,8 +13,9 @@ to the GitHub Wiki home page.
 ## 1. Product
 
 Mobile-first guitar/bass tuner with fully editable per-string tunings plus a
-chromatic (nearest-note) tab. One TypeScript codebase: Vite + React PWA now;
-Capacitor store shells later. No backend — custom tunings live in `localStorage`.
+chromatic (nearest-note) tab. One TypeScript codebase: a Vite + React PWA, wrapped
+by Capacitor for the App Store and Google Play. No backend — custom tunings live
+in `localStorage`.
 
 ## 2. Architecture (layers)
 
@@ -26,6 +27,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 
 | Layer        | Path                          | Role                                            |
 | ------------ | ----------------------------- | ----------------------------------------------- |
+| Platform     | `src/platform/`               | Native-vs-web runtime checks (Capacitor)        |
 | Core music   | `src/core/music/`             | Notes, MIDI, Hz, cents, nearestPitch — pure TS  |
 | Core signal  | `src/core/signal/`            | Pitch display stabilizer, pluck synth           |
 | Core tunings | `src/core/tunings/`           | Tuning model, presets, analyzer, custom helpers |
@@ -43,8 +45,8 @@ Presets + custom editor → storage → active Tuning → string analyzer
 ## 3. Stack (allowed only)
 
 Vite, React 19, TypeScript strict, `vite-plugin-pwa`, Web Audio + AudioWorklet,
-`pitchy` (MPM), Capacitor (planned), localStorage, Vitest, Playwright,
-ESLint (`typescript-eslint` strict + sonarjs), Prettier.
+`pitchy` (MPM), Capacitor 8 (iOS + Android shells), localStorage, Vitest,
+Playwright, ESLint (`typescript-eslint` strict + sonarjs), Prettier.
 
 Not in scope: Redux/Zustand/TanStack Query, backend, cloud sync, RN (unless
 planned), alternate pitch libs, CSS frameworks, other test runners.
@@ -80,6 +82,7 @@ See [patterns-and-rules](areas/patterns-and-rules.md). Summary:
 - [Storage](areas/storage.md)
 - [Testing](areas/testing.md)
 - [CI/CD](areas/ci-cd.md)
+- [Native shell (iOS/Android)](areas/native-shell.md)
 - [Patterns & rules](areas/patterns-and-rules.md)
 - [Tooling](areas/tooling.md)
 - [Complete file index](areas/file-index.md)

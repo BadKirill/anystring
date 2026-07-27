@@ -11,8 +11,8 @@ to any note — for example G#1 D#2 A#2 F1 to play Meshuggah's Demiurge. Then pl
 the app listens through the microphone and shows how far each string is from the
 target and which way to turn the peg.
 
-One TypeScript codebase for everything: installable Progressive Web App today,
-Capacitor-wrapped App Store / Play Store builds later.
+One TypeScript codebase for everything: an installable Progressive Web App, and
+the same bundle wrapped by Capacitor for the App Store and Google Play.
 
 ## Develop
 
@@ -24,7 +24,25 @@ npm run test:e2e   # Playwright end-to-end tests (mic stubbed with an oscillator
 npm run build      # production build (dist/)
 ```
 
-Requires Node 20+.
+Requires Node 22+.
+
+## Native builds
+
+```bash
+npm run cap:ios       # build the web bundle, sync, open Xcode
+npm run cap:android   # build the web bundle, sync, open Android Studio
+```
+
+Gradle from the command line needs JDK 21 — the system JDK 17 fails with
+`invalid source release: 21`:
+
+```bash
+cd android && JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew assembleDebug
+```
+
+App icons and splash screens for both platforms come from `public/icon.svg` via
+`node scripts/generate-icons.mjs`. Details in
+[docs/knowledge/areas/native-shell.md](docs/knowledge/areas/native-shell.md).
 
 ## Project structure
 
@@ -33,6 +51,7 @@ Requires Node 20+.
 - `src/components/` — UI: gauge, string list, note picker, preset picker.
 - `src/state/` — tuner screen state.
 - `src/storage/` — localStorage persistence of custom tunings.
+- `src/platform/` — runtime checks for the Capacitor shell; `ios/` and `android/` hold the native projects.
 
 See [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) for architecture decisions
 and the development roadmap, and [AGENTS.md](AGENTS.md) for contributor/agent rules.

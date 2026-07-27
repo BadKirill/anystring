@@ -1,6 +1,12 @@
+import { readFileSync } from 'node:fs'
+
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { configDefaults, defineConfig } from 'vitest/config'
+
+const { version } = JSON.parse(readFileSync('./package.json', 'utf8')) as {
+  version: string
+}
 
 // Capacitor serves the bundle from capacitor://localhost, where the GitHub
 // Pages sub-path is wrong and a service worker only adds stale-asset risk.
@@ -41,6 +47,7 @@ const pwa = VitePWA({
 export default defineConfig({
   // Served from https://<user>.github.io/anystring/ on GitHub Pages
   base: isNativeBuild ? './' : '/anystring/',
+  define: { __APP_VERSION__: JSON.stringify(version) },
   test: {
     // e2e/ belongs to Playwright, not Vitest
     exclude: [...configDefaults.exclude, 'e2e/**'],

@@ -4,7 +4,12 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px 16px calc(24px + env(safe-area-inset-bottom));
+  /* The native shell renders edge to edge, so the status bar / notch and the
+     home indicator would overlap the app without the safe-area insets. */
+  padding-top: max(20px, calc(env(safe-area-inset-top) + 8px));
+  padding-right: calc(16px + env(safe-area-inset-right));
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  padding-left: calc(16px + env(safe-area-inset-left));
 }
 
 /* Install hint */
@@ -47,6 +52,47 @@
   color: var(--accent);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.about-text {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.about-version {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.about-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.about-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .screen-label {
   background: var(--surface);
   border-radius: 999px;
@@ -55,22 +101,18 @@
   color: var(--muted);
 }
 
-/* Screen tabs */
+/* Screen tabs and mode row share one two-column grid so their edges line up */
 
-.screen-tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-/* Mode row */
-
+.screen-tabs,
 .mode-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.screen-tabs > *,
+.mode-row > * {
+  flex: 1 1 0;
 }
 
 /* Gauge */
@@ -172,6 +214,18 @@
 }
 
 /* Buttons and chips */
+
+/* One pill height for every inline control so rows align across the screen */
+.button-primary,
+.button-secondary,
+.chip,
+.tuning-picker-button,
+.screen-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
 
 .button-primary,
 .button-secondary,

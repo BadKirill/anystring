@@ -16,13 +16,22 @@ Cursor also has `.cursor/rules/knowledge-graph.mdc`. Automation: `knowledge:refr
 (file inventory), `knowledge:check` (CI job), wiki sync on `master`
 (`.github/workflows/knowledge-wiki.yml`).
 
+**Store release:** the product is renamed **Anystring** (Anytune is a trademarked
+app on both stores) and wrapped with Capacitor 8. Step 8 is done in the repo: the
+iOS and Android projects build from the same Vite bundle, permissions, privacy
+manifest, icons, and splash screens are configured, and there is an in-app About
+sheet plus a published privacy policy. See
+`docs/knowledge/areas/native-shell.md`.
+
 Remaining:
 
-- Step 8 (Capacitor shell) — not started; requires Xcode / Android Studio.
+- Verify on a real iPhone that the AudioWorklet receives non-zero mic samples inside
+  `WKWebView` (WebKit bug 230902). If it does not, add a native `AVAudioEngine`
+  source behind the existing `startMicSession` seam.
 - Step 9 (real-device testing) — needs a physical phone and instrument; thresholds
   in `src/audio/pitchDetector.ts` and `src/core/tunings/analyzer.ts` may need tuning
   after that.
-- Deployment to a static host for link-based install distribution.
+- Developer accounts, signing, store listings, and submission.
 
 ## Idea review: is it worth building?
 
@@ -166,6 +175,11 @@ Pure math, no dependencies — write tests first.
 4. Store submission itself is a later, separate effort (accounts, signing, listings).
 
 **Done when:** the same web build runs as a native app on both an Android emulator and an iOS simulator with working microphone.
+
+Implemented: `CAP_BUILD=1` switches Vite to a relative base with no service worker,
+`npm run cap:sync` rebuilds and syncs both projects, and both compile
+(`xcodebuild` for the simulator, `gradlew assembleDebug` with JDK 21). Microphone
+capture inside the webview is still unverified on real hardware.
 
 ### 9. Polish
 

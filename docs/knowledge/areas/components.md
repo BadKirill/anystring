@@ -1,19 +1,28 @@
 # Components / UI
 
-Tags: `ui`, `gauge`, `picker`, `sheet`, `strings`, `chromatic`  
-Paths: `src/components/`, `src/App.tsx`, `src/App.css`, `src/index.css`
+Tags: `ui`, `gauge`, `picker`, `sheet`, `strings`, `chromatic`, `splash`  
+Paths: `src/components/`, `src/App.tsx`, `src/App.css`, `src/index.css`, `index.html`
 
 ## Composition
 
 `App.tsx` owns modal union (`none` | `presets` | `edit`) and screen tabs
 (`strings` | `chromatic`).
 
-**Strings:** Header (title + tuning name) → ScreenTabs → ModeControls (Auto +
-Listen) → TunerGauge → TuneDirectionHint → StringList → InstallHint → modals.
+**Strings:** Header (title + tuning name + About) → ScreenTabs → ModeControls
+(Auto + Listen) → TunerGauge → TuneDirectionHint → StringList → InstallHint →
+modals.
 
-**Chromatic:** Header (title + Chromatic label) → ScreenTabs → Listen only →
+**Chromatic:** Header (title + Chromatic label + About) → ScreenTabs → Listen only →
 TunerGauge (♭/# marks, live cents, no latch-to-center) → hint with cents /
 flat·sharp. No StringList, Auto, or tuning picker.
+
+## Launch cover
+
+`index.html` ships the cover markup plus inlined styles so it paints on the
+first frame; `main.tsx` fades `#splash` out after React's first paint. The mark
+is sized to `30vh` because `ios/App/App/Base.lproj/LaunchScreen.storyboard`
+renders the same art at 30% of screen height, so the native launch image hands
+over without a jump — and without the black gap that used to sit between them.
 
 ## Components
 
@@ -24,11 +33,12 @@ flat·sharp. No StringList, Auto, or tuning picker.
 | `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)           |
 | `PresetPicker.tsx`                             | Presets by instrument + My tunings + save draft                  |
 | `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                               |
-| `NotePicker.tsx`                               | Note + octave chips in Sheet                                     |
+| `NotePicker.tsx`                               | Note + octave chips in Sheet; plays a reference tone per pick    |
 | `Sheet.tsx`                                    | Bottom sheet modal shell                                         |
 | `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                       |
 | `TextField.tsx`                                | Named input for save/rename                                      |
-| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage                      |
+| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native    |
+| `AboutSheet.tsx`                               | Version, privacy summary, policy/support/source links            |
 | `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                      |
 | `strings.ts`                                   | **All** user-facing English strings (`UI`)                       |
 
@@ -41,7 +51,8 @@ flat·sharp. No StringList, Auto, or tuning picker.
 
 ## Open when
 
-Layout, gauge feel, screen tabs, picker lists, swipe UX, install hint, copy.
+Layout, gauge feel, screen tabs, picker lists, swipe UX, install hint, copy,
+launch cover.
 
 ## See also
 
