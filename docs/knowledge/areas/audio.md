@@ -53,24 +53,22 @@ after long idle.
 
 ## iOS ring/silent switch
 
-WKWebView plays Web Audio on an ambient session, so on iOS the reference tone is
-muted whenever the hardware switch is set to silent, and flipping the switch back
-does not always un-mute the running context.
+WKWebView defaults Web Audio to an Ambient session, so the hardware ring/silent
+switch mutes reference tones even when `AudioContext.state === "running"`.
 
-`src/platform/audioSession.ts` talks to the `AudioSession` Swift plugin in
-`ios/App/App/AudioSession.swift`, which arms `AVAudioSession` with `playback` +
-`mixWithOthers` — a category iOS keeps audible under the switch.
+Fix (web only): `src/platform/audioSession.ts` sets
+`navigator.audioSession.type` to `playback` before each tone, or
+`play-and-record` while the mic is open (Web Audio Session API, iOS 17+).
 
-| Trigger                        | Call                              |
-| ------------------------------ | --------------------------------- |
-| Before every tone (`warm…`)    | `reassertAudioSession()`          |
-| Mic session listening          | `setAudioSessionMode('capture')`  |
-| Mic session stopped / failed   | `setAudioSessionMode('playback')` |
-| App launch, app becomes active | native `AppDelegate`              |
+Do **not** reconfigure the app `AVAudioSession` from JS/native around tones —
+that interrupts WebKit's separate session and can silence output entirely
+(observed on iOS 26). The Capacitor `AudioSession` plugin is a no-op stub.
 
-In `capture` mode the shell leaves the session alone: WebKit owns a
-play-and-record session that already ignores the switch, and re-categorising it
-can drop the microphone. Everything is a no-op off native.
+| Trigger                      | Call                              |
+| ---------------------------- | --------------------------------- |
+| Before every tone (`warm…`)  | `reassertAudioSession()`          |
+| Mic session listening        | `setAudioSessionMode('capture')`  |
+| Mic session stopped / failed | `setAudioSessionMode('playback')` |
 
 ## Patterns
 

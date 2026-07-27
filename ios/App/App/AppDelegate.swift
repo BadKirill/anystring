@@ -7,7 +7,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        AudioSessionConfigurator.activate(capturing: false)
+        // Web Audio session type is set from JS (`navigator.audioSession`). Do not
+        // touch AVAudioSession here — it interrupts WKWebView and silences tones.
         return true
     }
 
@@ -26,9 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Flipping the ring/silent switch or another app taking the session can
-        // leave ours deactivated, which silences the tuner until it is re-armed.
-        AudioSessionConfigurator.reactivate()
+        // Intentionally empty: re-arming AVAudioSession here interrupts WKWebView.
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

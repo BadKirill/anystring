@@ -1,44 +1,44 @@
-import { registerPlugin } from '@capacitor/core'
-
-import { isNativePlatform } from './runtime'
-
 /** `capture` keeps the microphone input open; `playback` is output only. */
 export type AudioSessionMode = 'playback' | 'capture'
 
-interface AudioSessionPlugin {
-  activate(options: { mode: AudioSessionMode }): Promise<void>
-}
-
-const plugin = registerPlugin<AudioSessionPlugin>('AudioSession')
+type WebAudioSessionType =
+  'auto' | 'playback' | 'transient' | 'transient-solo' | 'ambient' | 'play-and-record'
 
 let mode: AudioSessionMode = 'playback'
 
-async function apply(): Promise<void> {
-  if (!isNativePlatform()) {
+function webTypeFor(next: AudioSessionMode): WebAudioSessionType {
+  return next === 'capture' ? 'play-and-record' : 'playback'
+}
+
+/**
+ * Declares intent via the Web Audio Session API (Safari / iOS 17+).
+ *
+ * WKWebView defaults to Ambient, which the ring/silent switch mutes even when
+ * AudioContext looks healthy. Setting `playback` is the supported fix.
+ *
+ * Do not also call into the app AVAudioSession from JS before each tone: that
+ * interrupts WebKit's separate session and can silence output entirely (iOS 26).
+ */
+function applyWebAudioSessionType(): void {
+  const session = navigator.audioSession
+  if (!session) {
     return
   }
-  try {
-    await plugin.activate({ mode })
-  } catch {
-    // Browsers and PWAs have no session to arm; never block audio over it.
-  }
+  session.type = webTypeFor(mode)
 }
 
 /**
- * Tells the native shell whether the microphone is running. While it is, iOS
- * already keeps the app audible and the session is left alone; when capture
- * stops the shell re-arms playback so tones survive the silent switch.
+ * Switches between output-only and mic capture for the web audio session type.
+ * No-op on browsers without `navigator.audioSession`.
  */
-export async function setAudioSessionMode(next: AudioSessionMode): Promise<void> {
+export function setAudioSessionMode(next: AudioSessionMode): void {
   mode = next
-  await apply()
+  applyWebAudioSessionType()
 }
 
 /**
- * Re-arms the session with the current mode. iOS mutes an ambient session under
- * the ring/silent switch, and WKWebView drops back to one whenever it starts or
- * stops media, so tones re-assert the category right before they play.
+ * Re-arms audible Web Audio before a reference tone. Safe to call repeatedly.
  */
-export async function reassertAudioSession(): Promise<void> {
-  await apply()
+export function reassertAudioSession(): void {
+  applyWebAudioSessionType()
 }

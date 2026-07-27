@@ -79,7 +79,7 @@ function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): A
 
 /** Resumes or recreates the shared AudioContext after idle suspend. */
 export async function warmReferenceAudio(): Promise<void> {
-  await reassertAudioSession()
+  reassertAudioSession()
   let ctx = getContext()
   if (ctx.state === 'suspended') {
     await ctx.resume()
