@@ -5,6 +5,8 @@ import { detectPitch, frequencyJumpCents } from './pitchDetector'
 import type { PitchState } from './pitchState'
 
 const MEDIAN_WINDOW = 5
+/** Require a few agreeing windows so a single WKWebView hum spike cannot flash. */
+const MIN_CONFIRM_READINGS = 3
 const MAX_JUMP_CENTS = 150
 
 function median(values: number[]): number {
@@ -37,6 +39,10 @@ export function createMicWindowHandler(
     recent.push(reading.frequency)
     while (recent.length > MEDIAN_WINDOW) {
       recent.shift()
+    }
+    if (recent.length < MIN_CONFIRM_READINGS) {
+      setState((prev) => ({ ...prev, frequency: null, clarity: null }))
+      return
     }
     setState((prev) => ({
       ...prev,
