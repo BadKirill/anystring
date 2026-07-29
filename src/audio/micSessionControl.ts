@@ -11,10 +11,16 @@ const IDLE_STATE: PitchState = {
   clarity: null,
 }
 
-interface SessionRefs {
+export interface SessionRefs {
   active: { current: boolean }
   session: { current: MicSession | null }
   recent: { current: number[] }
+  /** Bumps on every begin so stale getUserMedia promises cannot win. */
+  generation: { current: number }
+}
+
+function isStale(refs: SessionRefs, generation: number): boolean {
+  return !refs.active.current || refs.generation.current !== generation
 }
 
 export function beginMicSession(
@@ -26,15 +32,22 @@ export function beginMicSession(
   if (!refs.active.current) {
     return
   }
+  const generation = refs.generation.current + 1
+  refs.generation.current = generation
   refs.recent.current = []
   refs.session.current?.stop()
   refs.session.current = null
   setState({ ...IDLE_STATE, status: 'starting' })
+  // play-and-record before getUserMedia so WKWebView keeps input routed.
+  setAudioSessionMode('capture')
   startMicSession(handleWindow, () => {
+    if (document.visibilityState === 'hidden') {
+      return
+    }
     window.setTimeout(restart, 0)
   }).then(
     (session) => {
-      if (!refs.active.current) {
+      if (isStale(refs, generation)) {
         session.stop()
         return
       }
@@ -43,6 +56,11 @@ export function beginMicSession(
       setState({ ...IDLE_STATE, status: 'listening' })
     },
     (error: unknown) => {
+      if (isStale(refs, generation)) {
+        return
+      }
+      // Stop auto-resume loops: a failed start must not hammer getUserMedia.
+      refs.active.current = false
       const reason = error instanceof MicStreamError ? error.reason : 'unavailable'
       setAudioSessionMode('playback')
       setState({ ...IDLE_STATE, status: 'error', error: reason })
@@ -50,11 +68,25 @@ export function beginMicSession(
   )
 }
 
+/** Soft-resume an existing session after foregrounding; false if rebuild needed. */
+export async function resumeMicSession(refs: SessionRefs): Promise<boolean> {
+  const session = refs.session.current
+  if (!refs.active.current || !session) {
+    return false
+  }
+  const ok = await session.resume()
+  if (ok) {
+    setAudioSessionMode('capture')
+  }
+  return ok
+}
+
 export function stopMicSession(
   refs: SessionRefs,
   setState: Dispatch<SetStateAction<PitchState>>,
 ): void {
   refs.active.current = false
+  refs.generation.current += 1
   refs.recent.current = []
   setState(IDLE_STATE)
   refs.session.current?.stop()

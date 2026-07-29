@@ -125,5 +125,7 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
 }
 
 onAppResume(() => {
-  void warmReferenceAudio()
+  // Re-arm Web Audio after iOS suspends contexts in the background. A failed
+  // resume is fine — the next user tap rebuilds via playReferencePitch.
+  void warmReferenceAudio().catch(() => undefined)
 })
