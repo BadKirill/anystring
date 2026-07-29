@@ -15,7 +15,8 @@ Separate GitHub checks:
 6. E2E local — `npm run test:e2e`
 
 On `master` (paths under `docs/knowledge/**`): **Knowledge wiki** workflow runs
-`npm run knowledge:wiki` with `GITHUB_TOKEN`.
+`npm run knowledge:wiki` and, when `NOTION_API_KEY` is set,
+`npm run knowledge:notion`.
 
 ## Deploy (`deploy.yml`) — push to `master`
 
@@ -26,9 +27,11 @@ On `master` (paths under `docs/knowledge/**`): **Knowledge wiki** workflow runs
 ## Agent notes
 
 - Do not merge with failing CI checks.
-- `npm run knowledge:check` is part of `npm run check` (graph/index integrity).
-- Wiki sync is **not** a CI job; agents run `npm run knowledge:wiki` after catalog
-  updates (requires wiki write access).
+- After structural changes agents **must** run `npm run knowledge:sync`
+  (GitHub Wiki + Notion Wiki).
+- Notion requires `NOTION_API_KEY` (never commit the token).
+- Parent Notion page:
+  https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4
 
 ## Open when
 

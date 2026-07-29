@@ -1,5 +1,5 @@
 ---
-description: Selective reading via repo knowledge graph; keep catalog + wiki in sync
+description: Selective reading via knowledge graph; keep GitHub + Notion wikis in sync
 alwaysApply: true
 ---
 
@@ -17,12 +17,19 @@ instead of scanning everything. Same contract as
 4. Use `docs/knowledge/graph.json` if you need machine tags/edges.
 5. Do **not** bulk-read unrelated layers.
 
-## After structural changes
+## After structural changes (mandatory)
+
+You **must** update the knowledge graph and both external wikis:
 
 1. `npm run knowledge:refresh`
 2. Update affected area page(s), `CATALOG.md`, `graph.json`, `INDEX.md` as needed.
 3. `npm run knowledge:check` (also in `npm run check` + CI).
-4. `npm run knowledge:wiki` locally if needed (CI mirrors wiki on `master`).
+4. `npm run knowledge:sync` (= GitHub Wiki + Notion Wiki).
+   - `knowledge:wiki` → https://github.com/BadKirill/anystring/wiki
+   - `knowledge:notion` → needs `NOTION_API_KEY` (never commit the token)
+
+If Notion credentials are missing, still sync GitHub wiki and report the Notion
+gap. Do not silently skip knowledge updates.
 
 ## Skill
 

@@ -15,19 +15,37 @@ is the portable contract.
 
 Machine map: [`graph.json`](graph.json) · Human overview: [`CATALOG.md`](CATALOG.md)
 
-## After structural changes
+## After structural changes (mandatory)
 
 If you add/rename/remove modules, change public APIs, storage keys, audio
-constants, UI flows, CI, or layer rules:
+constants, UI flows, CI, layer rules, or anything described in the knowledge
+tree, you **must** keep the graph and **both** external wikis in sync before
+finishing the task:
 
 ```bash
-npm run knowledge:refresh   # regenerate file inventory section
+npm run knowledge:refresh          # regenerate file inventory section
 # edit affected areas/*.md + CATALOG.md + graph.json + INDEX.md as needed
-npm run knowledge:check
-npm run knowledge:wiki      # local; on master CI also mirrors the wiki
+npm run knowledge:check            # must pass (also part of npm run check)
+npm run knowledge:sync             # GitHub Wiki + Notion Wiki
+# equivalent:
+#   npm run knowledge:wiki         # https://github.com/BadKirill/anytune/wiki
+#   npm run knowledge:notion       # requires NOTION_API_KEY
 ```
 
+Do **not** skip Notion or GitHub wiki sync when `NOTION_API_KEY` / git credentials
+are available. If Notion sync fails for missing credentials, say so explicitly
+and still update `docs/knowledge/` + GitHub wiki.
+
 `npm run check` includes `knowledge:check` and must pass.
+
+### External mirrors
+
+| Mirror      | URL                                                                    | Command                                       |
+| ----------- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| GitHub Wiki | https://github.com/BadKirill/anystring/wiki                            | `npm run knowledge:wiki`                      |
+| Notion Wiki | https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4 | `npm run knowledge:notion` (`NOTION_API_KEY`) |
+
+Source of truth is always `docs/knowledge/` in this repo.
 
 ## Hard constraints (always)
 

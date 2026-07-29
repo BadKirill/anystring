@@ -1,4 +1,4 @@
-# Mirrors docs/knowledge to the GitHub Wiki after changes land on master.
+# Mirrors docs/knowledge to GitHub Wiki and Notion after changes on master.
 name: Knowledge wiki
 
 on:
@@ -7,6 +7,7 @@ on:
     paths:
       - 'docs/knowledge/**'
       - 'scripts/sync-knowledge-wiki.mjs'
+      - 'scripts/sync-notion-wiki.mjs'
       - 'scripts/refresh-file-index.mjs'
       - 'package.json'
   workflow_dispatch:
@@ -19,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  sync:
+  github-wiki:
     name: Sync GitHub Wiki
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +30,28 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Mirror knowledge → wiki
+      - name: Mirror knowledge → GitHub Wiki
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run knowledge:wiki
+
+  notion-wiki:
+    name: Sync Notion Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Mirror knowledge → Notion
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_PARENT_ID: 3a57e1830c32800c8d3be98bdb534bc4
+        run: |
+          if [ -z "$NOTION_API_KEY" ]; then
+            echo "NOTION_API_KEY not set — skipping Notion sync"
+            exit 0
+          fi
+          npm run knowledge:notion

@@ -1,11 +1,11 @@
 ---
 name: knowledge-lookup
 description: >-
-  Resolves AnyTune code-change tasks via the repo-local knowledge graph
-  (docs/knowledge) with selective file reads, then updates the catalog and
-  GitHub Wiki mirror. Use when the user asks to implement, fix, refactor,
-  explore architecture, or change project structure — before scanning the whole
-  codebase.
+  Resolves AnyTune/Anystring code-change tasks via the repo-local knowledge
+  graph (docs/knowledge) with selective file reads, then updates the catalog
+  and both external wikis (GitHub Wiki + Notion). Use when the user asks to
+  implement, fix, refactor, explore architecture, or change project structure —
+  before scanning the whole codebase.
 ---
 
 # Knowledge lookup agent
@@ -13,7 +13,7 @@ description: >-
 ## Goal
 
 Answer “what do I need to read/change?” from the knowledge tree so the session
-avoids full-repo analysis and excess tokens.
+avoids full-repo analysis and excess tokens. Keep graph + wikis accurate.
 
 ## Workflow
 
@@ -28,7 +28,7 @@ Knowledge lookup:
 - [ ] 5. Implement / answer
 - [ ] 6. If structure/contracts changed → npm run knowledge:refresh + edit areas
 - [ ] 7. Run npm run knowledge:check
-- [ ] 8. Run npm run knowledge:wiki (skip if only CI will sync on master)
+- [ ] 8. Run npm run knowledge:sync  (GitHub Wiki + Notion Wiki)
 ```
 
 ### 1–2. Route
@@ -59,24 +59,24 @@ Open `docs/knowledge/areas/<page>.md` for each tag via INDEX routing.
 
 Follow `AGENTS.md` + `.cursor/rules/code-style.md`. Stay in the scoped layer.
 
-### 6–8. Maintain mirror
+### 6–8. Maintain mirrors (mandatory on structural changes)
 
-Knowledge source of truth is **in-repo** under `docs/knowledge/`.
+Source of truth: `docs/knowledge/`.
 
 ```bash
-npm run knowledge:check   # links, graph, INDEX routes, src coverage
-npm run knowledge:wiki    # Home, Agent-Index, areas, Graph, _Sidebar; drop stale pages
+npm run knowledge:check
+npm run knowledge:sync    # knowledge:wiki + knowledge:notion
 ```
 
-Wiki: https://github.com/BadKirill/anytune/wiki
+| Mirror      | URL                                                                    |
+| ----------- | ---------------------------------------------------------------------- |
+| GitHub Wiki | https://github.com/BadKirill/anystring/wiki                            |
+| Notion Wiki | https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4 |
 
-**MCP note:** Cursor currently has no GitHub Wiki MCP server here. Do not block
-waiting for MCP — use the script. If a wiki MCP is added later, it must write
-the same pages from `docs/knowledge/` after local updates.
+Notion needs `NOTION_API_KEY` in the environment (never commit it). If missing,
+sync GitHub wiki anyway and report that Notion was skipped.
 
 ## Output shape (when reporting context)
-
-Keep brief:
 
 ```markdown
 ## Knowledge context
@@ -85,6 +85,7 @@ Keep brief:
 - Areas read: …
 - Files to touch: …
 - Constraints: …
+- Wikis synced: GitHub / Notion / skipped+why
 ```
 
 Then proceed with the task.
