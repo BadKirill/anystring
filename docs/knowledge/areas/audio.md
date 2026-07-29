@@ -41,12 +41,19 @@ Bass fundamentals get a slightly lower bar; still reject weak detections.
 `idle` → `starting` (`beginMicSession`) → `listening` | `error`  
 `stopMicSession` clears refs, stops worklet/tracks, returns `idle`.
 
-On audio graph end or a suspended AudioContext that cannot resume, mic stream
-schedules `restart` via timeout if still active.
+`beginMicSession` bumps a generation token so overlapping `getUserMedia`
+promises cannot clobber a newer start (common when iOS suspends + resumes).
+Failed starts clear `active` so visibility resume does not hammer the mic.
+`setAudioSessionMode('capture')` runs **before** `getUserMedia`.
+
+iOS always suspends `AudioContext` while backgrounded. That is **not** treated
+as a dead stream: `watchContextSuspend` / track `ended` ignore events while
+`document.visibilityState === 'hidden'`. On foreground, `resumeMicSession`
+soft-resumes the existing context; only a failed resume rebuilds the session.
 
 `useMicControls`: Start always rebuilds the session (dead/suspended sessions can
-leave a non-null ref). App resume restarts only while listening; unmount stop is
-separate from resume registration so dependency churn does not kill the mic.
+leave a non-null ref). Unmount stop is separate from resume registration so
+dependency churn does not kill the mic.
 
 `referenceTone.warmReferenceAudio` rebuilds the shared context if resume fails
 after long idle.
