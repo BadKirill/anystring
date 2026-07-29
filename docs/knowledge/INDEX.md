@@ -4,9 +4,9 @@ Portable protocol (all tools): [`AGENT_PROTOCOL.md`](AGENT_PROTOCOL.md)
 
 **Read this first** on any code-change request. Do **not** scan the whole repo.
 Route via tags → open only matching area pages → open source files from the
-file map. After structural changes: `npm run knowledge:refresh`, update docs,
-`npm run knowledge:check` (wiki syncs on `master` via CI; locally
-`npm run knowledge:wiki`).
+file map. After structural changes you **must**: `npm run knowledge:refresh`,
+update docs, `npm run knowledge:check`, then `npm run knowledge:sync`
+(GitHub Wiki + Notion Wiki).
 
 ## Selective reading protocol
 
@@ -51,14 +51,14 @@ Refresh inventory: `npm run knowledge:refresh`.
 - `npm run check` before finishing.
 - Branch + PR per change; no drive-by docs unless asked (except this knowledge tree when it must stay accurate).
 
-## Wiki mirror
+## Wiki mirrors
 
-Repo catalog is the source of truth. External human wiki:
-https://github.com/BadKirill/anystring/wiki
+| Mirror | URL                                                                    | Command                    |
+| ------ | ---------------------------------------------------------------------- | -------------------------- |
+| GitHub | https://github.com/BadKirill/anystring/wiki                            | `npm run knowledge:wiki`   |
+| Notion | https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4 | `npm run knowledge:notion` |
 
-Sync command: `npm run knowledge:wiki` (pushes markdown + `_Sidebar.md`, removes
-stale wiki pages). Banner links point at a branch where the source file exists on
-`origin` (falls back to path-only if unpushed).
+`npm run knowledge:sync` runs both. Notion needs `NOTION_API_KEY` (never commit).
 
-There is no GitHub Wiki MCP in the current Cursor MCP set — agents use the script
-(or equivalent `git` push to `anystring.wiki`).
+Repo catalog is the source of truth. Sync pushes markdown + `_Sidebar.md` to
+GitHub Wiki and 📚 child pages to Notion; stale GitHub wiki pages are removed.

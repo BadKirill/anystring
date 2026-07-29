@@ -42,7 +42,7 @@ Relaxed for `*.test.ts` and `e2e/**` (length/cognitive).
 ## Knowledge maintenance
 
 Structural/API changes → update knowledge tree → `npm run knowledge:check` →
-`npm run knowledge:wiki` (see INDEX.md).
+`npm run knowledge:sync` (GitHub Wiki **and** Notion Wiki; see INDEX.md).
 
 ## See also
 

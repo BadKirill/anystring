@@ -135,6 +135,7 @@ function checkRequiredFiles() {
     '.cursor/rules/knowledge-graph.mdc',
     '.cursor/skills/knowledge-lookup/SKILL.md',
     'scripts/sync-knowledge-wiki.mjs',
+    'scripts/sync-notion-wiki.mjs',
     'scripts/refresh-file-index.mjs',
   ]) {
     if (!existsSync(join(ROOT, rel))) fail(`missing required file: ${rel}`)

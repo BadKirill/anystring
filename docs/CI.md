@@ -12,7 +12,8 @@ Every push and pull request runs the **CI** workflow with five separate checks v
 | E2E (Playwright local) | `npm run test:e2e` against dev server |
 
 Pushes to `master` that touch `docs/knowledge/**` also run **Knowledge wiki**,
-which mirrors the catalog to https://github.com/BadKirill/anystring/wiki.
+which mirrors the catalog to https://github.com/BadKirill/anystring/wiki and,
+when `NOTION_API_KEY` is configured as a repo secret, to the Notion Anytune Wiki.
 
 Pushes to `master` also run the **Deploy** workflow:
 
