@@ -13,11 +13,23 @@ Path: `src/audio/`
 
 | Frequency   | Min clarity |
 | ----------- | ----------- |
-| &lt; 60 Hz  | 0.82        |
-| &lt; 100 Hz | 0.86        |
+| &lt; 60 Hz  | 0.88        |
+| &lt; 100 Hz | 0.88        |
 | else        | 0.90        |
 
-Bass fundamentals get a slightly lower bar; still reject weak detections.
+## Amplitude gate (`minRmsFor`)
+
+Quiet WKWebView hum (~40 Hz, high clarity, tiny RMS) is rejected before it can
+look like a Demiurge F1. Real plucks sit well above these floors.
+
+| Frequency  | Min RMS |
+| ---------- | ------- |
+| &lt; 55 Hz | 0.012   |
+| &lt; 90 Hz | 0.008   |
+| else       | 0.005   |
+
+`detectPitch` also subtracts DC bias, and `micWindowHandler` waits for 3 agreeing
+windows (~250 ms) before publishing a frequency so a single hum spike cannot flash.
 
 ## Pipeline modules
 
