@@ -12,11 +12,10 @@ GitHub Copilot, and any other coding agent with repo access.
 2. [docs/knowledge/INDEX.md](docs/knowledge/INDEX.md) — knowledge graph: tag → area pages (do **not** scan the whole repo)
 3. Human catalog: [docs/knowledge/CATALOG.md](docs/knowledge/CATALOG.md)
 
-After structural changes you **must**:
-`npm run knowledge:refresh` → update area docs → `npm run knowledge:check` →
-`npm run knowledge:sync` (GitHub Wiki **and** Notion Wiki).
-Notion needs `NOTION_API_KEY` (never commit). CI mirrors GitHub Wiki on `master`;
-Notion syncs on `master` when the secret is set.
+After structural changes update the **local** General Wiki snapshot only:
+`npm run knowledge:refresh` → edit area docs → `npm run knowledge:check`.
+Do **not** touch Notion or GitHub Wiki unless the user explicitly asks (then
+run the command and **read-back**). No wiki sync automation on commit/PR.
 
 Also: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) · [docs/CI.md](docs/CI.md) ·
 [.cursor/rules/code-style.md](.cursor/rules/code-style.md) (Cursor) ·

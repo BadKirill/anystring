@@ -1,36 +1,36 @@
 ---
-description: Selective reading via knowledge graph; keep GitHub + Notion wikis in sync
+description: Local General Wiki snapshot is the base; external wikis only on explicit request
 alwaysApply: true
 ---
 
-# Knowledge graph — selective reading
+# Wiki / knowledge — local-first
 
-Before exploring the codebase for a change request, use the repo knowledge tree
-instead of scanning everything. Same contract as
-`docs/knowledge/AGENT_PROTOCOL.md` (also for ChatGPT/Claude/Copilot via `AGENTS.md`).
+Используй проверенный локальный снимок General Wiki как базу. Обычная индексация
+не обращается к Notion. Любое чтение или изменение внешней Wiki выполняется
+только по явной просьбе или отдельной команде с обязательным read-back.
+Автоматизации на commit/PR пока нет.
 
-## Protocol
+## Base (always)
 
-1. Read `docs/knowledge/AGENT_PROTOCOL.md` + `docs/knowledge/INDEX.md`.
-2. Open only the 1–3 matching `docs/knowledge/areas/*.md` pages for the task tags.
-3. Open source files listed there. Prefer colocated `*.test.ts` when touching core.
-4. Use `docs/knowledge/graph.json` if you need machine tags/edges.
-5. Do **not** bulk-read unrelated layers.
+- Source of truth for agents: `docs/knowledge/` (local General Wiki snapshot).
+- Selective reading: `AGENT_PROTOCOL.md` → `INDEX.md` → matching `areas/*.md`.
+- After structural code changes: update local knowledge + `npm run knowledge:check`.
+  Do **not** call Notion or push GitHub Wiki unless the user asked.
 
-## After structural changes (mandatory)
+## External Wiki (Notion / GitHub Wiki)
 
-You **must** update the knowledge graph and both external wikis:
+Allowed **only** when the user explicitly asks or names a dedicated command
+(`knowledge:wiki`, `knowledge:notion`, “обнови Notion”, “sync wiki”, etc.).
 
-1. `npm run knowledge:refresh`
-2. Update affected area page(s), `CATALOG.md`, `graph.json`, `INDEX.md` as needed.
-3. `npm run knowledge:check` (also in `npm run check` + CI).
-4. `npm run knowledge:sync` (= GitHub Wiki + Notion Wiki).
-   - `knowledge:wiki` → https://github.com/BadKirill/anystring/wiki
-   - `knowledge:notion` → needs `NOTION_API_KEY` (never commit the token)
+Then:
 
-If Notion credentials are missing, still sync GitHub wiki and report the Notion
-gap. Do not silently skip knowledge updates.
+1. Perform the requested read and/or write.
+2. **Read-back** — re-fetch or re-read the external page and confirm the result
+   to the user (what changed / what was read).
+3. Never treat external Wiki as the index for ordinary code work.
 
-## Skill
+## No commit/PR automation
 
-For code-change tasks, follow `.cursor/skills/knowledge-lookup/SKILL.md`.
+Do not add or rely on commit hooks / PR checks that sync external wikis.
+CI may still run local `knowledge:check`. Wiki sync workflows stay manual
+(`workflow_dispatch`) only.

@@ -1,22 +1,33 @@
-# Wiki sync reference
+# Wiki sync reference (explicit commands only)
 
-## Mirrors
+Используй проверенный локальный снимок General Wiki как базу. Обычная индексация
+не обращается к Notion. Любое чтение или изменение внешней Wiki выполняется
+только по явной просьбе или отдельной команде с обязательным read-back.
+Автоматизации на commit/PR пока нет.
 
-| Source             | Destination         | Command                    |
-| ------------------ | ------------------- | -------------------------- |
-| `docs/knowledge/*` | GitHub Wiki         | `npm run knowledge:wiki`   |
-| `docs/knowledge/*` | Notion Anytune Wiki | `npm run knowledge:notion` |
-| both               |                     | `npm run knowledge:sync`   |
+## Local base
 
-Notion parent page:
-https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4
+`docs/knowledge/` — always the index for agents.
 
-Requires `NOTION_API_KEY` (integration must be connected to that page).
-Never commit the token.
+## Explicit external commands
 
-GitHub Wiki: https://github.com/BadKirill/anystring/wiki
+| Command                    | Destination                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `npm run knowledge:wiki`   | https://github.com/BadKirill/anystring/wiki          |
+| `npm run knowledge:notion` | Notion Anytune Wiki (`NOTION_API_KEY`, never commit) |
 
-## GitHub Wiki mapping
+There is **no** automatic sync on commit/PR. The GitHub Action, if present, is
+`workflow_dispatch` only.
+
+## Read-back
+
+After any external wiki read or write:
+
+1. Re-fetch or re-open the remote page(s).
+2. Confirm to the user what was read or what changed.
+3. Do not assume success from a script exit code alone.
+
+## GitHub Wiki mapping (when syncing)
 
 | Repo path                          | Wiki page           |
 | ---------------------------------- | ------------------- |
@@ -25,14 +36,3 @@ GitHub Wiki: https://github.com/BadKirill/anystring/wiki
 | `docs/knowledge/AGENT_PROTOCOL.md` | `Agent-Protocol.md` |
 | `docs/knowledge/areas/*.md`        | Title-Case page     |
 | `docs/knowledge/graph.json`        | `Graph.md`          |
-| generated                          | `_Sidebar.md`       |
-
-## Commands
-
-```bash
-npm run knowledge:check
-npm run knowledge:sync
-```
-
-Scripts: `scripts/sync-knowledge-wiki.mjs`, `scripts/sync-notion-wiki.mjs`,
-`scripts/check-knowledge.mjs`, `scripts/refresh-file-index.mjs`.

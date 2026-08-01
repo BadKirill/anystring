@@ -16,11 +16,11 @@ Do not scan the whole repo by default.
 ```bash
 npm run knowledge:refresh
 npm run knowledge:check
-npm run knowledge:sync
 ```
 
-Update affected knowledge pages. `knowledge:sync` mirrors GitHub Wiki and Notion
-Wiki (`NOTION_API_KEY` required for Notion; never commit the token).
+Update affected **local** knowledge pages under `docs/knowledge/`.
+Do not call Notion or GitHub Wiki unless the user explicitly asks; then run the
+named command and read-back the remote result. No commit/PR wiki automation.
 
 ## Invariants
 

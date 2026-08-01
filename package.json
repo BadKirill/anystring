@@ -26,7 +26,6 @@
     "knowledge:check": "node scripts/check-knowledge.mjs",
     "knowledge:wiki": "node scripts/sync-knowledge-wiki.mjs",
     "knowledge:notion": "node scripts/sync-notion-wiki.mjs",
-    "knowledge:sync": "npm run knowledge:wiki && npm run knowledge:notion",
     "preview": "vite preview"
   },
   "dependencies": {
