@@ -1,16 +1,18 @@
-# Mirrors docs/knowledge to GitHub Wiki and Notion after changes on master.
+# Manual wiki sync only (no commit/PR automation).
+# Local docs/knowledge/ is the General Wiki snapshot used for indexing.
 name: Knowledge wiki
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'docs/knowledge/**'
-      - 'scripts/sync-knowledge-wiki.mjs'
-      - 'scripts/sync-notion-wiki.mjs'
-      - 'scripts/refresh-file-index.mjs'
-      - 'package.json'
   workflow_dispatch:
+    inputs:
+      target:
+        description: Which external wiki to sync
+        type: choice
+        options:
+          - github
+          - notion
+          - both
+        default: github
 
 permissions:
   contents: write
@@ -22,6 +24,7 @@ concurrency:
 jobs:
   github-wiki:
     name: Sync GitHub Wiki
+    if: ${{ inputs.target == 'github' || inputs.target == 'both' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,6 +40,7 @@ jobs:
 
   notion-wiki:
     name: Sync Notion Wiki
+    if: ${{ inputs.target == 'notion' || inputs.target == 'both' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +55,7 @@ jobs:
           NOTION_PARENT_ID: 3a57e1830c32800c8d3be98bdb534bc4
         run: |
           if [ -z "$NOTION_API_KEY" ]; then
-            echo "NOTION_API_KEY not set — skipping Notion sync"
-            exit 0
+            echo "NOTION_API_KEY not set"
+            exit 1
           fi
           npm run knowledge:notion

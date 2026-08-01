@@ -1,39 +1,41 @@
 ---
 name: knowledge-lookup
 description: >-
-  Resolves AnyTune/Anystring code-change tasks via the repo-local knowledge
-  graph (docs/knowledge) with selective file reads, then updates the catalog
-  and both external wikis (GitHub Wiki + Notion). Use when the user asks to
-  implement, fix, refactor, explore architecture, or change project structure —
-  before scanning the whole codebase.
+  Resolves code-change tasks via the local docs/knowledge General Wiki snapshot
+  with selective file reads. Does not contact Notion or GitHub Wiki unless the
+  user explicitly asks. Use when implementing, fixing, refactoring, or exploring
+  architecture — before scanning the whole codebase.
 ---
 
 # Knowledge lookup agent
 
 ## Goal
 
-Answer “what do I need to read/change?” from the knowledge tree so the session
-avoids full-repo analysis and excess tokens. Keep graph + wikis accurate.
+Answer “what do I need to read/change?” from the **local** knowledge snapshot
+(`docs/knowledge/`) so the session avoids full-repo analysis and excess tokens.
+
+## Wiki policy
+
+Используй проверенный локальный снимок General Wiki как базу. Обычная индексация
+не обращается к Notion. Любое чтение или изменение внешней Wiki выполняется
+только по явной просьбе или отдельной команде с обязательным read-back.
+Автоматизации на commit/PR пока нет.
 
 ## Workflow
-
-Copy and track:
 
 ```
 Knowledge lookup:
 - [ ] 1. Read docs/knowledge/AGENT_PROTOCOL.md + INDEX.md
 - [ ] 2. Pick tags for the user task
-- [ ] 3. Read matched area page(s) only
+- [ ] 3. Read matched area page(s) only (local files)
 - [ ] 4. Open listed source + tests
 - [ ] 5. Implement / answer
-- [ ] 6. If structure/contracts changed → npm run knowledge:refresh + edit areas
+- [ ] 6. If structure changed → knowledge:refresh + edit local areas
 - [ ] 7. Run npm run knowledge:check
-- [ ] 8. Run npm run knowledge:sync  (GitHub Wiki + Notion Wiki)
+- [ ] 8. External wiki ONLY if user explicitly asked → then read-back
 ```
 
-### 1–2. Route
-
-From the user request, choose tags (examples):
+### Route
 
 | User intent                     | Tags                           |
 | ------------------------------- | ------------------------------ |
@@ -46,46 +48,32 @@ From the user request, choose tags (examples):
 | Tests / CI                      | `test`, `ci`                   |
 | New folder / architecture       | `architecture`, `patterns`     |
 
-Open `docs/knowledge/areas/<page>.md` for each tag via INDEX routing.
+Open `docs/knowledge/areas/<page>.md` via INDEX routing. Never open Notion for
+this step.
 
-### 3–4. Read narrowly
-
-- Prefer area “Open when” / module tables over grepping the whole `src/`.
-- For “where is X?”, use `areas/file-index.md`.
-- Only widen search if the area page is missing the answer — then update the
-  knowledge docs so the next agent finds it.
-
-### 5. Implement
-
-Follow `AGENTS.md` + `.cursor/rules/code-style.md`. Stay in the scoped layer.
-
-### 6–8. Maintain mirrors (mandatory on structural changes)
-
-Source of truth: `docs/knowledge/`.
+### Maintain local snapshot
 
 ```bash
+npm run knowledge:refresh
 npm run knowledge:check
-npm run knowledge:sync    # knowledge:wiki + knowledge:notion
 ```
 
-| Mirror      | URL                                                                    |
-| ----------- | ---------------------------------------------------------------------- |
-| GitHub Wiki | https://github.com/BadKirill/anystring/wiki                            |
-| Notion Wiki | https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4 |
+### External Wiki (explicit request only)
 
-Notion needs `NOTION_API_KEY` in the environment (never commit it). If missing,
-sync GitHub wiki anyway and report that Notion was skipped.
+```bash
+npm run knowledge:wiki      # GitHub Wiki
+npm run knowledge:notion    # Notion (NOTION_API_KEY)
+```
 
-## Output shape (when reporting context)
+After either command: **read-back** remote content and confirm to the user.
+
+## Output shape
 
 ```markdown
 ## Knowledge context
 
 - Tags: …
-- Areas read: …
+- Areas read (local): …
 - Files to touch: …
-- Constraints: …
-- Wikis synced: GitHub / Notion / skipped+why
+- External wiki: not used | used + read-back summary
 ```
-
-Then proceed with the task.

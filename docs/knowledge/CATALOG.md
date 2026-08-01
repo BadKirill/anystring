@@ -99,8 +99,8 @@ When code structure or contracts change, update:
 4. `graph.json` nodes/edges/tags
 5. `INDEX.md` routing if tags change
 6. `npm run knowledge:check` (local `check` + CI job)
-7. `npm run knowledge:sync` — GitHub Wiki **and** Notion Wiki
-   (Notion: `NOTION_API_KEY`; page https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4)
+7. External Wiki (GitHub / Notion) **only** on explicit user request, then
+   read-back. No commit/PR wiki automation.
 
 Also loaded by non-Cursor agents via `AGENTS.md`, `CLAUDE.md`,
 `.github/copilot-instructions.md`, `llms.txt`.

@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
- * Mirrors docs/knowledge/* into the GitHub Wiki (anystring.wiki).
- * Source of truth stays in the main repo; wiki is the human-readable external copy.
+ * Explicit GitHub Wiki mirror (manual / workflow_dispatch only).
+ * Ordinary indexing uses local docs/knowledge/ — do not run this unless asked.
+ * After running: read-back the remote wiki and confirm to the user.
+ * Source of truth stays in the main repo.
  */
 import { execFileSync } from 'node:child_process'
 import {

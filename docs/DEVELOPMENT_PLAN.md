@@ -13,7 +13,8 @@ tuning picker. Session-only screen mode.
 Repo-local knowledge graph lives under `docs/knowledge/`. Portable protocol:
 `AGENT_PROTOCOL.md` + root `AGENTS.md` (ChatGPT/Codex, Claude, Copilot, Cursor).
 Cursor also has `.cursor/rules/knowledge-graph.mdc`. Automation: `knowledge:refresh`
-(file inventory), `knowledge:check` (CI job), wiki sync on `master`
+(file inventory), `knowledge:check` (CI job). External Wiki sync is manual only
+(no commit/PR automation; Notion/GitHub Wiki on explicit request + read-back).
 (`.github/workflows/knowledge-wiki.yml`).
 
 **Store release:** the product is renamed **Anystring** (Anytune is a trademarked

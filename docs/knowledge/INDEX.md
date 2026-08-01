@@ -3,10 +3,11 @@
 Portable protocol (all tools): [`AGENT_PROTOCOL.md`](AGENT_PROTOCOL.md)
 
 **Read this first** on any code-change request. Do **not** scan the whole repo.
-Route via tags → open only matching area pages → open source files from the
-file map. After structural changes you **must**: `npm run knowledge:refresh`,
-update docs, `npm run knowledge:check`, then `npm run knowledge:sync`
-(GitHub Wiki + Notion Wiki).
+Route via tags → open only matching **local** area pages → open source files from
+the file map. Local `docs/knowledge/` is the General Wiki snapshot base — do not
+open Notion for ordinary indexing. After structural changes: `npm run knowledge:refresh`,
+update docs, `npm run knowledge:check`. External Wiki only on explicit request
+(+ read-back). No commit/PR wiki automation.
 
 ## Selective reading protocol
 
@@ -16,7 +17,7 @@ update docs, `npm run knowledge:check`, then `npm run knowledge:sync`
 4. Skip unrelated layers. `src/core/` stays pure TS — never import platform code into it.
 5. If the change adds/renames modules, public APIs, storage keys, audio constants,
    UI flows, or CI — update `CATALOG.md`, `graph.json`, affected area pages, then
-   run `npm run knowledge:check` and `npm run knowledge:wiki`.
+   run `npm run knowledge:check` (local only).
 
 Machine graph: [`graph.json`](graph.json) · Human catalog: [`CATALOG.md`](CATALOG.md)
 
@@ -51,14 +52,15 @@ Refresh inventory: `npm run knowledge:refresh`.
 - `npm run check` before finishing.
 - Branch + PR per change; no drive-by docs unless asked (except this knowledge tree when it must stay accurate).
 
-## Wiki mirrors
+## External Wiki (explicit only)
 
-| Mirror | URL                                                                    | Command                    |
+Local base: `docs/knowledge/` (General Wiki snapshot). Ordinary indexing never
+calls Notion.
+
+| Mirror | URL                                                                    | Command (manual)           |
 | ------ | ---------------------------------------------------------------------- | -------------------------- |
 | GitHub | https://github.com/BadKirill/anystring/wiki                            | `npm run knowledge:wiki`   |
 | Notion | https://app.notion.com/p/Anytune-Wiki-3a57e1830c32800c8d3be98bdb534bc4 | `npm run knowledge:notion` |
 
-`npm run knowledge:sync` runs both. Notion needs `NOTION_API_KEY` (never commit).
-
-Repo catalog is the source of truth. Sync pushes markdown + `_Sidebar.md` to
-GitHub Wiki and 📚 child pages to Notion; stale GitHub wiki pages are removed.
+Run these **only** when the user asks. Afterward: **read-back** the remote page.
+No commit/PR automation for wiki sync.
