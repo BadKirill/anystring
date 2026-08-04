@@ -61,5 +61,5 @@ jobs:
         run: sleep 15
       - name: Run live UI smoke tests
         env:
-          PLAYWRIGHT_BASE_URL: https://badkirill.github.io
+          PLAYWRIGHT_BASE_URL: https://anystring.app
         run: npm run test:e2e:live

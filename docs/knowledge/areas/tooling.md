@@ -21,20 +21,23 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 
 ## Config files
 
-| File                                                         | Notes                                                                                                                   |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `vite.config.ts`                                             | `base: '/anystring/'` (`./` when `CAP_BUILD=1`), PWA precache all assets, `__APP_VERSION__` define, Vitest excludes e2e |
-| `capacitor.config.ts`                                        | `com.badkirill.anystring`, app name, `webDir: 'dist'`                                                                   |
-| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                                                                                          |
-| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability                                                                          |
-| `.prettierrc` / `.prettierignore`                            | Format ownership                                                                                                        |
-| `playwright.config.ts`                                       | E2E; live URL override via env                                                                                          |
-| `index.html`                                                 | SPA shell                                                                                                               |
-| `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens                                                                 |
-| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                                                                                     |
-| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                                                                                     |
-| `scripts/sync-knowledge-wiki.mjs`                            | GitHub Wiki mirror (explicit)                                                                                           |
-| `scripts/sync-notion-wiki.mjs`                               | Notion Wiki mirror (explicit)                                                                                           |
+| File                                                         | Notes                                                                                        |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `vite.config.ts`                                             | `base: '/'` (`./` + `root: app` when `CAP_BUILD=1`), MPA landing + `/app`, PWA scope `/app/` |
+| `capacitor.config.ts`                                        | `com.badkirill.anystring`, app name, `webDir: 'dist'`                                        |
+| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                                                               |
+| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability                                               |
+| `.prettierrc` / `.prettierignore`                            | Format ownership                                                                             |
+| `playwright.config.ts`                                       | E2E; live URL override via env                                                               |
+| `index.html`                                                 | Marketing landing (web)                                                                      |
+| `app/index.html`                                             | Tuner SPA shell (web `/app/` + native)                                                       |
+| `public/CNAME`                                               | Custom domain `anystring.app` for GitHub Pages                                               |
+| `public/privacy.html` / `public/support.html`                | Store-required static pages                                                                  |
+| `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens                                      |
+| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                                                          |
+| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                                                          |
+| `scripts/sync-knowledge-wiki.mjs`                            | GitHub Wiki mirror (explicit)                                                                |
+| `scripts/sync-notion-wiki.mjs`                               | Notion Wiki mirror (explicit)                                                                |
 
 ## PWA
 

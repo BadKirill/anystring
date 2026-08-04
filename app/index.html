@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0d1412" />
+    <meta name="application-name" content="Anystring" />
+    <meta name="apple-mobile-web-app-title" content="Anystring" />
+    <meta
+      name="description"
+      content="Free tuner for guitar and bass with fully editable per-string tunings."
+    />
+    <title>Anystring — guitar & bass tuner</title>
+    <!--
+      Inlined so the cover paints on the first frame. The native launch image is
+      the same mark on the same background, so the shell hands over to the web
+      layer without the black gap the bundle download used to leave behind.
+    -->
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 50% 0%, #14201b 0%, #0d1412 60%), #0d1412;
+        opacity: 1;
+        transition: opacity 240ms ease-out;
+      }
+
+      #splash.splash-done {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Matches the native launch image, which scales the mark to 30% of the
+         screen height before the web layer takes over. */
+      .splash-mark {
+        width: 30vh;
+        height: 30vh;
+      }
+
+      .splash-needle {
+        transform-origin: 256px 336px;
+        transform: rotate(18deg);
+        animation: splash-sweep 1.9s ease-in-out infinite alternate;
+      }
+
+      @keyframes splash-sweep {
+        from {
+          transform: rotate(-20deg);
+        }
+        to {
+          transform: rotate(20deg);
+        }
+      }
+
+      .splash-word {
+        position: absolute;
+        top: calc(50% + 17vh);
+        color: #1ed760;
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        font-size: clamp(1.6rem, 8vw, 2.2rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #splash {
+          transition: none;
+        }
+
+        .splash-needle {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <svg class="splash-mark" viewBox="0 0 512 512" aria-hidden="true">
+        <path
+          d="M 116 336 A 148 148 0 0 1 396 336"
+          fill="none"
+          stroke="#23332c"
+          stroke-width="20"
+          stroke-linecap="round"
+        />
+        <line
+          class="splash-needle"
+          x1="256"
+          y1="336"
+          x2="256"
+          y2="180"
+          stroke="#1ed760"
+          stroke-width="22"
+          stroke-linecap="round"
+        />
+        <circle cx="256" cy="336" r="26" fill="#1ed760" />
+        <line
+          x1="152"
+          y1="418"
+          x2="360"
+          y2="418"
+          stroke="#2c423a"
+          stroke-width="14"
+          stroke-linecap="round"
+        />
+      </svg>
+      <div class="splash-word">Anystring</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="../src/main.tsx"></script>
+  </body>
+</html>

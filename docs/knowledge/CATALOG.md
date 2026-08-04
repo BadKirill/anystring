@@ -4,7 +4,8 @@ Human-readable map of the whole project: what exists, how it is written, and
 which rules apply. Agents start at [INDEX.md](INDEX.md). This file is mirrored
 to the GitHub Wiki home page.
 
-**Live app:** https://badkirill.github.io/anystring/  
+**Live site:** https://anystring.app/  
+**Tuner (PWA):** https://anystring.app/app/
 **Repo:** https://github.com/BadKirill/anystring  
 **Wiki:** https://github.com/BadKirill/anystring/wiki
 

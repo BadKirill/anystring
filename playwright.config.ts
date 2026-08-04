@@ -28,7 +28,7 @@ export default defineConfig({
     ? undefined
     : {
         command: 'npm run dev',
-        url: 'http://localhost:5173/anystring/',
+        url: 'http://localhost:5173/app/',
         reuseExistingServer: !process.env.CI,
       },
 })

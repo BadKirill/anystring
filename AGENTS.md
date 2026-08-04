@@ -88,11 +88,11 @@ src/storage/        — localStorage persistence
 
 ## Testing
 
-| Command                 | Purpose                                                                            |
-| ----------------------- | ---------------------------------------------------------------------------------- |
-| `npm run check`         | Lint + format check + typecheck + unit tests — run before every PR                 |
-| `npm run test:e2e`      | Full Playwright suite against local dev server                                     |
-| `npm run test:e2e:live` | Smoke tests against production (`PLAYWRIGHT_BASE_URL=https://badkirill.github.io`) |
+| Command                 | Purpose                                                                      |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| `npm run check`         | Lint + format check + typecheck + unit tests — run before every PR           |
+| `npm run test:e2e`      | Full Playwright suite against local dev server                               |
+| `npm run test:e2e:live` | Smoke tests against production (`PLAYWRIGHT_BASE_URL=https://anystring.app`) |
 
 CI runs five separate GitHub checks on every push/PR; deploy to GitHub Pages runs an additional live UI check. See [docs/CI.md](docs/CI.md).
 
