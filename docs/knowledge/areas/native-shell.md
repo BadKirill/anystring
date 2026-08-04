@@ -1,25 +1,26 @@
 # Native shell (iOS / Android)
 
 Tags: `capacitor`, `ios`, `android`, `native`, `store`, `permissions`, `privacy`  
-Paths: `capacitor.config.ts`, `ios/`, `android/`, `src/platform/`, `public/privacy.html`
+Paths: `capacitor.config.ts`, `ios/`, `android/`, `src/platform/`, `public/privacy.html`,
+`public/support.html`, `public/CNAME`
 
 ## Role
 
-Ship the same Vite bundle to the App Store and Google Play. Capacitor 8 wraps
+Ship the same Vite tuner bundle to the App Store and Google Play. Capacitor 8 wraps
 `dist/` in a native binary; there is no second codebase and no native UI.
 
 ## Build pipeline
 
-| Command                | Effect                                               |
-| ---------------------- | ---------------------------------------------------- |
-| `npm run build`        | Web/PWA build: `base: '/anystring/'`, service worker |
-| `npm run build:native` | `CAP_BUILD=1`: `base: './'`, **no** service worker   |
-| `npm run cap:sync`     | Native build + `cap sync` into `ios/` and `android/` |
-| `npm run cap:ios`      | Sync, then open Xcode                                |
-| `npm run cap:android`  | Sync, then open Android Studio                       |
+| Command                | Effect                                                       |
+| ---------------------- | ------------------------------------------------------------ |
+| `npm run build`        | Web/PWA build: `base: '/'`, landing + `/app`, service worker |
+| `npm run build:native` | `CAP_BUILD=1`: Vite `root: app`, `base: './'`, no SW         |
+| `npm run cap:sync`     | Native build + `cap sync` into `ios/` and `android/`         |
+| `npm run cap:ios`      | Sync, then open Xcode                                        |
+| `npm run cap:android`  | Sync, then open Android Studio                               |
 
-`CAP_BUILD` matters because the shell serves from `capacitor://localhost`: the
-Pages sub-path would 404 and a service worker only adds stale-asset risk.
+`CAP_BUILD` uses `root: app` so the shell emits at `dist/index.html` with
+relative asset URLs for `capacitor://localhost`. Marketing pages are web-only.
 
 ## Toolchain
 
@@ -97,8 +98,9 @@ selecting an `AVAudioEngine` plugin that posts 8192-sample Float32 windows.
 - Apple App Privacy and Google Data Safety: **no data collected**, no tracking,
   no third-party sharing. Microphone audio is processed on-device and discarded.
 - Age rating: no objectionable content, ages 4+ / Everyone.
-- Privacy policy URL: `https://badkirill.github.io/anystring/privacy.html`
-  (source: `public/privacy.html`). Support URL: the repo issues page.
+- Privacy policy URL: `https://anystring.app/privacy.html`
+  (source: `public/privacy.html`). Support URL: `https://anystring.app/support.html`.
+  Marketing URL: `https://anystring.app/`.
 - Guideline 4.2 (minimum functionality): assets are bundled locally, the app runs
   fully offline with native icon and splash, and real-time pitch DSP is the
   substantive feature — say so in the review notes.

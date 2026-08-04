@@ -19,8 +19,8 @@ External Wiki sync is **not** run on push/PR. Manual
 
 ## Deploy (`deploy.yml`) — push to `master`
 
-1. Build Vite → Pages artifact (`base: /anystring/`)
-2. Deploy GitHub Pages → https://badkirill.github.io/anystring/
+1. Build Vite → Pages artifact (`base: /`, landing + `/app` tuner)
+2. Deploy GitHub Pages → https://anystring.app/
 3. Live UI smoke — `npm run test:e2e:live`
 
 ## Agent notes

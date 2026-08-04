@@ -20,7 +20,7 @@ Pushes to `master` also run the **Deploy** workflow:
 | Job                   | What it runs                                                         |
 | --------------------- | -------------------------------------------------------------------- |
 | Build (Vite)          | `npm run build` → upload Pages artifact                              |
-| Deploy (GitHub Pages) | Publish to https://badkirill.github.io/anystring/                    |
+| Deploy (GitHub Pages) | Publish to https://anystring.app/                                    |
 | UI check (live site)  | `npm run test:e2e:live` — Playwright smoke tests on the deployed URL |
 
 ## UI check after deploy
@@ -34,7 +34,7 @@ The **UI check (live site)** job is the automated equivalent of a Cursor browser
 Locally you can run the same check:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://badkirill.github.io npm run test:e2e:live
+PLAYWRIGHT_BASE_URL=https://anystring.app npm run test:e2e:live
 ```
 
 For interactive visual review in Cursor, use the **cursor-ide-browser** MCP (`browser_navigate`, `browser_snapshot`, `browser_take_screenshot`) against the live URL or `npm run dev`.

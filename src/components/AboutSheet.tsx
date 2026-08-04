@@ -1,14 +1,12 @@
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
+const SITE_URL = 'https://anystring.app'
 const REPO_URL = 'https://github.com/BadKirill/anystring'
 
 const LINKS = [
-  {
-    label: UI.aboutPrivacyLink,
-    href: 'https://badkirill.github.io/anystring/privacy.html',
-  },
-  { label: UI.aboutSupportLink, href: `${REPO_URL}/issues` },
+  { label: UI.aboutPrivacyLink, href: `${SITE_URL}/privacy.html` },
+  { label: UI.aboutSupportLink, href: `${SITE_URL}/support.html` },
   { label: UI.aboutSourceLink, href: REPO_URL },
 ]
 

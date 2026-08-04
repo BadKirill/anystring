@@ -2,9 +2,9 @@
 
 Free tuner for guitar and bass with **fully editable per-string tunings**.
 
-**Live app:** https://badkirill.github.io/anystring/ — open it on your phone and
-add it to the home screen to install. Deploys automatically from `master` via
-GitHub Actions (see [docs/CI.md](docs/CI.md)).
+**Live site:** https://anystring.app/ — open the tuner at
+[/app/](https://anystring.app/app/) on your phone and add it to the home screen.
+Deploys automatically from `master` via GitHub Actions (see [docs/CI.md](docs/CI.md)).
 
 Pick a preset (Standard, Drop D, Drop C#, Drop C, ...) or tap any string and set it
 to any note — for example G#1 D#2 A#2 F1 to play Meshuggah's Demiurge. Then play:

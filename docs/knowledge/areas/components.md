@@ -38,7 +38,7 @@ over without a jump — and without the black gap that used to sit between them.
 | `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                       |
 | `TextField.tsx`                                | Named input for save/rename                                      |
 | `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native    |
-| `AboutSheet.tsx`                               | Version, privacy summary, policy/support/source links            |
+| `AboutSheet.tsx`                               | Version, privacy summary; links to anystring.app privacy/support |
 | `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                      |
 | `strings.ts`                                   | **All** user-facing English strings (`UI`)                       |
 

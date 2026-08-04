@@ -85,7 +85,9 @@
         "ios/",
         "android/",
         "src/platform/",
-        "public/privacy.html"
+        "public/privacy.html",
+        "public/support.html",
+        "public/CNAME"
       ]
     },
     {

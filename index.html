@@ -2,57 +2,296 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0d1412" />
-    <meta name="application-name" content="Anystring" />
-    <meta name="apple-mobile-web-app-title" content="Anystring" />
     <meta
       name="description"
       content="Free tuner for guitar and bass with fully editable per-string tunings."
     />
-    <title>Anystring — guitar & bass tuner</title>
-    <!--
-      Inlined so the cover paints on the first frame. The native launch image is
-      the same mark on the same background, so the shell hands over to the web
-      layer without the black gap the bundle download used to leave behind.
-    -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <title>Anystring — custom guitar & bass tuner</title>
     <style>
-      #splash {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
+      :root {
+        --bg: #0d1412;
+        --surface: #16211d;
+        --surface-raised: #1d2b26;
+        --accent: #1ed760;
+        --in-tune: #3ce97b;
+        --muted: #5b6b64;
+        --text: #e8f2ec;
+        --gauge-arc: #23332c;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 50% 0%, #14201b 0%, var(--bg) 60%), var(--bg);
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      a:hover {
+        color: var(--in-tune);
+      }
+
+      /* —— Hero: one composition —— */
+
+      .hero {
+        min-height: 100dvh;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: radial-gradient(circle at 50% 0%, #14201b 0%, #0d1412 60%), #0d1412;
-        opacity: 1;
-        transition: opacity 240ms ease-out;
+        text-align: center;
+        padding: max(32px, env(safe-area-inset-top)) 24px
+          max(40px, env(safe-area-inset-bottom));
+        gap: 20px;
       }
 
-      #splash.splash-done {
+      .mark {
+        width: min(42vw, 220px);
+        height: min(42vw, 220px);
+        margin-bottom: 8px;
         opacity: 0;
-        pointer-events: none;
+        animation: rise 700ms ease-out 80ms forwards;
       }
 
-      /* Matches the native launch image, which scales the mark to 30% of the
-         screen height before the web layer takes over. */
-      .splash-mark {
-        width: 30vh;
-        height: 30vh;
-      }
-
-      .splash-needle {
+      .needle {
         transform-origin: 256px 336px;
         transform: rotate(18deg);
-        animation: splash-sweep 1.9s ease-in-out infinite alternate;
+        animation: sweep 1.9s ease-in-out infinite alternate;
       }
 
-      @keyframes splash-sweep {
+      .hub {
+        animation: hub-glow 2.4s ease-in-out infinite alternate;
+      }
+
+      .brand {
+        margin: 0;
+        color: var(--accent);
+        font-size: clamp(2.4rem, 10vw, 3.4rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        opacity: 0;
+        animation: rise 700ms ease-out 180ms forwards;
+      }
+
+      .headline {
+        margin: 0;
+        max-width: 18ch;
+        font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
+        opacity: 0;
+        animation: rise 700ms ease-out 280ms forwards;
+      }
+
+      .lede {
+        margin: 0;
+        max-width: 32rem;
+        color: #8ba396;
+        font-size: 1.05rem;
+        opacity: 0;
+        animation: rise 700ms ease-out 380ms forwards;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 8px;
+        opacity: 0;
+        animation: rise 700ms ease-out 480ms forwards;
+      }
+
+      .button-primary,
+      .button-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 12px 28px;
+        border-radius: 999px;
+        font: inherit;
+        font-weight: 600;
+        text-decoration: none;
+        transition:
+          filter 80ms ease,
+          transform 80ms ease;
+      }
+
+      .button-primary {
+        background: var(--accent);
+        color: #06130c;
+      }
+
+      .button-secondary {
+        background: var(--surface-raised);
+        color: var(--text);
+      }
+
+      .button-primary:hover,
+      .button-secondary:hover {
+        filter: brightness(1.08);
+        color: inherit;
+      }
+
+      .button-primary:active,
+      .button-secondary:active {
+        filter: brightness(0.82);
+        transform: scale(0.97);
+      }
+
+      /* —— Promise section —— */
+
+      .promise {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 72px 24px 48px;
+      }
+
+      .promise h2 {
+        margin: 0 0 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+
+      .promise-lead {
+        margin: 0 0 28px;
+        font-size: clamp(1.35rem, 4vw, 1.7rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+      }
+
+      .points {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .points li {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 16px 18px;
+        background: var(--surface);
+        border-radius: 16px;
+        border: 2px solid transparent;
+      }
+
+      .points li strong {
+        display: block;
+        margin-bottom: 2px;
+        font-weight: 600;
+      }
+
+      .points li span {
+        color: #8ba396;
+        font-size: 0.95rem;
+      }
+
+      .dot {
+        flex-shrink: 0;
+        width: 10px;
+        height: 10px;
+        margin-top: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 12px rgb(30 215 96 / 35%);
+      }
+
+      /* —— Trust —— */
+
+      .trust {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 24px 24px 72px;
+      }
+
+      .trust p {
+        margin: 0;
+        padding: 20px 18px;
+        background: var(--surface-raised);
+        border-radius: 16px;
+        color: #8ba396;
+        font-size: 0.98rem;
+      }
+
+      .trust strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* —— Footer —— */
+
+      .site-footer {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 0 24px max(48px, env(safe-area-inset-bottom));
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 28px;
+        border-top: 1px solid var(--gauge-arc);
+        padding-top: 28px;
+      }
+
+      .site-footer a {
+        font-size: 0.95rem;
+      }
+
+      .site-footer .muted {
+        color: var(--muted);
+        font-weight: 400;
+        margin-left: auto;
+      }
+
+      /* —— Motion —— */
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes sweep {
         from {
           transform: rotate(-20deg);
         }
@@ -61,35 +300,35 @@
         }
       }
 
-      .splash-word {
-        position: absolute;
-        top: calc(50% + 17vh);
-        color: #1ed760;
-        font-family:
-          'Inter',
-          system-ui,
-          -apple-system,
-          'Segoe UI',
-          sans-serif;
-        font-size: clamp(1.6rem, 8vw, 2.2rem);
-        font-weight: 700;
-        letter-spacing: -0.02em;
+      @keyframes hub-glow {
+        from {
+          fill: var(--accent);
+        }
+        to {
+          fill: var(--in-tune);
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        #splash {
-          transition: none;
+        .mark,
+        .brand,
+        .headline,
+        .lede,
+        .cta-row {
+          animation: none;
+          opacity: 1;
         }
 
-        .splash-needle {
+        .needle,
+        .hub {
           animation: none;
         }
       }
     </style>
   </head>
   <body>
-    <div id="splash">
-      <svg class="splash-mark" viewBox="0 0 512 512" aria-hidden="true">
+    <header class="hero">
+      <svg class="mark" viewBox="0 0 512 512" aria-hidden="true">
         <path
           d="M 116 336 A 148 148 0 0 1 396 336"
           fill="none"
@@ -98,7 +337,7 @@
           stroke-linecap="round"
         />
         <line
-          class="splash-needle"
+          class="needle"
           x1="256"
           y1="336"
           x2="256"
@@ -107,7 +346,7 @@
           stroke-width="22"
           stroke-linecap="round"
         />
-        <circle cx="256" cy="336" r="26" fill="#1ed760" />
+        <circle class="hub" cx="256" cy="336" r="26" fill="#1ed760" />
         <line
           x1="152"
           y1="418"
@@ -118,9 +357,68 @@
           stroke-linecap="round"
         />
       </svg>
-      <div class="splash-word">Anystring</div>
-    </div>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+      <p class="brand">Anystring</p>
+      <h1 class="headline">Any tuning. Every string.</h1>
+      <p class="lede">
+        Free guitar and bass tuner with fully editable per-string notes — Drop D, Drop C,
+        Drop B, or whatever you invent.
+      </p>
+
+      <div class="cta-row">
+        <a class="button-primary" href="/app/">Open tuner</a>
+        <a class="button-secondary" href="#why">Why Anystring</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="promise" id="why">
+        <h2>Why Anystring</h2>
+        <p class="promise-lead">
+          Most free tuners lock you into presets. Here every string is yours to edit.
+        </p>
+        <ul class="points">
+          <li>
+            <span class="dot" aria-hidden="true"></span>
+            <div>
+              <strong>Edit any string</strong>
+              <span>Tap a note, pick pitch and octave, save as My tunings.</span>
+            </div>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"></span>
+            <div>
+              <strong>Guitar and bass</strong>
+              <span
+                >Including low F1 — large analysis window, on-device pitch
+                detection.</span
+              >
+            </div>
+          </li>
+          <li>
+            <span class="dot" aria-hidden="true"></span>
+            <div>
+              <strong>Strings or Chromatic</strong>
+              <span>Target your tuning, or hear the nearest note live.</span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="trust">
+        <p>
+          <strong>Your mic stays on your device.</strong>
+          Audio is analysed in real time while you tune, never recorded, never uploaded.
+          No accounts, no ads, no tracking.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a href="/privacy.html">Privacy policy</a>
+      <a href="/support.html">Support</a>
+      <a href="https://github.com/BadKirill/anystring">Source</a>
+      <span class="muted">PWA · iOS · Android</span>
+    </footer>
   </body>
 </html>
