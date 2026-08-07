@@ -36,8 +36,8 @@
         letter-spacing: -0.02em;
       }
       h2 {
+        margin: 0 0 6px;
         font-size: 1.1rem;
-        margin-top: 32px;
       }
       a {
         color: var(--accent);
@@ -48,9 +48,16 @@
       }
       .card {
         margin-top: 24px;
-        padding: 18px 16px;
+        padding: 14px 16px 16px;
         background: var(--surface);
         border-radius: 16px;
+      }
+      .card p {
+        margin: 0;
+      }
+      .card .prompt {
+        margin: 20px 0 6px;
+        color: var(--muted);
       }
       .nav {
         margin-bottom: 28px;
@@ -77,14 +84,13 @@
       <p>
         <a href="mailto:support@anystring.app">support@anystring.app</a>
       </p>
+      <p class="prompt">Prefer an issue tracker?</p>
+      <h2>GitHub</h2>
+      <p>
+        <a href="https://github.com/BadKirill/anystring/issues"
+          >github.com/BadKirill/anystring/issues</a
+        >
+      </p>
     </div>
-
-    <h2>GitHub</h2>
-    <p>
-      Prefer an issue tracker?
-      <a href="https://github.com/BadKirill/anystring/issues"
-        >github.com/BadKirill/anystring/issues</a
-      >.
-    </p>
   </body>
 </html>
