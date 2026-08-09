@@ -1,0 +1,15 @@
+appId: com.badkirill.anystring
+name: Mic permission allowed → listening
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+      microphone: allow
+- extendedWaitUntil:
+    visible: 'Anystring'
+    timeout: 30000
+- tapOn: 'Start tuning'
+- extendedWaitUntil:
+    visible: 'Stop'
+    timeout: 15000

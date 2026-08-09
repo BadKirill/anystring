@@ -1,0 +1,32 @@
+appId: com.badkirill.anystring
+name: Native store screenshot pass (backup)
+---
+- launchApp:
+    clearState: true
+    permissions:
+      microphone: allow
+- extendedWaitUntil:
+    visible: 'Anystring'
+    timeout: 30000
+- takeScreenshot: native-01-idle
+- tapOn: 'Standard E.*'
+- extendedWaitUntil:
+    visible: 'Close'
+    timeout: 10000
+- takeScreenshot: native-02-presets
+- tapOn: 'Close'
+- tapOn: '1 E2'
+- tapOn: '1 E2'
+- extendedWaitUntil:
+    visible: 'Choose note'
+    timeout: 10000
+- takeScreenshot: native-03-note-picker
+- tapOn: 'Done'
+- tapOn: 'Chromatic'
+- takeScreenshot: native-04-chromatic
+- tapOn: 'Strings'
+- tapOn: 'Start tuning'
+- extendedWaitUntil:
+    visible: 'Stop'
+    timeout: 15000
+- takeScreenshot: native-05-listening

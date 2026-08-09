@@ -125,5 +125,13 @@ export function TuneDirectionHint(props: TuneDirectionHintProps) {
   if (view.tone === 'empty') {
     return <p className={hintClassName(view.tone)} aria-hidden="true" />
   }
-  return <p className={hintClassName(view.tone)}>{view.text}</p>
+  // role=alert exposes mic errors to Android WebView a11y (Maestro / TalkBack).
+  return (
+    <p
+      className={hintClassName(view.tone)}
+      role={view.tone === 'error' ? 'alert' : undefined}
+    >
+      {view.text}
+    </p>
+  )
 }

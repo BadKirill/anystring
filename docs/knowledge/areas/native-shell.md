@@ -105,13 +105,37 @@ selecting an `AVAudioEngine` plugin that posts 8192-sample Float32 windows.
   fully offline with native icon and splash, and real-time pitch DSP is the
   substantive feature — say so in the review notes.
 
+## Store screenshots
+
+Listing PNGs live in `store/screenshots/{ios,android}/` (see README there).
+Regenerate with `npm run screenshots:store` (Playwright device viewports + stub
+mic). Optional native pass: Maestro `.maestro/screenshots.yaml` after a debug
+install.
+
+## Native UI automation (Maestro)
+
+Maestro is the chosen Capacitor UI automation tool (not Appium/Detox). Flows under
+`.maestro/` exercise OS mic allow/deny and shell smoke. Pitch detection stays on
+Playwright stubs — see [testing.md](testing.md).
+
+| Script                            | Effect                                     |
+| --------------------------------- | ------------------------------------------ |
+| `npm run cap:build:ios-sim`       | Sync + `xcodebuild` Debug for Simulator    |
+| `npm run cap:build:android-debug` | Sync + `gradlew assembleDebug` (JDK 21)    |
+| `npm run test:e2e:native`         | `scripts/native-e2e.sh` build/install/test |
+
+First microphone prompt is the **system** dialog on `Start tuning` (no custom
+pre-permission UI). Denied path shows `UI.micDenied` and returns to Start.
+
 ## Open when
 
 Adding a Capacitor plugin, changing permissions or store metadata, bumping SDK
-targets or app version, regenerating icons, or debugging native-only audio.
+targets or app version, regenerating icons, debugging native-only audio, or
+updating Maestro / store screenshot pipelines.
 
 ## See also
 
 - [audio.md](audio.md) — the mic path the shell reuses
+- [testing.md](testing.md) — Playwright + Maestro + store screenshots
 - [tooling.md](tooling.md) — Vite config and npm scripts
 - [ci-cd.md](ci-cd.md) — web deploy; native builds are manual

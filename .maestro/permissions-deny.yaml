@@ -1,0 +1,27 @@
+appId: com.badkirill.anystring
+name: Mic permission denied → error copy (Android)
+# Android shows a system mic dialog even when RECORD_AUDIO starts denied.
+# Deny button label uses a curly apostrophe — prefer the resource id.
+# Error copy string is flaky in Android WebView a11y; assert not-listening instead.
+# Full denied copy is covered by Playwright e2e/mic-permissions.spec.ts.
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+      microphone: deny
+      android.permission.RECORD_AUDIO: deny
+      android.permission.MODIFY_AUDIO_SETTINGS: allow
+- extendedWaitUntil:
+    visible: 'Anystring'
+    timeout: 30000
+- tapOn: 'Start tuning'
+- extendedWaitUntil:
+    visible: '.*record audio.*'
+    timeout: 15000
+- tapOn:
+    id: 'com.android.permissioncontroller:id/permission_deny_button'
+- extendedWaitUntil:
+    visible: 'Start tuning'
+    timeout: 15000
+- assertNotVisible: 'Stop'

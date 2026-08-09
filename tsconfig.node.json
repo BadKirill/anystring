@@ -22,5 +22,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts", "capacitor.config.ts", "playwright.config.ts", "e2e"]
+  "include": [
+    "vite.config.ts",
+    "capacitor.config.ts",
+    "playwright.config.ts",
+    "playwright.store.config.ts",
+    "e2e"
+  ]
 }

@@ -1,0 +1,2 @@
+# Default app id for Capacitor iOS/Android shells (same bundle / applicationId).
+appId: com.badkirill.anystring

@@ -1,0 +1,31 @@
+appId: com.badkirill.anystring
+name: Reference tone tap + screen smoke
+---
+- launchApp:
+    clearState: true
+    permissions:
+      microphone: allow
+- extendedWaitUntil:
+    visible: 'Anystring'
+    timeout: 30000
+- tapOn: '1 E2'
+- extendedWaitUntil:
+    visible: 'Start tuning'
+    timeout: 10000
+- tapOn: 'Chromatic'
+- extendedWaitUntil:
+    visible: 'Chromatic'
+    timeout: 10000
+- tapOn: 'Strings'
+- extendedWaitUntil:
+    visible: 'Start tuning'
+    timeout: 15000
+# Preset sheet a11y is flaky in Android WebView — covered by Playwright.
+- tapOn: 'Start tuning'
+- extendedWaitUntil:
+    visible: 'Stop'
+    timeout: 15000
+- tapOn: 'Stop'
+- extendedWaitUntil:
+    visible: 'Start tuning'
+    timeout: 10000
