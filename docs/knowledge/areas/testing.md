@@ -28,7 +28,7 @@ Commands:
 - Local full: `npm run test:e2e` (`testIgnore: **/store/**`)
 - Live smoke: `npm run test:e2e:live` (or `PLAYWRIGHT_BASE_URL=...`)
 - Store screenshots: `npm run screenshots:store` → `store/screenshots/{ios,android}/`
-  (`playwright.store.config.ts`: iPhone 6.7" 430×932@3x, Android 1080×2340)
+  (`playwright.store.config.ts`: iPhone 6.7" 430×932@3x, Android 432×768@2.5 → 1080×1920)
 
 ## Native E2E (Maestro)
 

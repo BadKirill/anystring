@@ -6,17 +6,34 @@ import { APP_URL, setTestTone, stubMicrophone } from '../helpers'
 const A2_HZ = 110
 const A2_FLAT_HZ = 106
 const OUT_ROOT = path.join(process.cwd(), 'store', 'screenshots')
+/** Let layout / sheet animation settle before capturing. */
+const SETTLE_MS = 900
 
 function platformDir(): 'ios' | 'android' {
   const name = test.info().project.name
   return name.startsWith('ios') ? 'ios' : 'android'
 }
 
+/** Opaque sheet backdrop so the tuner UI does not bleed through store shots. */
+async function opaqueSheetBackdrop(page: Page): Promise<void> {
+  await page.addStyleTag({
+    content: '.overlay { background: rgb(0 0 0) !important; }',
+  })
+}
+
+async function settle(): Promise<void> {
+  await new Promise<void>((resolve) => {
+    setTimeout(resolve, SETTLE_MS)
+  })
+}
+
 async function shot(page: Page, basename: string): Promise<void> {
+  await settle()
   const dir = path.join(OUT_ROOT, platformDir())
   await page.screenshot({
     path: path.join(dir, `${basename}.png`),
     fullPage: false,
+    animations: 'disabled',
   })
 }
 
@@ -61,6 +78,7 @@ test.describe('store screenshots', () => {
     await expect(
       page.getByRole('heading', { name: 'Tunings', exact: true }),
     ).toBeVisible()
+    await opaqueSheetBackdrop(page)
     await shot(page, '05-presets')
   })
 
@@ -70,6 +88,7 @@ test.describe('store screenshots', () => {
     await stringButton.click()
     await stringButton.click()
     await expect(page.getByRole('heading', { name: 'Choose note' })).toBeVisible()
+    await opaqueSheetBackdrop(page)
     await shot(page, '06-note-picker')
   })
 

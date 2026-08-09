@@ -3,6 +3,10 @@ import { defineConfig } from '@playwright/test'
 /**
  * Store listing screenshots at App Store / Play Console phone sizes.
  * Run: npm run screenshots:store
+ *
+ * Android: phone CSS width (not 1080 CSS px — that left empty margins beside the
+ * 480px-capped app). Height is exactly 9:16 so Play gets 1080×1920 without the
+ * ultra-tall crop: 432×768 @2.5 → exact 1080×1920.
  */
 export default defineConfig({
   testDir: 'e2e/store',
@@ -31,8 +35,8 @@ export default defineConfig({
     {
       name: 'android-phone',
       use: {
-        viewport: { width: 1080, height: 2340 },
-        deviceScaleFactor: 1,
+        viewport: { width: 432, height: 768 },
+        deviceScaleFactor: 2.5,
         isMobile: true,
         hasTouch: true,
         launchOptions: {

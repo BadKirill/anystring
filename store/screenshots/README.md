@@ -2,10 +2,10 @@
 
 Phone listing assets for App Store Connect and Google Play.
 
-| Folder     | Logical size     | Notes                             |
-| ---------- | ---------------- | --------------------------------- |
-| `ios/`     | 1290×2796 (6.7") | Playwright viewport 430×932 @3x   |
-| `android/` | 1080×2340        | Playwright viewport 1080×2340 @1x |
+| Folder     | Logical size     | Notes                            |
+| ---------- | ---------------- | -------------------------------- |
+| `ios/`     | 1290×2796 (6.7") | Playwright viewport 430×932 @3x  |
+| `android/` | 1080×1920 (9:16) | Playwright viewport 432×768 @2.5 |
 
 Regenerate:
 
