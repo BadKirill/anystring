@@ -52,6 +52,11 @@ test.describe('tuning with the microphone', () => {
   })
 
   test('shows chromatic nearest-note guidance for the same tone', async ({ page }) => {
+    // Stay inside ±50¢ of A2 so chromatic nearest-note does not flip to G#2 / A#2
+    // (106 Hz and 114 Hz are nearer those neighbors than A2).
+    const chromaticFlatHz = 107.5
+    const chromaticSharpHz = 112.5
+
     await stubMicrophone(page, A2_HZ)
     await page.goto(APP_URL)
 
@@ -59,10 +64,10 @@ test.describe('tuning with the microphone', () => {
     await page.getByRole('button', { name: 'Start tuning' }).click()
     await expect(page.getByText('A2 · centered')).toBeVisible()
 
-    await setTestTone(page, A2_FLAT_HZ)
+    await setTestTone(page, chromaticFlatHz)
     await expect(page.getByText(/A2 · .+ · flat — tune up/)).toBeVisible()
 
-    await setTestTone(page, A2_SHARP_HZ)
+    await setTestTone(page, chromaticSharpHz)
     await expect(page.getByText(/A2 · .+ · sharp — tune down/)).toBeVisible()
   })
 
