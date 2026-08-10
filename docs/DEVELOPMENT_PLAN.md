@@ -34,6 +34,14 @@ Remaining:
   after that.
 - Developer accounts, signing, store listings, and submission.
 
+**E2E / store assets decision:** Playwright remains the deterministic web e2e
+layer (stub mic, permission error copy, reference-tone spy, chromatic/strings).
+**Maestro** is the chosen native UI automation for Capacitor iOS/Android
+simulators (OS mic allow/deny + shell smoke) — not Appium or Detox. Store phone
+screenshots are generated via `npm run screenshots:store` into
+`store/screenshots/`. Native pitch-on-simulator is not asserted; real-device mic
+verification stays manual.
+
 ## Idea review: is it worth building?
 
 Yes. GuitarTuna locks custom/editable tunings behind a paid subscription, and most free tuners only offer fixed presets. A free tuner where you type any note per string (e.g. G#-D#-A#-F for Meshuggah's Demiurge) fills a real gap for non-professional musicians.

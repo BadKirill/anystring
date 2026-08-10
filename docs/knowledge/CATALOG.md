@@ -36,7 +36,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 | Components   | `src/components/`             | React UI                                        |
 | State        | `src/state/`                  | `useTunerState` and helpers                     |
 | Storage      | `src/storage/`                | localStorage v2 + legacy migration              |
-| E2E          | `e2e/`                        | Playwright + synthetic mic                      |
+| E2E          | `e2e/`, `.maestro/`, `store/` | Playwright + Maestro + store screenshots        |
 | Docs         | `docs/`                       | Plan, CI, this knowledge tree                   |
 | Agent rules  | `AGENTS.md`, `.cursor/rules/` | Workflow + style                                |
 
@@ -47,7 +47,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 
 Vite, React 19, TypeScript strict, `vite-plugin-pwa`, Web Audio + AudioWorklet,
 `pitchy` (MPM), Capacitor 8 (iOS + Android shells), localStorage, Vitest,
-Playwright, ESLint (`typescript-eslint` strict + sonarjs), Prettier.
+Playwright, Maestro (native shell), ESLint (`typescript-eslint` strict + sonarjs), Prettier.
 
 Not in scope: Redux/Zustand/TanStack Query, backend, cloud sync, RN (unless
 planned), alternate pitch libs, CSS frameworks, other test runners.

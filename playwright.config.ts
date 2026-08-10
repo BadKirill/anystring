@@ -5,6 +5,7 @@ const isLiveCheck = liveBaseUrl !== undefined && liveBaseUrl !== ''
 
 export default defineConfig({
   testDir: 'e2e',
+  testIgnore: ['**/store/**'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test'
 declare global {
   interface Window {
     __setTestToneHz?: (hz: number) => void
+    __referenceTonePlayCount?: number
   }
 }
 
@@ -57,6 +58,56 @@ export async function stubMicrophoneDenied(page: Page): Promise<void> {
     navigator.mediaDevices.getUserMedia = () =>
       Promise.reject(new DOMException('Permission denied', 'NotAllowedError'))
   })
+}
+
+/** Simulates a device with no microphone hardware. */
+export async function stubMicrophoneMissing(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('Requested device not found', 'NotFoundError'))
+  })
+}
+
+/** Simulates a generic getUserMedia failure (busy device, etc.). */
+export async function stubMicrophoneUnavailable(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('Could not start audio source', 'AbortError'))
+  })
+}
+
+/**
+ * Counts AudioBufferSourceNode.start() calls used by reference-tone playback.
+ * Oscillator mic stubs do not use buffer sources, so the count stays tone-only.
+ * Call before page.goto().
+ */
+export async function spyReferenceTone(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    window.__referenceTonePlayCount = 0
+    const proto = AudioBufferSourceNode.prototype
+    // Bound call keeps the instance `this` when the method is stored unbound.
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- re-applied via call.bind
+    const originalStart = Function.prototype.call.bind(proto.start) as (
+      thisArg: AudioBufferSourceNode,
+      when?: number,
+      offset?: number,
+      duration?: number,
+    ) => void
+    proto.start = function startPatched(
+      this: AudioBufferSourceNode,
+      when?: number,
+      offset?: number,
+      duration?: number,
+    ): void {
+      window.__referenceTonePlayCount = (window.__referenceTonePlayCount ?? 0) + 1
+      originalStart(this, when, offset, duration)
+    }
+  })
+}
+
+/** Current number of reference-tone buffer plays recorded by spyReferenceTone. */
+export async function referenceTonePlayCount(page: Page): Promise<number> {
+  return page.evaluate(() => window.__referenceTonePlayCount ?? 0)
 }
 
 export const APP_URL = '/app/'

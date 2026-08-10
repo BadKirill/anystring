@@ -16,6 +16,11 @@ dist-ssr
 test-results
 playwright-report
 
+# Native local builds (cap:build:ios-sim / gradlew)
+ios/build/
+android/.gradle/
+android/**/build/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

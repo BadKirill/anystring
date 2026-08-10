@@ -53,9 +53,10 @@ Do not introduce libraries, frameworks, or patterns outside this list without an
 | Persistence     | **`localStorage`** via `src/storage/` — no backend                              |
 | Unit tests      | **Vitest**                                                                      |
 | E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)             |
+| Native UI e2e   | **Maestro** (Capacitor iOS/Android simulators — permissions + shell smoke)      |
 | Lint / format   | **ESLint** (`typescript-eslint` strict, `eslint-plugin-sonarjs`) + **Prettier** |
 
-**Not in scope:** Redux, Zustand, TanStack Query, backend/API, cloud sync, React Native (unless planned later), alternative pitch libraries, CSS frameworks (Tailwind, MUI, etc.), or test runners other than Vitest/Playwright.
+**Not in scope:** Redux, Zustand, TanStack Query, backend/API, cloud sync, React Native (unless planned later), alternative pitch libraries, CSS frameworks (Tailwind, MUI, etc.), or test runners other than Vitest/Playwright/Maestro.
 
 ## Architecture
 
@@ -88,11 +89,13 @@ src/storage/        — localStorage persistence
 
 ## Testing
 
-| Command                 | Purpose                                                                      |
-| ----------------------- | ---------------------------------------------------------------------------- |
-| `npm run check`         | Lint + format check + typecheck + unit tests — run before every PR           |
-| `npm run test:e2e`      | Full Playwright suite against local dev server                               |
-| `npm run test:e2e:live` | Smoke tests against production (`PLAYWRIGHT_BASE_URL=https://anystring.app`) |
+| Command                     | Purpose                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `npm run check`             | Lint + format check + typecheck + unit tests — run before every PR           |
+| `npm run test:e2e`          | Full Playwright suite against local dev server                               |
+| `npm run test:e2e:live`     | Smoke tests against production (`PLAYWRIGHT_BASE_URL=https://anystring.app`) |
+| `npm run test:e2e:native`   | Maestro flows on iOS Simulator / Android emulator (`scripts/native-e2e.sh`)  |
+| `npm run screenshots:store` | Phone store listing PNGs → `store/screenshots/`                              |
 
 CI runs five separate GitHub checks on every push/PR; deploy to GitHub Pages runs an additional live UI check. See [docs/CI.md](docs/CI.md).
 
