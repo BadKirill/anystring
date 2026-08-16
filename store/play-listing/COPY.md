@@ -70,9 +70,9 @@ Anystring — бесплатный тюнер для гитары и баса с
 
 ## Graphic assets (файлы в store/play-listing/)
 
-| Asset | File | Size |
-| ----- | ---- | ---- |
-| App icon | `icon-512.png` | 512×512 PNG |
+| Asset           | File                           | Size         |
+| --------------- | ------------------------------ | ------------ |
+| App icon        | `icon-512.png`                 | 512×512 PNG  |
 | Feature graphic | `feature-graphic-1024x500.png` | 1024×500 PNG |
 
 Phone screenshots: `store/screenshots/android/` (01–07).
