@@ -2,6 +2,7 @@ import { pitchToFrequency, type Pitch } from '../core/music'
 import { normalizePluck, synthesizePluck } from '../core/signal/pluckedTone'
 import { reassertAudioSession } from '../platform/audioSession'
 import { onAppResume } from './appResume'
+import { resumeAudioContext, STALE_BACKGROUND_MS } from './audioContextResume'
 import { suppressPitchDetection } from './pitchGate'
 
 const NOTE_DURATION_S = 1.4
@@ -9,14 +10,24 @@ const SUPPRESS_MS = NOTE_DURATION_S * 1000 + 300
 const OUTPUT_GAIN = 0.88
 
 let context: AudioContext | null = null
+let contextStale = false
 let stopTimer: ReturnType<typeof setTimeout> | null = null
 let nodes: AudioNode[] = []
 const bufferCache = new Map<number, AudioBuffer>()
 
+function releaseContext(): void {
+  clearPlayback()
+  const previous = context
+  context = null
+  bufferCache.clear()
+  if (previous && previous.state !== 'closed') {
+    void previous.close().catch(() => undefined)
+  }
+}
+
 function getContext(): AudioContext {
   if (context?.state === 'closed') {
-    context = null
-    bufferCache.clear()
+    releaseContext()
   }
   context ??= new AudioContext()
   return context
@@ -80,20 +91,16 @@ function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): A
 /** Resumes or recreates the shared AudioContext after idle suspend. */
 export async function warmReferenceAudio(): Promise<void> {
   reassertAudioSession()
-  let ctx = getContext()
-  if (ctx.state === 'suspended') {
-    await ctx.resume()
+  if (contextStale) {
+    contextStale = false
+    releaseContext()
   }
-  if (ctx.state === 'running') {
+  if (await resumeAudioContext(getContext())) {
     return
   }
   // Long idle / iOS can leave a context that will not resume — rebuild.
-  context = null
-  bufferCache.clear()
-  ctx = getContext()
-  if (ctx.state === 'suspended') {
-    await ctx.resume()
-  }
+  releaseContext()
+  await resumeAudioContext(getContext())
 }
 
 /** Plays a short plucked-string reference tone for ear comparison. */
@@ -102,9 +109,7 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
   await warmReferenceAudio()
 
   const ctx = getContext()
-  if (ctx.state !== 'running') {
-    await ctx.resume()
-  }
+  await resumeAudioContext(ctx)
 
   const frequency = pitchToFrequency(pitch)
   const source = ctx.createBufferSource()
@@ -124,7 +129,14 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
   stopTimer = setTimeout(clearPlayback, NOTE_DURATION_S * 1000 + 80)
 }
 
-onAppResume(() => {
+onAppResume(({ hiddenMs }) => {
+  // After a long background the OS tears the audio hardware down: the context
+  // can report "running" and stay silent forever. Rebuilding it needs the user
+  // gesture of the next tap, so only mark it and let warmReferenceAudio swap it.
+  if (hiddenMs >= STALE_BACKGROUND_MS) {
+    contextStale = true
+    return
+  }
   // Re-arm Web Audio after iOS suspends contexts in the background. A failed
   // resume is fine — the next user tap rebuilds via playReferencePitch.
   void warmReferenceAudio().catch(() => undefined)

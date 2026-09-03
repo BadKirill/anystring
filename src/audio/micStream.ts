@@ -6,6 +6,7 @@
  * a bass tuner depends on. Never re-enable them.
  */
 import workletUrl from './capture-processor.ts?worker&url'
+import { resumeAudioContext } from './audioContextResume'
 
 export type MicError = 'permission-denied' | 'no-microphone' | 'unavailable'
 
@@ -42,8 +43,13 @@ function isDocumentHidden(): boolean {
   return typeof document !== 'undefined' && document.visibilityState === 'hidden'
 }
 
-function contextIsRunning(context: AudioContext): boolean {
-  return context.state === 'running'
+/** A muted or ended track keeps delivering silence — the graph must be rebuilt. */
+function tracksAreLive(stream: MediaStream): boolean {
+  const tracks = stream.getAudioTracks()
+  return (
+    tracks.length > 0 &&
+    tracks.every((track) => track.readyState === 'live' && !track.muted)
+  )
 }
 
 /**
@@ -55,18 +61,11 @@ function watchContextSuspend(context: AudioContext, onDead: () => void): () => v
     if (context.state !== 'suspended' || isDocumentHidden()) {
       return
     }
-    void context
-      .resume()
-      .then(() => {
-        if (!contextIsRunning(context) && !isDocumentHidden()) {
-          onDead()
-        }
-      })
-      .catch(() => {
-        if (!isDocumentHidden()) {
-          onDead()
-        }
-      })
+    void resumeAudioContext(context).then((ok) => {
+      if (!ok && !isDocumentHidden()) {
+        onDead()
+      }
+    })
   }
   context.addEventListener('statechange', onState)
   return () => {
@@ -88,19 +87,14 @@ async function openMicStream(): Promise<MediaStream> {
   }
 }
 
-async function resumeContext(context: AudioContext): Promise<boolean> {
-  if (context.state === 'closed') {
+async function resumeSession(
+  stream: MediaStream,
+  context: AudioContext,
+): Promise<boolean> {
+  if (!tracksAreLive(stream)) {
     return false
   }
-  if (contextIsRunning(context)) {
-    return true
-  }
-  try {
-    await context.resume()
-  } catch {
-    return false
-  }
-  return contextIsRunning(context)
+  return resumeAudioContext(context)
 }
 
 function attachLostHandlers(
@@ -135,7 +129,7 @@ export async function startMicSession(
 ): Promise<MicSession> {
   const stream = await openMicStream()
   const context = new AudioContext()
-  await context.resume()
+  await resumeAudioContext(context)
   await context.audioWorklet.addModule(workletUrl)
 
   const source = context.createMediaStreamSource(stream)
@@ -151,7 +145,7 @@ export async function startMicSession(
 
   return {
     sampleRate: context.sampleRate,
-    resume: () => resumeContext(context),
+    resume: () => resumeSession(stream, context),
     stop: () => {
       detachLost()
       worklet.port.onmessage = null

@@ -33,20 +33,21 @@ windows (~250 ms) before publishing a frequency so a single hum spike cannot fla
 
 ## Pipeline modules
 
-| File                   | Role                                                                       |
-| ---------------------- | -------------------------------------------------------------------------- |
-| `micStream.ts`         | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet |
-| `capture-processor.ts` | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)      |
-| `pitchDetector.ts`     | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                       |
-| `micWindowHandler.ts`  | Median of last 5; reject jumps &gt; 150¢ unless stable                     |
-| `micSessionControl.ts` | `beginMicSession` / `stopMicSession` (status + teardown)                   |
-| `useMicControls.ts`    | Hook wiring start/stop + resume                                            |
-| `usePitch.ts`          | Public `{ status, error, frequency, clarity, start, stop }`                |
-| `pitchState.ts`        | `PitchStatus`, `PitchState`                                                |
-| `pitchGate.ts`         | Suppress detection while reference tone plays                              |
-| `referenceTone.ts`     | Plucked reference note (uses `core/signal/pluckedTone`)                    |
-| `appResume.ts`         | Visibility / pageshow resume handlers                                      |
-| `worklet-types.d.ts`   | Worklet typings                                                            |
+| File                    | Role                                                                       |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `micStream.ts`          | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet |
+| `capture-processor.ts`  | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)      |
+| `pitchDetector.ts`      | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                       |
+| `micWindowHandler.ts`   | Median of last 5; reject jumps &gt; 150¢ unless stable                     |
+| `micSessionControl.ts`  | `beginMicSession` / `stopMicSession` (status + teardown)                   |
+| `useMicControls.ts`     | Hook wiring start/stop + resume                                            |
+| `usePitch.ts`           | Public `{ status, error, frequency, clarity, start, stop }`                |
+| `pitchState.ts`         | `PitchStatus`, `PitchState`                                                |
+| `pitchGate.ts`          | Suppress detection while reference tone plays                              |
+| `referenceTone.ts`      | Plucked reference note (uses `core/signal/pluckedTone`)                    |
+| `appResume.ts`          | Visibility / pageshow resume handlers, reports `hiddenMs`                  |
+| `audioContextResume.ts` | Bounded `resume()` + `STALE_BACKGROUND_MS` rebuild threshold               |
+| `worklet-types.d.ts`    | Worklet typings                                                            |
 
 ## Session lifecycle
 
@@ -62,6 +63,24 @@ iOS always suspends `AudioContext` while backgrounded. That is **not** treated
 as a dead stream: `watchContextSuspend` / track `ended` ignore events while
 `document.visibilityState === 'hidden'`. On foreground, `resumeMicSession`
 soft-resumes the existing context; only a failed resume rebuilds the session.
+
+## Long background (10+ min)
+
+The OS reclaims the audio hardware while the app idles in the background, and
+the old graph never produces sound again — `resume()` may even resolve into a
+`running` context that stays silent, or leave its promise pending forever.
+
+- Every `resume()` goes through `resumeAudioContext` (1.5 s cap, returns whether
+  the context actually runs). Nothing awaits a bare `AudioContext.resume()`.
+- `appResume` measures `hiddenMs` (Infinity for bfcache restores) and passes it
+  to handlers.
+- Past `STALE_BACKGROUND_MS` (30 s) the graph is rebuilt, not resumed: the mic
+  restarts via `beginMicSession`, and `referenceTone` marks its context stale so
+  the next tap closes it and builds a fresh one under user activation.
+- `releaseContext` closes the discarded context — Safari allows only a handful
+  of live `AudioContext`s, so leaking them eventually kills playback outright.
+- `MicSession.resume` fails fast when tracks are `ended` or `muted`, which is how
+  iOS reports capture the system took away.
 
 `useMicControls`: Start always rebuilds the session (dead/suspended sessions can
 leave a non-null ref). Unmount stop is separate from resume registration so

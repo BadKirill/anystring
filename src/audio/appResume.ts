@@ -1,8 +1,16 @@
-type ResumeHandler = () => void | Promise<void>
+export interface AppResumeInfo {
+  /** How long the app stayed in the background, Infinity after a bfcache restore. */
+  readonly hiddenMs: number
+}
+
+type ResumeHandler = (info: AppResumeInfo) => void | Promise<void>
+
+const UNKNOWN_HIDDEN_MS = Number.POSITIVE_INFINITY
 
 const handlers = new Set<ResumeHandler>()
 let installed = false
 let resumePending = false
+let hiddenSinceMs: number | null = null
 
 /** Registers a callback that runs when the app returns from the background. */
 export function onAppResume(handler: ResumeHandler): () => void {
@@ -12,18 +20,31 @@ export function onAppResume(handler: ResumeHandler): () => void {
   }
 }
 
-async function notifyResume(): Promise<void> {
+async function notifyResume(info: AppResumeInfo): Promise<void> {
   if (resumePending) {
     return
   }
   resumePending = true
   try {
     for (const handler of handlers) {
-      await handler()
+      await handler(info)
     }
   } finally {
     resumePending = false
   }
+}
+
+function markHidden(): void {
+  hiddenSinceMs ??= Date.now()
+}
+
+function takeHiddenMs(): number {
+  if (hiddenSinceMs === null) {
+    return 0
+  }
+  const hiddenMs = Date.now() - hiddenSinceMs
+  hiddenSinceMs = null
+  return hiddenMs
 }
 
 /** Installs document listeners for foreground resume (required on iOS PWAs). */
@@ -34,14 +55,19 @@ export function installAppResumeHandlers(): void {
   installed = true
 
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      void notifyResume()
+    if (document.visibilityState === 'hidden') {
+      markHidden()
+      return
     }
+    void notifyResume({ hiddenMs: takeHiddenMs() })
   })
+
+  window.addEventListener('pagehide', markHidden)
 
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-      void notifyResume()
+      hiddenSinceMs = null
+      void notifyResume({ hiddenMs: UNKNOWN_HIDDEN_MS })
     }
   })
 }
