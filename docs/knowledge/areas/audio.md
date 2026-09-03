@@ -82,6 +82,12 @@ the old graph never produces sound again — `resume()` may even resolve into a
 - `MicSession.resume` fails fast when tracks are `ended` or `muted`, which is how
   iOS reports capture the system took away.
 
+Platform note: measured on an Android emulator (Pixel 6 AVD) the graph survives
+10 minutes of background untouched — the context stays `running`, `currentTime`
+keeps advancing, tracks stay `live`, and both tone and mic work without a
+rebuild. The teardown is a WKWebView behaviour, so on Android the rebuild is
+precautionary (it still covers real devices, which cut background mic capture).
+
 `useMicControls`: Start always rebuilds the session (dead/suspended sessions can
 leave a non-null ref). Unmount stop is separate from resume registration so
 dependency churn does not kill the mic.
