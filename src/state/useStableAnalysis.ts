@@ -48,10 +48,6 @@ function stabilizeAnalysis<T extends CentsDirection>(
   }
 }
 
-/**
- * Stabilizes needle display for string analysis.
- * Pass `mode: 'passthrough'` for chromatic — latch-to-center would hide live cents.
- */
 export function useStableAnalysis<T extends CentsDirection>(
   rawAnalysis: T | null,
   clarity: number | null,

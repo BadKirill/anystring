@@ -8,7 +8,6 @@ interface SwipeableRowProps {
   onEdit?: () => void
 }
 
-/** Row that reveals delete (swipe left) or edit (swipe right) actions. */
 export function SwipeableRow({ children, onDelete, onEdit }: SwipeableRowProps) {
   const { offset, onTouchStart, onTouchMove, onTouchEnd, reset } = useSwipeOffset(
     !!onDelete,

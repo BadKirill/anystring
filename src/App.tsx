@@ -28,7 +28,7 @@ function gaugeCentsFor(analysis: DisplayAnalysis | null): number | null {
   if (!analysis) {
     return null
   }
-  // Strings: snap needle to center when in-tune. Chromatic: always show live cents.
+
   if (analysis.kind === 'string' && analysis.direction === 'in-tune') {
     return 0
   }
@@ -130,8 +130,6 @@ function ModeControls({ state }: { state: TunerState }) {
         className={auto ? 'chip chip-selected' : 'chip'}
         aria-pressed={auto}
         onClick={() => {
-          // Always clear manual target — even if already Auto, so a stuck
-          // highlight from a previous detection cannot leave the UI feeling dead.
           state.selectString(null)
         }}
       >

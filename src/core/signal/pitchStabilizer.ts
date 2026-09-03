@@ -101,7 +101,6 @@ function applyOutOfTuneReading(
   }
 }
 
-/** Smooths pluck attack and decay so an in-tune string stays centered on the gauge. */
 export function stabilizePitchDisplay(
   state: PitchStabilizerState,
   input: StabilizePitchInput,

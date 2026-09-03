@@ -88,7 +88,6 @@ function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): A
   return lowPass
 }
 
-/** Resumes or recreates the shared AudioContext after idle suspend. */
 export async function warmReferenceAudio(): Promise<void> {
   reassertAudioSession()
   if (contextStale) {
@@ -98,12 +97,10 @@ export async function warmReferenceAudio(): Promise<void> {
   if (await resumeAudioContext(getContext())) {
     return
   }
-  // Long idle / iOS can leave a context that will not resume — rebuild.
   releaseContext()
   await resumeAudioContext(getContext())
 }
 
-/** Plays a short plucked-string reference tone for ear comparison. */
 export async function playReferencePitch(pitch: Pitch): Promise<void> {
   clearPlayback()
   await warmReferenceAudio()
@@ -130,14 +127,9 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
 }
 
 onAppResume(({ hiddenMs }) => {
-  // After a long background the OS tears the audio hardware down: the context
-  // can report "running" and stay silent forever. Rebuilding it needs the user
-  // gesture of the next tap, so only mark it and let warmReferenceAudio swap it.
   if (hiddenMs >= STALE_BACKGROUND_MS) {
     contextStale = true
     return
   }
-  // Re-arm Web Audio after iOS suspends contexts in the background. A failed
-  // resume is fine — the next user tap rebuilds via playReferencePitch.
   void warmReferenceAudio().catch(() => undefined)
 })

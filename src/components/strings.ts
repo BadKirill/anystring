@@ -1,4 +1,3 @@
-/** All user-facing text, centralized for future RU/EN localization. */
 export const UI = {
   appName: 'Anystring',
   screenStrings: 'Strings',

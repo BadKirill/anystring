@@ -14,7 +14,6 @@ function tuningOf(specs: [NoteName, number][]): Tuning {
   }
 }
 
-/** Meshuggah — Demiurge 4-string bass tuning, lowest first. */
 const DEMIURGE = tuningOf([
   ['F', 1],
   ['A#', 1],

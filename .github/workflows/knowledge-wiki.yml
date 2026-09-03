@@ -1,5 +1,3 @@
-# Manual wiki sync only (no commit/PR automation).
-# Local docs/knowledge/ is the General Wiki snapshot used for indexing.
 name: Knowledge wiki
 
 on:

@@ -13,7 +13,6 @@ function rms(samples: Float32Array, from: number, to: number): number {
   return Math.sqrt(sum / (to - from))
 }
 
-/** Deterministic noise so decay assertions do not flake in CI. */
 function seedRandom(seed: number): void {
   let state = seed
   vi.spyOn(Math, 'random').mockImplementation(() => {

@@ -51,7 +51,7 @@ test.describe('reference tone playback', () => {
     await waitForTonePlays(page, 1)
 
     await expect(page.getByRole('button', { name: 'Stop' })).toBeVisible()
-    // Pitch gate may briefly clear analysis; listening session must stay up.
+
     await expect(page.getByText(/String 2 \(A2\):|Play/)).toBeVisible()
   })
 })

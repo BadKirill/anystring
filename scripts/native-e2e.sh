@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Build Capacitor debug binaries, install on a booted simulator/emulator, run Maestro.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -25,7 +24,6 @@ run_maestro() {
     maestro test "${platform_flag[@]}" "${MAESTRO_ARGS[@]}"
     return
   fi
-  # iOS Simulator cannot reliably deny WKWebView mic — skip deny there.
   if [[ "$label" == "ios" ]]; then
     maestro test "${platform_flag[@]}" \
       .maestro/permissions-allow.yaml \
@@ -56,7 +54,6 @@ boot_ios_simulator() {
     xcrun simctl boot "$udid" >/dev/null 2>&1 || true
     xcrun simctl bootstatus "$udid" -b >/dev/null 2>&1
   fi
-  # Only the UDID goes to stdout — callers capture it for simctl install.
   printf '%s\n' "$udid"
 }
 

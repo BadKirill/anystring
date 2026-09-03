@@ -14,7 +14,6 @@ function shouldShow(): boolean {
   return isIos && !isStandalone && localStorage.getItem(DISMISSED_KEY) === null
 }
 
-/** Tells iOS Safari users how to install the PWA (no automatic prompt on iOS). */
 export function InstallHint() {
   const [visible, setVisible] = useState(shouldShow)
 

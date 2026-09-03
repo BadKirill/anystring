@@ -98,7 +98,6 @@ function analysisMode(screen: TunerScreen): 'stabilize' | 'passthrough' {
   return screen === 'chromatic' ? 'passthrough' : 'stabilize'
 }
 
-/** Single source of truth for the tuner screen. */
 export function useTunerState(): TunerState {
   const [screen, setScreen] = useState<TunerScreen>('strings')
   const [tuning, setTuning] = useState<Tuning>(

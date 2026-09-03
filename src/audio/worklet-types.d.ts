@@ -1,5 +1,3 @@
-/** Minimal AudioWorklet global scope typings (not included in lib.dom). */
-
 declare abstract class AudioWorkletProcessor {
   readonly port: MessagePort
   abstract process(

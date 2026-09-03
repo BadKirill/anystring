@@ -89,7 +89,7 @@ export function useMicControls(setState: Dispatch<SetStateAction<PitchState>>): 
 
   const start = useCallback(() => {
     activeRef.current = true
-    // Always rebuild: a suspended/dead session can leave sessionRef set while silent.
+
     restart()
   }, [restart])
 
