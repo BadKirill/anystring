@@ -9,7 +9,6 @@ interface SheetProps {
   tall?: boolean
 }
 
-/** Bottom sheet modal: locks page scroll, scrolls its own content, footer clear of screen edge. */
 export function Sheet({ children, onClose, tall }: SheetProps) {
   useLockBodyScroll()
 

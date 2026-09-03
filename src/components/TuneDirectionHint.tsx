@@ -41,7 +41,6 @@ function stringDirectionText(analysis: StringAnalysis, tuning: Tuning): string {
   return `${label}: ${analysis.direction === 'tighten' ? UI.tighten : UI.loosen}`
 }
 
-/** Nearest note + live cents — not “correct note”, just how to center the needle. */
 function chromaticDirectionText(analysis: ChromaticAnalysis): string {
   const note = formatPitch(analysis.pitch)
   if (analysis.direction === 'in-tune') {
@@ -125,7 +124,7 @@ export function TuneDirectionHint(props: TuneDirectionHintProps) {
   if (view.tone === 'empty') {
     return <p className={hintClassName(view.tone)} aria-hidden="true" />
   }
-  // role=alert exposes mic errors to Android WebView a11y (Maestro / TalkBack).
+
   return (
     <p
       className={hintClassName(view.tone)}

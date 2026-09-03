@@ -20,7 +20,6 @@ name: Reference tone tap + screen smoke
 - extendedWaitUntil:
     visible: 'Start tuning'
     timeout: 15000
-# Preset sheet a11y is flaky in Android WebView — covered by Playwright.
 - tapOn: 'Start tuning'
 - extendedWaitUntil:
     visible: 'Stop'

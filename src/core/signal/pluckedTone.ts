@@ -1,7 +1,3 @@
-/**
- * Karplus-Strong plucked-string synthesis (pure TS).
- * Feeds shaped noise into a delay loop with averaging low-pass.
- */
 export function synthesizePluck(
   frequency: number,
   sampleRate: number,
@@ -33,7 +29,6 @@ export function synthesizePluck(
   return output
 }
 
-/** Mixes noise with a brief fundamental burst so the pluck feels more acoustic. */
 function seedDelayLine(line: Float32Array, frequency: number, sampleRate: number): void {
   for (let i = 0; i < line.length; i += 1) {
     const t = i / sampleRate
@@ -53,7 +48,6 @@ function dampingFor(frequency: number): number {
   return 0.9988
 }
 
-/** Normalizes peak amplitude so every note is similarly loud. */
 export function normalizePluck(samples: Float32Array, targetPeak = 0.85): Float32Array {
   let peak = 0
   for (const sample of samples) {

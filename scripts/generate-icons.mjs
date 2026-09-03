@@ -1,7 +1,3 @@
-// Renders public/icon.svg into every raster the PWA and the native shells need.
-// Native outputs overwrite the placeholders Capacitor scaffolds, and reuse the
-// sizes already in the projects so re-running after `cap add` stays correct.
-// Run with: node scripts/generate-icons.mjs
 import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -12,9 +8,9 @@ const BACKGROUND = '#0d1412'
 
 const source = await readFile(new URL('public/icon.svg', ROOT), 'utf8')
 const svg = Buffer.from(source)
-// iOS and Android mask the corners themselves; a baked-in radius double-rounds.
+
 const squareSvg = Buffer.from(source.replace(' rx="112"', ''))
-// Adaptive-icon foregrounds and splash art sit on their own background layer.
+
 const glyphSvg = Buffer.from(source.replace(/<rect[^>]*\/>\s*/, ''))
 
 const path = (rel) => fileURLToPath(new URL(rel, ROOT))
@@ -54,7 +50,6 @@ async function round(size) {
     .toBuffer()
 }
 
-// Android reserves the outer third of an adaptive foreground for masking.
 const foreground = (size) => centered(size, size, '#00000000', Math.round(size * 0.66))
 
 const splash = (width, height) =>

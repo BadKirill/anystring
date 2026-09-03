@@ -10,7 +10,6 @@ const LINKS = [
   { label: UI.aboutSourceLink, href: REPO_URL },
 ]
 
-/** Version, privacy summary, and store-required links. */
 export function AboutSheet({ onClose }: { onClose: () => void }) {
   return (
     <Sheet onClose={onClose}>

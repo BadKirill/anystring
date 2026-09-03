@@ -1,4 +1,3 @@
-# Builds and deploys to GitHub Pages on master, then checks the live UI.
 name: Deploy
 
 on:

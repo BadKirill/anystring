@@ -16,11 +16,7 @@
       content="Free tuner for guitar and bass with fully editable per-string tunings."
     />
     <title>Anystring — guitar & bass tuner</title>
-    <!--
-      Inlined so the cover paints on the first frame. The native launch image is
-      the same mark on the same background, so the shell hands over to the web
-      layer without the black gap the bundle download used to leave behind.
-    -->
+
     <style>
       #splash {
         position: fixed;
@@ -44,8 +40,6 @@
         pointer-events: none;
       }
 
-      /* Matches the native launch image, which scales the mark to 30% of the
-         screen height before the web layer takes over. */
       .splash-mark {
         width: 30vh;
         height: 30vh;

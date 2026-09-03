@@ -12,8 +12,6 @@ const { version } = JSON.parse(readFileSync('./package.json', 'utf8')) as {
   version: string
 }
 
-// Capacitor serves from capacitor://localhost: relative base, no service worker.
-// Native uses `root: app` so the shell lands at dist/index.html (not dist/app/).
 const isNativeBuild = process.env.CAP_BUILD === '1'
 
 const pwa = VitePWA({
@@ -48,7 +46,6 @@ const pwa = VitePWA({
   },
 })
 
-// https://vite.dev/config/
 export default defineConfig({
   root: isNativeBuild ? resolve(root, 'app') : root,
   publicDir: isNativeBuild ? resolve(root, 'public') : 'public',
@@ -67,8 +64,6 @@ export default defineConfig({
         },
   },
   test: {
-    // Config file lives at repo root; Vitest must resolve tests from there
-    // even when CAP_BUILD is unset (root stays the repo).
     root,
     exclude: [...configDefaults.exclude, 'e2e/**'],
   },

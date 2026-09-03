@@ -1,10 +1,3 @@
-/**
- * Microphone capture pipeline: getUserMedia -> AudioWorklet ring buffer.
- *
- * The three DSP constraints are deliberately disabled: echo cancellation,
- * noise suppression and AGC all filter or distort the low-frequency content
- * a bass tuner depends on. Never re-enable them.
- */
 import workletUrl from './capture-processor.ts?worker&url'
 
 export type MicError = 'permission-denied' | 'no-microphone' | 'unavailable'
@@ -21,7 +14,7 @@ export class MicStreamError extends Error {
 
 export interface MicSession {
   readonly sampleRate: number
-  /** Soft-resume after iOS suspends the context; false if the graph is dead. */
+
   resume(): Promise<boolean>
   stop(): void
 }
@@ -46,10 +39,6 @@ function contextIsRunning(context: AudioContext): boolean {
   return context.state === 'running'
 }
 
-/**
- * iOS suspends AudioContext whenever the app backgrounds. That is normal —
- * only treat a suspend as fatal while the UI is visible and resume fails.
- */
 function watchContextSuspend(context: AudioContext, onDead: () => void): () => void {
   const onState = (): void => {
     if (context.state !== 'suspended' || isDocumentHidden()) {
@@ -125,10 +114,6 @@ function attachLostHandlers(
   }
 }
 
-/**
- * Requests the microphone and streams 8192-sample windows to onWindow.
- * Must be called from a user gesture handler (mobile autoplay policy).
- */
 export async function startMicSession(
   onWindow: (samples: Float32Array, sampleRate: number) => void,
   onStreamLost?: () => void,

@@ -2,7 +2,6 @@ import { playReferencePitch, warmReferenceAudio } from '../audio/referenceTone'
 import { formatPitch, pitchToMidi, type Pitch } from '../core/music'
 import type { Tuning } from '../core/tunings'
 
-/** Visual string thickness in px: lower pitch = thicker string, like real gauges. */
 function stringThickness(pitch: Pitch): number {
   const midi = pitchToMidi(pitch)
   const E4_MIDI = 64
@@ -31,9 +30,9 @@ function StringGauge({ pitch, active }: { pitch: Pitch; active: boolean }) {
 
 interface StringListProps {
   tuning: Tuning
-  /** String currently detected or targeted; highlighted. */
+
   activeIndex: number | null
-  /** Manually targeted string (null = auto mode). */
+
   manualIndex: number | null
   onSelect: (index: number | null) => void
   onEdit: (index: number) => void

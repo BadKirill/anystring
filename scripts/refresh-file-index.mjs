@@ -1,8 +1,5 @@
 #!/usr/bin/env node
-/**
- * Regenerates the auto-managed inventory block inside file-index.md from the
- * filesystem. Manual prose outside the markers is preserved.
- */
+
 import { execFileSync } from 'node:child_process'
 import {
   mkdtempSync,

@@ -4,10 +4,8 @@ import { installAppResumeHandlers } from './audio/appResume'
 import './index.css'
 import App from './App.tsx'
 
-/** Kept in step with the fade in the inline splash styles in index.html. */
 const SPLASH_FADE_MS = 240
 
-/** Hands the launch cover over to the app once React has painted a frame. */
 function dismissSplash(): void {
   const splash = document.getElementById('splash')
   if (!splash) {

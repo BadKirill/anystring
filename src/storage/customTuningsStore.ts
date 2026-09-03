@@ -13,7 +13,6 @@ const ACTIVE_KEY = 'anystring.v2.activeTuning'
 const LIST_SESSION_KEY = 'anystring.v2.customTunings.session'
 const ACTIVE_SESSION_KEY = 'anystring.v2.activeTuning.session'
 
-// Pre-rename keys: users who installed the PWA as "anytune" keep their tunings.
 const LEGACY_LIST_KEYS = ['anytune.v2.customTunings', 'anytune.customTunings']
 const LEGACY_LIST_SESSION_KEYS = [
   'anytune.v2.customTunings.session',
@@ -62,7 +61,6 @@ function normalizeString(value: unknown): Tuning['strings'][number] | null {
   return { pitch: { note: pitch.note as Pitch['note'], octave } }
 }
 
-/** Repairs common storage glitches before a tuning is used. */
 export function normalizeTuning(value: unknown): Tuning | null {
   if (!value || typeof value !== 'object') {
     return null
@@ -106,7 +104,7 @@ function writeRaw(storage: Storage, key: string, value: unknown): void {
   try {
     storage.setItem(key, JSON.stringify(value))
   } catch {
-    // Storage may be blocked on some mobile browsers until a user gesture.
+    return
   }
 }
 
@@ -270,12 +268,10 @@ function activeTuningId(): string | null {
   return null
 }
 
-/** All user-saved custom tunings from storage. */
 export function readCustomTunings(): Tuning[] {
   return readTuningList()
 }
 
-/** Saves or replaces one custom tuning and marks it active. */
 export function saveCustomTuning(tuning: Tuning): void {
   const stored = ensureStoredId(tuning)
   if (!belongsInMyTunings(stored)) {
@@ -286,7 +282,6 @@ export function saveCustomTuning(tuning: Tuning): void {
   writeActiveTuning(stored)
 }
 
-/** Removes a saved custom tuning. */
 export function deleteCustomTuning(id: string): void {
   if (activeTuningId() === id) {
     clearActiveTuning()
@@ -294,7 +289,6 @@ export function deleteCustomTuning(id: string): void {
   writeTuningList(readTuningListSourcesOnly().filter((entry) => entry.id !== id))
 }
 
-/** Renames a saved custom tuning. */
 export function renameCustomTuning(id: string, name: string): Tuning | null {
   const existing = readTuningList().find((entry) => entry.id === id)
   if (!existing) {
@@ -313,7 +307,6 @@ function readStoredActive(storage: Storage, key: string): Tuning | null {
   return ensureStoredId(parsed)
 }
 
-/** Last selected custom tuning, if any. */
 export function readActiveTuning(): Tuning | null {
   for (const storage of [localStorage, sessionStorage]) {
     const active =
@@ -331,7 +324,6 @@ export function readActiveTuning(): Tuning | null {
   return legacy
 }
 
-/** Remembers which custom tuning is currently selected. */
 export function writeActiveTuning(tuning: Tuning): void {
   const stored = ensureStoredId(tuning)
   if (!belongsInMyTunings(stored)) {
@@ -342,7 +334,6 @@ export function writeActiveTuning(tuning: Tuning): void {
   writeRaw(sessionStorage, ACTIVE_SESSION_KEY, stored)
 }
 
-/** Ensures a tuning is written to the saved list (e.g. before opening the picker). */
 export function persistTuningToList(tuning: Tuning): void {
   if (!appearsInPicker(tuning)) {
     return
@@ -350,7 +341,6 @@ export function persistTuningToList(tuning: Tuning): void {
   ensureListed(ensureStoredId(tuning))
 }
 
-/** Merges stored tunings with the live selection for the picker. */
 export function mergePickerTunings(saved: Tuning[], active: Tuning): Tuning[] {
   persistTuningToList(active)
   const entries = [...saved]
@@ -360,7 +350,6 @@ export function mergePickerTunings(saved: Tuning[], active: Tuning): Tuning[] {
   return dedupeTuningList(entries)
 }
 
-/** Adds or replaces one tuning in an in-memory list. */
 export function upsertInList(list: Tuning[], tuning: Tuning): Tuning[] {
   const stored = ensureStoredId(tuning)
   if (!appearsInPicker(stored)) {

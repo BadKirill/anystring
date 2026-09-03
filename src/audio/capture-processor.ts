@@ -1,13 +1,5 @@
-/**
- * AudioWorklet processor that accumulates mic samples into a ring buffer and
- * posts the latest window to the main thread at a fixed interval.
- *
- * Runs on the audio rendering thread — keep it allocation-free in process().
- * Loaded as a module via audioWorklet.addModule(), not imported by the app.
- */
-
 const WINDOW_SIZE = 8192
-const POST_INTERVAL_FRAMES = 4096 // ~85 ms at 48 kHz
+const POST_INTERVAL_FRAMES = 4096
 
 class CaptureProcessor extends AudioWorkletProcessor {
   private readonly ring = new Float32Array(WINDOW_SIZE)
@@ -37,7 +29,6 @@ class CaptureProcessor extends AudioWorkletProcessor {
     this.filled = Math.min(this.filled + samples.length, WINDOW_SIZE)
   }
 
-  /** Returns the ring buffer unrolled into chronological order. */
   private snapshot(): Float32Array {
     const out = new Float32Array(WINDOW_SIZE)
     const tail = WINDOW_SIZE - this.writeIndex
