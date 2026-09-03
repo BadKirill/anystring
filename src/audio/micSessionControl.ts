@@ -15,7 +15,7 @@ export interface SessionRefs {
   active: { current: boolean }
   session: { current: MicSession | null }
   recent: { current: number[] }
-  /** Bumps on every begin so stale getUserMedia promises cannot win. */
+
   generation: { current: number }
 }
 
@@ -38,7 +38,7 @@ export function beginMicSession(
   refs.session.current?.stop()
   refs.session.current = null
   setState({ ...IDLE_STATE, status: 'starting' })
-  // play-and-record before getUserMedia so WKWebView keeps input routed.
+
   setAudioSessionMode('capture')
   startMicSession(handleWindow, () => {
     if (document.visibilityState === 'hidden') {
@@ -59,7 +59,7 @@ export function beginMicSession(
       if (isStale(refs, generation)) {
         return
       }
-      // Stop auto-resume loops: a failed start must not hammer getUserMedia.
+
       refs.active.current = false
       const reason = error instanceof MicStreamError ? error.reason : 'unavailable'
       setAudioSessionMode('playback')
@@ -68,7 +68,6 @@ export function beginMicSession(
   )
 }
 
-/** Soft-resume an existing session after foregrounding; false if rebuild needed. */
 export async function resumeMicSession(refs: SessionRefs): Promise<boolean> {
   const session = refs.session.current
   if (!refs.active.current || !session) {
@@ -91,6 +90,6 @@ export function stopMicSession(
   setState(IDLE_STATE)
   refs.session.current?.stop()
   refs.session.current = null
-  // WebKit hands the session back to Ambient here under the silent switch.
+
   setAudioSessionMode('playback')
 }

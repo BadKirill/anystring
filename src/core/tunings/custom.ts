@@ -7,7 +7,6 @@ export const DRAFT_TUNING_ID = 'custom-draft'
 
 const PRESET_IDS = new Set(PRESET_TUNINGS.map((preset) => preset.id))
 
-/** True when the user has saved a custom tuning (current or legacy id). */
 export function isSavedCustomTuning(tuning: Tuning): boolean {
   if (isDraftTuning(tuning)) {
     return false
@@ -22,7 +21,6 @@ export function isDraftTuning(tuning: Tuning): boolean {
   return tuning.id === DRAFT_TUNING_ID
 }
 
-/** True when the tuning still matches a built-in preset (id, name, and pitches). */
 export function isUnmodifiedPreset(tuning: Tuning): boolean {
   const preset = PRESET_TUNINGS.find((entry) => entry.id === tuning.id)
   if (!preset) {
@@ -37,7 +35,6 @@ export function isUnmodifiedPreset(tuning: Tuning): boolean {
   })
 }
 
-/** True when the tuning should appear under My tunings (saved custom or edited preset). */
 export function belongsInMyTunings(tuning: Tuning): boolean {
   if (isDraftTuning(tuning)) {
     return false
@@ -48,7 +45,6 @@ export function belongsInMyTunings(tuning: Tuning): boolean {
   return !isUnmodifiedPreset(tuning)
 }
 
-/** Picker should always show the live selection when it is not a stock preset. */
 export function appearsInPicker(tuning: Tuning): boolean {
   return belongsInMyTunings(tuning)
 }

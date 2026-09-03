@@ -4,7 +4,6 @@ const handlers = new Set<ResumeHandler>()
 let installed = false
 let resumePending = false
 
-/** Registers a callback that runs when the app returns from the background. */
 export function onAppResume(handler: ResumeHandler): () => void {
   handlers.add(handler)
   return () => {
@@ -26,7 +25,6 @@ async function notifyResume(): Promise<void> {
   }
 }
 
-/** Installs document listeners for foreground resume (required on iOS PWAs). */
 export function installAppResumeHandlers(): void {
   if (installed) {
     return

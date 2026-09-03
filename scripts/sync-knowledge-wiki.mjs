@@ -1,10 +1,5 @@
 #!/usr/bin/env node
-/**
- * Explicit GitHub Wiki mirror (manual / workflow_dispatch only).
- * Ordinary indexing uses local docs/knowledge/ — do not run this unless asked.
- * After running: read-back the remote wiki and confirm to the user.
- * Source of truth stays in the main repo.
- */
+
 import { execFileSync } from 'node:child_process'
 import {
   existsSync,
@@ -32,14 +27,12 @@ function wikiRemoteUrl() {
   return `https://github.com/${WIKI_SLUG}`
 }
 
-/** Stable wiki page names for awkward filenames. */
 const PAGE_NAME_OVERRIDES = {
   'ci-cd.md': 'CI-CD.md',
   'patterns-and-rules.md': 'Patterns-And-Rules.md',
   'file-index.md': 'File-Index.md',
 }
 
-/** Wiki pages we manage; anything else .md (except kept) is removed on sync. */
 const KEEP_WIKI_FILES = new Set(['_Footer.md'])
 
 function run(cmd, args, cwd) {
@@ -77,9 +70,7 @@ function sourceBlobUrl(sourceRel) {
         '',
       ),
     )
-  } catch {
-    // origin/HEAD unset; main() tries to fix
-  }
+  } catch {}
   candidates.push(runCapture('git', ['rev-parse', '--abbrev-ref', 'HEAD']))
   for (const branch of candidates) {
     try {
@@ -87,9 +78,7 @@ function sourceBlobUrl(sourceRel) {
         quiet: true,
       })
       return `${REPO}/blob/${branch}/${sourceRel}`
-    } catch {
-      // try next candidate
-    }
+    } catch {}
   }
   return null
 }
@@ -257,7 +246,7 @@ function commitAndPush(wikiDir) {
 
 function main() {
   ensureKnowledgePresent()
-  // Prefer origin/HEAD for banner branch detection
+
   try {
     runCapture('git', ['rev-parse', '--abbrev-ref', 'origin/HEAD'])
   } catch {

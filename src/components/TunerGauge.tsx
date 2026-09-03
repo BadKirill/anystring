@@ -2,12 +2,11 @@ const GAUGE_RANGE_CENTS = 50
 const NEEDLE_MAX_DEGREES = 60
 
 interface TunerGaugeProps {
-  /** Cents offset to display, clamped to +-50; null parks the needle. */
   cents: number | null
-  /** Label under the needle: target string note, or detected nearest note. */
+
   targetLabel: string | null
   inTune: boolean
-  /** Chromatic: show ♭ / # marks so center reads as detected pitch offset. */
+
   chromatic?: boolean
 }
 

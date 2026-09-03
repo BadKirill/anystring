@@ -6,7 +6,6 @@ interface TextFieldProps {
   'aria-label'?: string
 }
 
-/** Text input with a clear button, shared sizing and style across the app. */
 export function TextField({
   value,
   placeholder,

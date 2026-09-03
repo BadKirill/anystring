@@ -25,7 +25,6 @@ function clampOffset(value: number, hasDelete: boolean, hasEdit: boolean): numbe
   return Math.min(maxRight, Math.max(maxLeft, value))
 }
 
-/** Touch-driven horizontal offset for swipe-to-reveal rows. */
 export function useSwipeOffset(hasDelete: boolean, hasEdit: boolean) {
   const [offset, setOffset] = useState(0)
   const startX = useRef(0)

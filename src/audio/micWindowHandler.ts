@@ -5,7 +5,7 @@ import { detectPitch, frequencyJumpCents } from './pitchDetector'
 import type { PitchState } from './pitchState'
 
 const MEDIAN_WINDOW = 5
-/** Require a few agreeing windows so a single WKWebView hum spike cannot flash. */
+
 const MIN_CONFIRM_READINGS = 3
 const MAX_JUMP_CENTS = 150
 

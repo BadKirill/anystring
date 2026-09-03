@@ -8,9 +8,7 @@ import { UI } from './strings'
 const OCTAVES = [0, 1, 2, 3, 4, 5, 6]
 
 function preview(pitch: Pitch): void {
-  playReferencePitch(pitch).catch(() => {
-    // A blocked audio context must not stop the user from picking a note.
-  })
+  playReferencePitch(pitch).catch(() => undefined)
 }
 
 interface NotePickerProps {
@@ -50,7 +48,6 @@ export function NotePicker({ initial, onConfirm, onClose }: NotePickerProps) {
   const [note, setNote] = useState<NoteName>(initial.note)
   const [octave, setOctave] = useState<number>(initial.octave)
 
-  // Sound every pick so the target is audible while the tuning is still open.
   const pickNote = (next: NoteName) => {
     setNote(next)
     preview({ note: next, octave })

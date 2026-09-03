@@ -1,15 +1,5 @@
 #!/usr/bin/env node
-/**
- * Explicit Notion Wiki mirror (manual / workflow_dispatch only).
- * Ordinary indexing must NOT call this — local docs/knowledge/ is the base.
- * After running: read-back the Notion parent page and confirm to the user.
- *
- * Requires:
- *   NOTION_API_KEY   — integration token with access to the parent page
- *   NOTION_PARENT_ID — default: official Anytune Wiki page id
- *
- * Never commit the token.
- */
+
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -245,7 +235,6 @@ function loadEntries() {
   for (const [rel, label, isJson] of ORDER) {
     const abs = join(KNOWLEDGE, rel)
     if (!existsSync(abs)) {
-      // native-shell may be missing on older trees — skip quietly
       console.warn(`skip missing ${rel}`)
       continue
     }
@@ -258,7 +247,7 @@ function loadEntries() {
     }
     entries.push({ label, markdown })
   }
-  // Include any extra area pages not in ORDER
+
   const areasDir = join(KNOWLEDGE, 'areas')
   const known = new Set(ORDER.map(([rel]) => rel))
   for (const file of readdirSync(areasDir)

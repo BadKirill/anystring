@@ -11,7 +11,6 @@ import {
 const SAMPLE_RATE = 48000
 const WINDOW_SIZE = 8192
 
-/** Synthesizes a decaying plucked-string-like tone with a few harmonics. */
 function pluckedTone(frequency: number, gain = 1): Float32Array {
   const samples = new Float32Array(WINDOW_SIZE)
   for (let i = 0; i < WINDOW_SIZE; i += 1) {

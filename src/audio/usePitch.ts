@@ -5,7 +5,6 @@ import { useMicControls } from './useMicControls'
 
 export type { PitchState, PitchStatus } from './pitchState'
 
-/** Starts/stops the mic pipeline and exposes a smoothed pitch reading. */
 export function usePitch(): PitchState & { start: () => void; stop: () => void } {
   const [state, setState] = useState<PitchState>({
     status: 'idle',

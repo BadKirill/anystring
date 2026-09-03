@@ -6,7 +6,7 @@ import { APP_URL, setTestTone, stubMicrophone } from '../helpers'
 const A2_HZ = 110
 const A2_FLAT_HZ = 106
 const OUT_ROOT = path.join(process.cwd(), 'store', 'screenshots')
-/** Let layout / sheet animation settle before capturing. */
+
 const SETTLE_MS = 900
 
 function platformDir(): 'ios' | 'android' {
@@ -14,7 +14,6 @@ function platformDir(): 'ios' | 'android' {
   return name.startsWith('ios') ? 'ios' : 'android'
 }
 
-/** Opaque sheet backdrop so the tuner UI does not bleed through store shots. */
 async function opaqueSheetBackdrop(page: Page): Promise<void> {
   await page.addStyleTag({
     content: '.overlay { background: rgb(0 0 0) !important; }',

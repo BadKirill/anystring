@@ -1,7 +1,5 @@
 #!/usr/bin/env node
-/**
- * Validates the repo-local knowledge graph stays consistent with the codebase.
- */
+
 import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'

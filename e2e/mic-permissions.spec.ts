@@ -47,7 +47,6 @@ test.describe('microphone permission and hardware errors', () => {
   test('recovers to listening when the mic becomes available on retry', async ({
     page,
   }) => {
-    // First navigation uses a deny stub; after reload we install a working stub.
     await stubMicrophoneDenied(page)
     await page.goto(APP_URL)
     await page.getByRole('button', { name: 'Start tuning' }).click()

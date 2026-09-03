@@ -14,7 +14,6 @@ function preset(
   return { id, name, instrument, strings: pitches(specs) }
 }
 
-/** Built-in tunings, lowest string first. */
 export const PRESET_TUNINGS: Tuning[] = [
   preset('guitar-standard', 'Standard E', 'guitar', [
     ['E', 2],

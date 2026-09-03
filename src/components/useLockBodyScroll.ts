@@ -1,11 +1,5 @@
 import { useEffect } from 'react'
 
-/**
- * Prevents the page behind a modal sheet from scrolling while mounted.
- *
- * Avoid `position: fixed` on body — on iOS WKWebView it desyncs the visual
- * viewport from hit-testing, so buttons look tappable but receive no clicks.
- */
 export function useLockBodyScroll(): void {
   useEffect(() => {
     const { style } = document.body

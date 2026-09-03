@@ -31,7 +31,7 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      // Complexity budget (complexipy/ruff equivalents)
+
       'sonarjs/cognitive-complexity': ['error', 10],
       complexity: ['error', 10],
       'max-lines-per-function': [
@@ -42,7 +42,6 @@ export default tseslint.config(
     },
   },
   {
-    // src/core must stay portable: pure TS, no React/DOM/platform code
     files: ['src/core/**/*.ts'],
     rules: {
       'no-restricted-imports': [
@@ -70,7 +69,6 @@ export default tseslint.config(
     },
   },
   {
-    // Test files may exceed function-length limits (describe blocks)
     files: ['**/*.test.ts', '**/*.test.tsx', 'e2e/**/*.ts'],
     rules: {
       'max-lines-per-function': 'off',
