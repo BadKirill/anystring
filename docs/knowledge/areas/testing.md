@@ -12,16 +12,17 @@ Tags: `test`, `vitest`, `playwright`, `e2e`, `maestro`
 
 ## E2E (Playwright — web / deterministic audio)
 
-| File                            | Focus                                                                  |
-| ------------------------------- | ---------------------------------------------------------------------- |
-| `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers |
-| `e2e/smoke.spec.ts`             | Deployed/live smoke                                                    |
-| `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                             |
-| `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                    |
-| `e2e/reference-tone.spec.ts`    | String tap + note picker buffer plays; listening stays up              |
-| `e2e/custom-tuning.spec.ts`     | Edit/save custom                                                       |
-| `e2e/stop-tuning.spec.ts`       | Stop listening                                                         |
-| `e2e/store/screenshots.spec.ts` | Store listing PNGs (not in default `test:e2e`)                         |
+| File                            | Focus                                                                   |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers  |
+| `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
+| `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |
+| `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                     |
+| `e2e/reference-tone.spec.ts`    | String tap + note picker buffer plays; listening stays up               |
+| `e2e/background-resume.spec.ts` | Tone + mic recovery after a 10-minute background (`stubLongBackground`) |
+| `e2e/custom-tuning.spec.ts`     | Edit/save custom                                                        |
+| `e2e/stop-tuning.spec.ts`       | Stop listening                                                          |
+| `e2e/store/screenshots.spec.ts` | Store listing PNGs (not in default `test:e2e`)                          |
 
 Commands:
 

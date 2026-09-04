@@ -9,6 +9,7 @@ import {
 } from 'react'
 
 import { onAppResume } from './appResume'
+import { STALE_BACKGROUND_MS } from './audioContextResume'
 import {
   beginMicSession,
   resumeMicSession,
@@ -34,8 +35,12 @@ function useMicResume(
   restartRef: RefObject<() => void>,
 ): void {
   useEffect(() => {
-    return onAppResume(() => {
+    return onAppResume(({ hiddenMs }) => {
       if (!activeRef.current) {
+        return
+      }
+      if (hiddenMs >= STALE_BACKGROUND_MS) {
+        restartRef.current()
         return
       }
       void resumeMicSession(getRefs()).then((ok) => {

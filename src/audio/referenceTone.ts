@@ -2,6 +2,7 @@ import { pitchToFrequency, type Pitch } from '../core/music'
 import { normalizePluck, synthesizePluck } from '../core/signal/pluckedTone'
 import { reassertAudioSession } from '../platform/audioSession'
 import { onAppResume } from './appResume'
+import { resumeAudioContext, STALE_BACKGROUND_MS } from './audioContextResume'
 import { suppressPitchDetection } from './pitchGate'
 
 const NOTE_DURATION_S = 1.4
@@ -9,14 +10,24 @@ const SUPPRESS_MS = NOTE_DURATION_S * 1000 + 300
 const OUTPUT_GAIN = 0.88
 
 let context: AudioContext | null = null
+let contextStale = false
 let stopTimer: ReturnType<typeof setTimeout> | null = null
 let nodes: AudioNode[] = []
 const bufferCache = new Map<number, AudioBuffer>()
 
+function releaseContext(): void {
+  clearPlayback()
+  const previous = context
+  context = null
+  bufferCache.clear()
+  if (previous && previous.state !== 'closed') {
+    void previous.close().catch(() => undefined)
+  }
+}
+
 function getContext(): AudioContext {
   if (context?.state === 'closed') {
-    context = null
-    bufferCache.clear()
+    releaseContext()
   }
   context ??= new AudioContext()
   return context
@@ -79,20 +90,15 @@ function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): A
 
 export async function warmReferenceAudio(): Promise<void> {
   reassertAudioSession()
-  let ctx = getContext()
-  if (ctx.state === 'suspended') {
-    await ctx.resume()
+  if (contextStale) {
+    contextStale = false
+    releaseContext()
   }
-  if (ctx.state === 'running') {
+  if (await resumeAudioContext(getContext())) {
     return
   }
-
-  context = null
-  bufferCache.clear()
-  ctx = getContext()
-  if (ctx.state === 'suspended') {
-    await ctx.resume()
-  }
+  releaseContext()
+  await resumeAudioContext(getContext())
 }
 
 export async function playReferencePitch(pitch: Pitch): Promise<void> {
@@ -100,9 +106,7 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
   await warmReferenceAudio()
 
   const ctx = getContext()
-  if (ctx.state !== 'running') {
-    await ctx.resume()
-  }
+  await resumeAudioContext(ctx)
 
   const frequency = pitchToFrequency(pitch)
   const source = ctx.createBufferSource()
@@ -122,6 +126,10 @@ export async function playReferencePitch(pitch: Pitch): Promise<void> {
   stopTimer = setTimeout(clearPlayback, NOTE_DURATION_S * 1000 + 80)
 }
 
-onAppResume(() => {
+onAppResume(({ hiddenMs }) => {
+  if (hiddenMs >= STALE_BACKGROUND_MS) {
+    contextStale = true
+    return
+  }
   void warmReferenceAudio().catch(() => undefined)
 })

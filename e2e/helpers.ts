@@ -4,6 +4,7 @@ declare global {
   interface Window {
     __setTestToneHz?: (hz: number) => void
     __referenceTonePlayCount?: number
+    __simulateBackground?: (hiddenMs: number) => Promise<void>
   }
 }
 
@@ -93,6 +94,74 @@ export async function spyReferenceTone(page: Page): Promise<void> {
 
 export async function referenceTonePlayCount(page: Page): Promise<number> {
   return page.evaluate(() => window.__referenceTonePlayCount ?? 0)
+}
+
+export async function stubLongBackground(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const live: AudioContext[] = []
+    const dead = new WeakSet<AudioContext>()
+    let clockOffsetMs = 0
+    let hidden = false
+
+    const realNow = Date.now.bind(Date)
+    Date.now = () => realNow() + clockOffsetMs
+
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => (hidden ? 'hidden' : 'visible'),
+    })
+
+    const BaseAudioContext = window.AudioContext
+    const proto = BaseAudioContext.prototype
+    /* eslint-disable @typescript-eslint/unbound-method -- re-applied via call.bind */
+    const originalResume = Function.prototype.call.bind(proto.resume) as (
+      thisArg: AudioContext,
+    ) => Promise<void>
+    const originalSuspend = Function.prototype.call.bind(proto.suspend) as (
+      thisArg: AudioContext,
+    ) => Promise<void>
+    /* eslint-enable @typescript-eslint/unbound-method */
+
+    proto.resume = function resumePatched(this: AudioContext): Promise<void> {
+      if (dead.has(this)) {
+        return new Promise<void>(() => undefined)
+      }
+      return originalResume(this)
+    }
+
+    window.AudioContext = class TrackedAudioContext extends BaseAudioContext {
+      constructor(options?: AudioContextOptions) {
+        super(options)
+        live.push(this)
+      }
+    }
+
+    const setHidden = (next: boolean) => {
+      hidden = next
+      document.dispatchEvent(new Event('visibilitychange'))
+    }
+
+    window.__simulateBackground = async (hiddenMs: number) => {
+      setHidden(true)
+      for (const context of live.splice(0)) {
+        dead.add(context)
+        if (context.state !== 'closed') {
+          await originalSuspend(context)
+        }
+      }
+      clockOffsetMs += hiddenMs
+      setHidden(false)
+    }
+  })
+}
+
+export async function simulateBackground(page: Page, hiddenMs: number): Promise<void> {
+  await page.evaluate(async (ms: number) => {
+    if (!window.__simulateBackground) {
+      throw new Error('Background stub is not active')
+    }
+    await window.__simulateBackground(ms)
+  }, hiddenMs)
 }
 
 export const APP_URL = '/app/'
