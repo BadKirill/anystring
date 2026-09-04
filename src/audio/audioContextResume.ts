@@ -1,6 +1,5 @@
 const RESUME_TIMEOUT_MS = 1500
 
-/** Background time after which an audio graph is assumed dead and gets rebuilt. */
 export const STALE_BACKGROUND_MS = 30_000
 
 export interface ResumableContext {
@@ -29,11 +28,6 @@ async function resumeWithinTimeout(
   }
 }
 
-/**
- * Resumes a context and reports whether it really runs. iOS can leave the
- * resume() promise pending forever after a long background, which would
- * deadlock every caller awaiting it — so the wait is always bounded.
- */
 export async function resumeAudioContext(
   context: ResumableContext,
   timeoutMs = RESUME_TIMEOUT_MS,

@@ -1,5 +1,4 @@
 export interface AppResumeInfo {
-  /** How long the app stayed in the background, Infinity after a bfcache restore. */
   readonly hiddenMs: number
 }
 

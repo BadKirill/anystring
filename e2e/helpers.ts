@@ -96,11 +96,6 @@ export async function referenceTonePlayCount(page: Page): Promise<number> {
   return page.evaluate(() => window.__referenceTonePlayCount ?? 0)
 }
 
-/**
- * Emulates iOS after a long background: every AudioContext alive at that moment
- * is suspended for good — its resume() promise never settles — and the wall
- * clock jumps forward. Call before page.goto(), drive with simulateBackground().
- */
 export async function stubLongBackground(page: Page): Promise<void> {
   await page.addInitScript(() => {
     const live: AudioContext[] = []
@@ -118,7 +113,6 @@ export async function stubLongBackground(page: Page): Promise<void> {
 
     const BaseAudioContext = window.AudioContext
     const proto = BaseAudioContext.prototype
-    // Bound calls keep the instance `this` when the methods are stored unbound.
     /* eslint-disable @typescript-eslint/unbound-method -- re-applied via call.bind */
     const originalResume = Function.prototype.call.bind(proto.resume) as (
       thisArg: AudioContext,
@@ -161,7 +155,6 @@ export async function stubLongBackground(page: Page): Promise<void> {
   })
 }
 
-/** Backgrounds the app for hiddenMs of simulated time (needs stubLongBackground). */
 export async function simulateBackground(page: Page, hiddenMs: number): Promise<void> {
   await page.evaluate(async (ms: number) => {
     if (!window.__simulateBackground) {

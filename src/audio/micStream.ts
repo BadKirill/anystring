@@ -36,7 +36,6 @@ function isDocumentHidden(): boolean {
   return typeof document !== 'undefined' && document.visibilityState === 'hidden'
 }
 
-/** A muted or ended track keeps delivering silence — the graph must be rebuilt. */
 function tracksAreLive(stream: MediaStream): boolean {
   const tracks = stream.getAudioTracks()
   return (

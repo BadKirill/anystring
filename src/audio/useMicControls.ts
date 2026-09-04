@@ -39,8 +39,6 @@ function useMicResume(
       if (!activeRef.current) {
         return
       }
-      // A capture graph that idled in the background for minutes can resume
-      // into a "running" context that never delivers samples again.
       if (hiddenMs >= STALE_BACKGROUND_MS) {
         restartRef.current()
         return
