@@ -38,7 +38,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 | Storage      | `src/storage/`                | localStorage v2 + legacy migration              |
 | E2E          | `e2e/`, `.maestro/`, `store/` | Playwright + Maestro + store screenshots        |
 | Docs         | `docs/`                       | Plan, CI, this knowledge tree                   |
-| Agent rules  | `AGENTS.md`, `.cursor/rules/` | Workflow + style                                |
+| Agent rules  | `AGENTS.md`, `.cursor/rules/` | Workflow + SDD/TDD + style                      |
 
 **Portability rule:** `src/core/**` must not import React, DOM, or
 `audio` / `components` / `state` / `storage` (ESLint).
@@ -54,6 +54,8 @@ planned), alternate pitch libs, CSS frameworks, other test runners.
 
 ## 4. Patterns (how code is written)
 
+- **SDD + TDD** with Linus taste and SOLID — see [sdd-tdd](areas/sdd-tdd.md).
+  Spec (types) → failing test → smallest implementation → refactor.
 - Prefer **pure functions and plain data** over classes/mutation.
 - Domain names (`centsBetween`, `analyzeString`), not `helper`/`utils`.
 - Colocated tests for every `src/core/` module: `foo.ts` + `foo.test.ts`.
@@ -65,8 +67,9 @@ planned), alternate pitch libs, CSS frameworks, other test runners.
 
 ## 5. Hard rules
 
-See [patterns-and-rules](areas/patterns-and-rules.md). Summary:
+See [sdd-tdd](areas/sdd-tdd.md) and [patterns-and-rules](areas/patterns-and-rules.md). Summary:
 
+- Spec first, then a failing test, then code. Do not implement-then-match-tests.
 - Mic processing filters off; window 8192; in-tune ±5 cents.
 - Complexity budgets enforced by ESLint — do not disable.
 - `npm run check` must pass; one branch/PR per change.
@@ -74,6 +77,7 @@ See [patterns-and-rules](areas/patterns-and-rules.md). Summary:
 ## 6. Area guides
 
 - [Architecture & data flow](areas/architecture.md)
+- [SDD + TDD, Linus taste, SOLID](areas/sdd-tdd.md)
 - [Core: music](areas/core-music.md)
 - [Core: signal](areas/core-signal.md)
 - [Core: tunings](areas/core-tunings.md)

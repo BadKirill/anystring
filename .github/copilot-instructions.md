@@ -3,6 +3,11 @@
 You are working in the AnyTune repository. Obey [`AGENTS.md`](../AGENTS.md) and
 [`docs/knowledge/AGENT_PROTOCOL.md`](../docs/knowledge/AGENT_PROTOCOL.md).
 
+Code changes follow **SDD + TDD** (Linus taste + SOLID):
+[`docs/knowledge/areas/sdd-tdd.md`](../docs/knowledge/areas/sdd-tdd.md).
+Specify in types → failing test → smallest implementation → refactor. Do not
+implement first and match tests after.
+
 ## Required reading order for code tasks
 
 1. `docs/knowledge/INDEX.md` (tag → area routing)

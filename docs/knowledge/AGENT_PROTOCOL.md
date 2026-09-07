@@ -26,6 +26,9 @@ is the portable contract.
 3. Open only the source files those pages list.
 4. Do **not** scan the whole repository by default.
 5. Do **not** open Notion or GitHub Wiki for ordinary indexing.
+6. Write code only through **SDD + TDD** (Linus taste + SOLID):
+   spec in types → failing test → smallest implementation → refactor.
+   See [`areas/sdd-tdd.md`](areas/sdd-tdd.md).
 
 Machine map: [`graph.json`](graph.json) · Human overview: [`CATALOG.md`](CATALOG.md)
 
@@ -56,6 +59,7 @@ was seen or changed. Never commit API tokens.
 
 ## Hard constraints (always)
 
+- **SDD + TDD** before implementation ([sdd-tdd.md](areas/sdd-tdd.md))
 - Mic: `echoCancellation`, `noiseSuppression`, `autoGainControl` = **false**
 - Pitch window: **8192** samples
 - Functions ≤ 50 lines; complexity/cognitive ≤ 10; nesting ≤ 3
@@ -70,6 +74,7 @@ chat): attach or pin at least:
 1. `docs/knowledge/INDEX.md`
 2. `docs/knowledge/CATALOG.md`
 3. This file (`AGENT_PROTOCOL.md`)
+4. `docs/knowledge/areas/sdd-tdd.md`
 
 Then follow the same selective-reading steps. Prefer connecting the GitHub repo
 (Codex / ChatGPT with repo) so `AGENTS.md` at the repo root is loaded first.

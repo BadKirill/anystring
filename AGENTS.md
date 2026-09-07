@@ -19,8 +19,28 @@ run the command and **read-back**). No wiki sync automation on commit/PR.
 
 Also: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) · [docs/CI.md](docs/CI.md) ·
 [.cursor/rules/code-style.md](.cursor/rules/code-style.md) (Cursor) ·
+[.cursor/rules/sdd-tdd.mdc](.cursor/rules/sdd-tdd.mdc) (Cursor) ·
 [CLAUDE.md](CLAUDE.md) · [.github/copilot-instructions.md](.github/copilot-instructions.md) ·
 [llms.txt](llms.txt)
+
+## How to write code (mandatory)
+
+Every code change follows **SDD + TDD**, with Linus Torvalds taste and SOLID.
+Full spec: [docs/knowledge/areas/sdd-tdd.md](docs/knowledge/areas/sdd-tdd.md)
+
+1. **Specify** — types, invariants, inputs/outputs, failure modes. No production code yet.
+2. **Red** — a failing test that encodes the spec.
+3. **Green** — the smallest change that passes.
+4. **Refactor** — remove special cases; keep SOLID; tests stay green.
+5. **`npm run check`**
+
+Skip the loop only for docs/config/copy/format-only. Spikes are thrown away or
+rewritten through this loop before merge. `src/core/` is always TDD.
+
+Taste: special cases mean the data is wrong; never break user-visible behavior,
+storage keys, or audio invariants unless that _is_ the spec; no hacks, no `any` /
+`!` / `@ts-ignore`. SOLID here is functions + small types, not class hierarchies.
+`src/core/` stays pure; platform depends on core.
 
 ## Workflow
 
@@ -76,6 +96,7 @@ src/storage/        — localStorage persistence
 ## Hard rules
 
 - Run `npm run check` (lint + format + typecheck + unit tests) before finishing any task; it must pass.
+- Write code through **SDD + TDD** (Linus taste + SOLID): spec → failing test → implement → refactor. See [docs/knowledge/areas/sdd-tdd.md](docs/knowledge/areas/sdd-tdd.md).
 - Microphone capture must keep `echoCancellation`, `noiseSuppression`, and `autoGainControl` **disabled** — they destroy low-frequency tuner input.
 - Pitch-detection window stays at **8192 samples** unless real-device testing justifies a change (needed for ~43 Hz bass).
 - Functions: max **50 lines**, cyclomatic complexity ≤ **10**, cognitive complexity ≤ **10**, nesting depth ≤ **3** — ESLint errors, do not disable.

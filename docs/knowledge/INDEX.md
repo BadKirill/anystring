@@ -41,10 +41,13 @@ Refresh inventory: `npm run knowledge:refresh`.
 | eslint, prettier, complexity, stack limits                                   | [patterns-and-rules.md](areas/patterns-and-rules.md) |
 | vite, PWA, tsconfig, package scripts                                         | [tooling.md](areas/tooling.md)                       |
 | architecture, data flow, layers                                              | [architecture.md](areas/architecture.md)             |
+| SDD, TDD, SOLID, Linus, spec, red-green-refactor, how to write code          | [sdd-tdd.md](areas/sdd-tdd.md)                       |
 | “where is file X?” / full inventory                                          | [file-index.md](areas/file-index.md)                 |
 
 ## Hard constraints (always)
 
+- **SDD + TDD** (Linus taste + SOLID): spec → failing test → implement → refactor.
+  See [sdd-tdd.md](areas/sdd-tdd.md).
 - Mic: `echoCancellation`, `noiseSuppression`, `autoGainControl` **false**.
 - Pitch window: **8192** samples (bass ~43 Hz).
 - Functions ≤ 50 lines; complexity/cognitive ≤ 10; nesting ≤ 3.

@@ -8,6 +8,10 @@ alwaysApply: true
 Human-readable, simple code is the top priority. Enforced by `npm run check`
 (lint + format check + typecheck + tests) — it must pass before any task is done.
 
+Process: **SDD + TDD**, Linus taste, SOLID — see `.cursor/rules/sdd-tdd.mdc` and
+`docs/knowledge/areas/sdd-tdd.md`. Spec in types → failing test → implement →
+refactor. Do not write production code first and match tests after.
+
 ## Structure
 
 - `src/core/` is pure TypeScript: no React, no DOM, no browser globals, no imports

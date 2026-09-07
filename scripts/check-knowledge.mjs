@@ -131,6 +131,7 @@ function checkRequiredFiles() {
     'llms.txt',
     '.github/copilot-instructions.md',
     '.cursor/rules/knowledge-graph.mdc',
+    '.cursor/rules/sdd-tdd.mdc',
     '.cursor/skills/knowledge-lookup/SKILL.md',
     'scripts/sync-knowledge-wiki.mjs',
     'scripts/sync-notion-wiki.mjs',

@@ -79,6 +79,11 @@ Ruff and complexipy are Python-only tools; the TypeScript equivalents, enforced 
 - **`eslint-plugin-sonarjs`** with `cognitive-complexity: 10` (= complexipy role), plus `complexity` (cyclomatic ≤ 10), `max-lines-per-function: 50`, `max-depth: 3`
 - **Prettier** for formatting (= ruff format)
 - Rules documented in `.cursor/rules/` so the agent always follows them
+- **SDD + TDD** (Linus Torvalds taste + SOLID) is mandatory for every code
+  change: spec in types → failing test → smallest implementation → refactor.
+  Full agent contract: `docs/knowledge/areas/sdd-tdd.md` and
+  `.cursor/rules/sdd-tdd.mdc`. SOLID here is layer boundaries and small
+  functions, not class hierarchies.
 
 ## Architecture
 

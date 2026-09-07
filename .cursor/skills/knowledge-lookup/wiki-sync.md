@@ -35,4 +35,5 @@ After any external wiki read or write:
 | `docs/knowledge/INDEX.md`          | `Agent-Index.md`    |
 | `docs/knowledge/AGENT_PROTOCOL.md` | `Agent-Protocol.md` |
 | `docs/knowledge/areas/*.md`        | Title-Case page     |
+| `docs/knowledge/areas/sdd-tdd.md`  | `SDD-TDD.md`        |
 | `docs/knowledge/graph.json`        | `Graph.md`          |

@@ -1,0 +1,36 @@
+---
+description: SDD + TDD, Linus taste, and SOLID — mandatory for every code change
+alwaysApply: true
+---
+
+# SDD + TDD + Linus + SOLID
+
+Full spec: `docs/knowledge/areas/sdd-tdd.md`. Do not skip it on code tasks.
+
+## Loop (mandatory)
+
+1. **Specify** — types, invariants, inputs/outputs, failure modes. No production code yet.
+2. **Red** — failing test that encodes the spec (right failure, not a compile typo).
+3. **Green** — smallest change that passes.
+4. **Refactor** — remove special cases; keep SOLID; tests stay green.
+5. **`npm run check`**
+
+Skip only for docs/config/copy/format-only. Spikes are thrown away or rewritten through this loop.
+
+## Linus taste
+
+- Special cases mean the **data shape is wrong** — fix the type, not another `if`.
+- Design data first (`Pitch`, `Tuning`, `PitchState`); functions follow.
+- Never break user-visible behavior, storage keys, or audio invariants unless that *is* the spec.
+- No hacks, no `any` / `!` / `@ts-ignore`, no “test later.”
+- One concern per change. Depth ≤ 3, complexity ≤ 10, function ≤ 50 lines — if ESLint fires, redesign.
+
+## SOLID (functions + types, not class theater)
+
+- **S** — one job per function/module.
+- **O** — extend with a new module, do not bloat a god file.
+- **L** — adapters honor their contract; substitutes must not surprise.
+- **I** — small types, no kitchen-sink interfaces.
+- **D** — `src/core/` stays pure; platform depends on core, never the reverse.
+
+Tests assert behavior. Core is always TDD. Do not implement first and match tests after.

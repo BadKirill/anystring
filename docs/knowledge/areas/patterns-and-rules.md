@@ -1,9 +1,14 @@
 # Patterns & hard rules
 
 Tags: `eslint`, `style`, `constraints`, `patterns`  
-Sources: `AGENTS.md`, `.cursor/rules/code-style.md`, `eslint.config.js`
+Sources: `AGENTS.md`, `.cursor/rules/code-style.md`, `.cursor/rules/sdd-tdd.mdc`,
+`eslint.config.js`
 
 ## How code is written
+
+Process: **SDD + TDD**, Linus taste, SOLID — [sdd-tdd.md](sdd-tdd.md). Spec in
+types → failing test → smallest implementation → refactor. `src/core/` is always
+TDD.
 
 1. **Pure core** — domain math/models in `src/core` with colocated Vitest.
 2. **Thin adapters** — mic/storage behind small modules; swappable later.
@@ -47,4 +52,5 @@ No commit/PR wiki automation.
 
 ## See also
 
-- [architecture.md](architecture.md) · [tooling.md](tooling.md) · [INDEX.md](../INDEX.md)
+- [sdd-tdd.md](sdd-tdd.md) · [architecture.md](architecture.md) ·
+  [tooling.md](tooling.md) · [INDEX.md](../INDEX.md)
