@@ -31,6 +31,7 @@ const PAGE_NAME_OVERRIDES = {
   'ci-cd.md': 'CI-CD.md',
   'patterns-and-rules.md': 'Patterns-And-Rules.md',
   'file-index.md': 'File-Index.md',
+  'sdd-tdd.md': 'SDD-TDD.md',
 }
 
 const KEEP_WIKI_FILES = new Set(['_Footer.md'])

@@ -4,6 +4,9 @@ Tags: `test`, `vitest`, `playwright`, `e2e`, `maestro`
 
 ## Unit (Vitest)
 
+TDD is mandatory for code changes ([sdd-tdd.md](sdd-tdd.md)): failing test first,
+then the smallest implementation. Do not write production code and match tests after.
+
 - Command: `npm run test` (included in `npm run check`)
 - Config: `vite.config.ts` excludes `e2e/**` from Vitest
 - Rule: every `src/core/` module has colocated `*.test.ts`
@@ -72,4 +75,5 @@ break stubbed frequencies, or native permission/shell regressions.
 
 ## See also
 
-- [audio.md](audio.md) · [native-shell.md](native-shell.md) · [ci-cd.md](ci-cd.md) · [patterns-and-rules.md](patterns-and-rules.md)
+- [sdd-tdd.md](sdd-tdd.md) · [audio.md](audio.md) · [native-shell.md](native-shell.md) ·
+  [ci-cd.md](ci-cd.md) · [patterns-and-rules.md](patterns-and-rules.md)

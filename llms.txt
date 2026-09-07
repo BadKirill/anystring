@@ -10,10 +10,12 @@
 - [Knowledge index](docs/knowledge/INDEX.md): tag → area routing (read this first)
 - [Knowledge catalog](docs/knowledge/CATALOG.md): human overview
 - [Knowledge graph](docs/knowledge/graph.json): machine nodes/edges
+- [SDD + TDD](docs/knowledge/areas/sdd-tdd.md): spec first, test first, Linus taste, SOLID
 
 ## Area guides
 
 - [Architecture](docs/knowledge/areas/architecture.md)
+- [SDD + TDD](docs/knowledge/areas/sdd-tdd.md)
 - [Audio](docs/knowledge/areas/audio.md)
 - [Core music](docs/knowledge/areas/core-music.md)
 - [Core signal](docs/knowledge/areas/core-signal.md)

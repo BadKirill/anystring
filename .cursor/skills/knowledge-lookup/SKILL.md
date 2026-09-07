@@ -37,16 +37,17 @@ Knowledge lookup:
 
 ### Route
 
-| User intent                     | Tags                           |
-| ------------------------------- | ------------------------------ |
-| Mic / pitch / stop listening    | `mic`, `worklet`, `pitchy`     |
-| Cents / notes / Hz              | `music`, `cents`               |
-| Needle jitter / lock            | `stabilizer`                   |
-| Presets / My tunings / analyzer | `tuning`, `custom`, `analyzer` |
-| Gauge / picker / copy           | `ui`, `gauge`, `strings`       |
-| Save/load / migrate             | `storage`, `persist`           |
-| Tests / CI                      | `test`, `ci`                   |
-| New folder / architecture       | `architecture`, `patterns`     |
+| User intent                      | Tags                           |
+| -------------------------------- | ------------------------------ |
+| Mic / pitch / stop listening     | `mic`, `worklet`, `pitchy`     |
+| Cents / notes / Hz               | `music`, `cents`               |
+| Needle jitter / lock             | `stabilizer`                   |
+| Presets / My tunings / analyzer  | `tuning`, `custom`, `analyzer` |
+| Gauge / picker / copy            | `ui`, `gauge`, `strings`       |
+| Save/load / migrate              | `storage`, `persist`           |
+| Tests / CI                       | `test`, `ci`                   |
+| New folder / architecture        | `architecture`, `patterns`     |
+| SDD / TDD / SOLID / how to write | `sdd`, `tdd`, `solid`          |
 
 Open `docs/knowledge/areas/<page>.md` via INDEX routing. Never open Notion for
 this step.

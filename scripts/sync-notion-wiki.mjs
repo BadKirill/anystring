@@ -18,6 +18,7 @@ const ORDER = [
   ['INDEX.md', 'Selective reading index', null],
   ['graph.json', 'Knowledge graph (machine)', true],
   ['areas/architecture.md', 'Architecture and data flow', null],
+  ['areas/sdd-tdd.md', 'SDD TDD Linus SOLID', null],
   ['areas/audio.md', 'Audio pipeline and pitch detection', null],
   ['areas/native-shell.md', 'Native shell (iOS / Android)', null],
   ['areas/core-music.md', 'Core music theory', null],

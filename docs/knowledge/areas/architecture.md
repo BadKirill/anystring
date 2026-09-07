@@ -24,6 +24,12 @@ getUserMedia (AGC/NS/EC OFF)
 Parallel path: presets + string edits → `Tuning` → storage (`active` + custom list)
 → string analyzer. Chromatic ignores active tuning for targeting.
 
+## How to change it
+
+SDD + TDD, Linus taste, SOLID: [sdd-tdd.md](sdd-tdd.md). Specify the contract in
+types, prove it with a failing test, then implement. SOLID here is layer
+boundaries and small functions — not class hierarchies.
+
 ## Layer contracts
 
 | Layer              | May import                                        | Must not                                      |
@@ -55,4 +61,5 @@ or the mic→UI pipeline shape. Prefer area pages for normal features.
 
 ## See also
 
-- [patterns-and-rules.md](patterns-and-rules.md) · [audio.md](audio.md) · [state.md](state.md) · [file-index.md](file-index.md)
+- [sdd-tdd.md](sdd-tdd.md) · [patterns-and-rules.md](patterns-and-rules.md) ·
+  [audio.md](audio.md) · [state.md](state.md) · [file-index.md](file-index.md)

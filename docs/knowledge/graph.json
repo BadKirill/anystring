@@ -13,6 +13,17 @@
       "roots": ["src/", "docs/DEVELOPMENT_PLAN.md", "AGENTS.md"]
     },
     {
+      "id": "sdd-tdd",
+      "title": "SDD + TDD, Linus taste, SOLID",
+      "path": "docs/knowledge/areas/sdd-tdd.md",
+      "tags": ["sdd", "tdd", "solid", "linus", "spec", "taste"],
+      "roots": [
+        "AGENTS.md",
+        ".cursor/rules/sdd-tdd.mdc",
+        "docs/knowledge/areas/sdd-tdd.md"
+      ]
+    },
+    {
       "id": "core-music",
       "title": "Core music theory",
       "path": "docs/knowledge/areas/core-music.md",
@@ -95,7 +106,12 @@
       "title": "Patterns & hard rules",
       "path": "docs/knowledge/areas/patterns-and-rules.md",
       "tags": ["eslint", "style", "constraints", "patterns"],
-      "roots": [".cursor/rules/", "eslint.config.js", "AGENTS.md"]
+      "roots": [
+        ".cursor/rules/",
+        "eslint.config.js",
+        "AGENTS.md",
+        "docs/knowledge/areas/sdd-tdd.md"
+      ]
     },
     {
       "id": "tooling",
@@ -129,6 +145,9 @@
     { "from": "testing", "to": "core-tunings", "rel": "unit-tests" },
     { "from": "ci-cd", "to": "testing", "rel": "runs" },
     { "from": "patterns", "to": "architecture", "rel": "enforces" },
+    { "from": "sdd-tdd", "to": "patterns", "rel": "extends" },
+    { "from": "sdd-tdd", "to": "testing", "rel": "requires-tdd" },
+    { "from": "sdd-tdd", "to": "architecture", "rel": "applies-solid" },
     { "from": "tooling", "to": "ci-cd", "rel": "scripts-used-by" },
     { "from": "native-shell", "to": "tooling", "rel": "reuses-vite-build" },
     { "from": "native-shell", "to": "audio", "rel": "hosts-mic-pipeline" },
