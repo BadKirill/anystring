@@ -18,7 +18,7 @@ predicates.
 
 | File          | Key API                                                                                                                     |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `presets.ts`  | `PRESET_TUNINGS`, `DEFAULT_TUNING_ID` (`guitar-standard`)                                                                   |
+| `presets.ts`  | `PRESET_TUNINGS`, `DEFAULT_TUNING_ID` (`guitar-standard`). Guitar includes 6/7/8-string standard; bass 4/5-string.          |
 | `analyzer.ts` | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis` |
 | `custom.ts`   | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`    |
 | `index.ts`    | barrel                                                                                                                      |
