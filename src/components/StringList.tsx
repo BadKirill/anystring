@@ -1,6 +1,11 @@
+import { useLayoutEffect } from 'react'
+
 import { playReferencePitch, warmReferenceAudio } from '../audio/referenceTone'
 import { formatPitch, pitchToMidi, type Pitch } from '../core/music'
 import type { Tuning } from '../core/tunings'
+import type { StringRailOverflow } from './stringRailOverflow'
+import { UI } from './strings'
+import { useStringRailScroll } from './useStringRailScroll'
 
 function stringThickness(pitch: Pitch): number {
   const midi = pitchToMidi(pitch)
@@ -38,6 +43,92 @@ interface StringListProps {
   onEdit: (index: number) => void
 }
 
+function tapString(
+  index: number,
+  pitch: Pitch,
+  manualIndex: number | null,
+  onSelect: (index: number | null) => void,
+  onEdit: (index: number) => void,
+): void {
+  void warmReferenceAudio().then(() => playReferencePitch(pitch))
+  if (manualIndex === index) {
+    onEdit(index)
+  } else {
+    onSelect(index)
+  }
+}
+
+function revealActiveString(
+  root: HTMLDivElement | null,
+  activeIndex: number | null,
+): void {
+  if (root === null || activeIndex === null) {
+    return
+  }
+  const item = root.children.item(activeIndex)
+  if (item instanceof HTMLElement) {
+    item.scrollIntoView({ inline: 'nearest', block: 'nearest' })
+  }
+}
+
+function StringItem({
+  index,
+  pitch,
+  active,
+  manual,
+  onTap,
+}: {
+  index: number
+  pitch: Pitch
+  active: boolean
+  manual: boolean
+  onTap: () => void
+}) {
+  const classes = [
+    'string-button',
+    active ? 'string-active' : '',
+    manual ? 'string-manual' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+  return (
+    <div className="string-item">
+      <StringGauge pitch={pitch} active={active} />
+      <button type="button" className={classes} onClick={onTap}>
+        <span className="string-number">{index + 1}</span>
+        <span className="string-note">{formatPitch(pitch)}</span>
+      </button>
+    </div>
+  )
+}
+
+function StringRailChrome({
+  overflow,
+  scrollLeft,
+  onScrollLeft,
+}: {
+  overflow: StringRailOverflow
+  scrollLeft: number
+  onScrollLeft: (left: number) => void
+}) {
+  if (!overflow.hasOverflow) {
+    return null
+  }
+  return (
+    <input
+      type="range"
+      className="string-rail-slider"
+      min={0}
+      max={overflow.maxScroll}
+      value={scrollLeft}
+      aria-label={UI.scrollStrings}
+      onChange={(event) => {
+        onScrollLeft(Number(event.target.value))
+      }}
+    />
+  )
+}
+
 export function StringList({
   tuning,
   activeIndex,
@@ -45,44 +136,36 @@ export function StringList({
   onSelect,
   onEdit,
 }: StringListProps) {
-  const handleTap = (index: number) => {
-    const string = tuning.strings[index]
-    if (string) {
-      void warmReferenceAudio().then(() => playReferencePitch(string.pitch))
-    }
-    if (manualIndex === index) {
-      onEdit(index)
-    } else {
-      onSelect(index)
-    }
-  }
+  const rail = useStringRailScroll(tuning.strings.length)
+  useLayoutEffect(() => {
+    revealActiveString(rail.ref.current, activeIndex)
+  }, [activeIndex, rail.ref])
+
+  const listClass = rail.overflow.hasOverflow
+    ? 'string-list string-list-overflow'
+    : 'string-list'
 
   return (
-    <div className="string-list">
-      {tuning.strings.map((string, index) => {
-        const classes = [
-          'string-button',
-          index === activeIndex ? 'string-active' : '',
-          index === manualIndex ? 'string-manual' : '',
-        ]
-          .filter(Boolean)
-          .join(' ')
-        return (
-          <div key={index} className="string-item">
-            <StringGauge pitch={string.pitch} active={index === activeIndex} />
-            <button
-              type="button"
-              className={classes}
-              onClick={() => {
-                handleTap(index)
-              }}
-            >
-              <span className="string-number">{index + 1}</span>
-              <span className="string-note">{formatPitch(string.pitch)}</span>
-            </button>
-          </div>
-        )
-      })}
+    <div className="string-rail">
+      <div ref={rail.ref} className={listClass} onScroll={rail.onScroll}>
+        {tuning.strings.map((string, index) => (
+          <StringItem
+            key={index}
+            index={index}
+            pitch={string.pitch}
+            active={index === activeIndex}
+            manual={index === manualIndex}
+            onTap={() => {
+              tapString(index, string.pitch, manualIndex, onSelect, onEdit)
+            }}
+          />
+        ))}
+      </div>
+      <StringRailChrome
+        overflow={rail.overflow}
+        scrollLeft={rail.metrics.scrollLeft}
+        onScrollLeft={rail.setScrollLeft}
+      />
     </div>
   )
 }
