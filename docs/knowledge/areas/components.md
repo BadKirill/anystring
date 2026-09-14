@@ -29,7 +29,7 @@ over without a jump — and without the black gap that used to sit between them.
 | File                                           | Role                                                             |
 | ---------------------------------------------- | ---------------------------------------------------------------- |
 | `TunerGauge.tsx`                               | SVG needle ±50¢, green in-tune                                   |
-| `StringList.tsx`                               | String buttons + thickness gauge; auto highlight / manual select |
+| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow rail + slider |
 | `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)           |
 | `PresetPicker.tsx`                             | Presets by instrument + My tunings + save draft                  |
 | `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                               |

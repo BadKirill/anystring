@@ -166,6 +166,33 @@ export async function simulateBackground(page: Page, hiddenMs: number): Promise<
 
 export const APP_URL = '/app/'
 
+export const EIGHT_STRING_TUNING = {
+  id: 'custom-eight',
+  name: 'Eight',
+  instrument: 'guitar',
+  strings: [
+    { pitch: { note: 'F#', octave: 1 } },
+    { pitch: { note: 'B', octave: 1 } },
+    { pitch: { note: 'E', octave: 2 } },
+    { pitch: { note: 'A', octave: 2 } },
+    { pitch: { note: 'D', octave: 3 } },
+    { pitch: { note: 'G', octave: 3 } },
+    { pitch: { note: 'B', octave: 3 } },
+    { pitch: { note: 'E', octave: 4 } },
+  ],
+}
+
+export async function seedActiveTuning(
+  page: Page,
+  tuning: typeof EIGHT_STRING_TUNING,
+): Promise<void> {
+  await page.addInitScript((value) => {
+    const json = JSON.stringify(value)
+    localStorage.setItem('anystring.v2.activeTuning', json)
+    sessionStorage.setItem('anystring.v2.activeTuning.session', json)
+  }, tuning)
+}
+
 export async function clearTuningStorage(page: Page): Promise<void> {
   await page.evaluate(() => {
     localStorage.clear()
