@@ -24,6 +24,7 @@ then the smallest implementation. Do not write production code and match tests a
 | `e2e/reference-tone.spec.ts`    | String tap + note picker buffer plays; listening stays up               |
 | `e2e/background-resume.spec.ts` | Tone + mic recovery after a 10-minute background (`stubLongBackground`) |
 | `e2e/custom-tuning.spec.ts`     | Edit/save custom                                                        |
+| `e2e/string-list.spec.ts`       | One-row string rail + overflow slider                                   |
 | `e2e/stop-tuning.spec.ts`       | Stop listening                                                          |
 | `e2e/store/screenshots.spec.ts` | Store listing PNGs (not in default `test:e2e`)                          |
 
