@@ -46,9 +46,20 @@ and grants the WebView only if each result is `true`; a permission missing from
 the manifest always returns `false`, so the mic stays denied no matter what the
 user taps in the system dialog.
 
-Version numbers: `package.json` `version` is the single source; Vite injects it as
-`__APP_VERSION__` for the About sheet. Keep `MARKETING_VERSION` (iOS) and
-`versionName` (Android) in step when bumping.
+Version numbers live in `package.json` as `version` (marketing, e.g. `1.0.3`)
+and `buildNumber` (store integer, e.g. `8`). That is the only source of truth.
+
+- Android `build.gradle` reads both fields at compile time.
+- `npm run stamp:native-version` writes iOS `MARKETING_VERSION` and
+  `CURRENT_PROJECT_VERSION` (also runs at the start of `cap:sync`).
+- Vite injects `__APP_VERSION__` / `__APP_BUILD__` for the PWA fallback.
+- About on a native install reads OS metadata via `@capacitor/app`
+  (`App.getInfo()`), so the sheet shows the installed binary, not a
+  leftover JS constant. Web/PWA uses the bundled values. Display is
+  `Version 1.0.3 (8)`.
+- Bump with `npm run version:patch|minor|major|build` (always increments
+  `buildNumber`). Vitest fails if iOS or Android drift from `package.json`.
+  Do not edit versions in Xcode or Android Studio.
 
 ## Icons and splash
 
@@ -60,8 +71,9 @@ store icon drops the SVG corner radius because both platforms mask their own.
 
 ## Runtime seam
 
-`src/platform/runtime.ts` exposes `isNativePlatform()`; only that module imports
-Capacitor. The PWA install hint is hidden when it returns true.
+`src/platform/runtime.ts` exposes `isNativePlatform()`; `src/platform/appVersion.ts`
+reads installed native version via `@capacitor/app`. Only `src/platform/` imports
+Capacitor. The PWA install hint is hidden when `isNativePlatform()` is true.
 
 ## iOS microphone risk (open)
 

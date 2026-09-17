@@ -1,7 +1,8 @@
 {
   "name": "anystring",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "buildNumber": 9,
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -10,7 +11,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:native": "CAP_BUILD=1 npm run build",
-    "cap:sync": "npm run build:native && cap sync",
+    "cap:sync": "npm run stamp:native-version && npm run build:native && cap sync",
     "cap:ios": "npm run cap:sync && cap open ios",
     "cap:android": "npm run cap:sync && cap open android",
     "cap:build:ios-sim": "npm run cap:sync && xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -destination \"platform=iOS Simulator,name=${IOS_SIMULATOR_DEVICE:-iPhone 17}\" -derivedDataPath ios/build build",
@@ -30,10 +31,16 @@
     "knowledge:check": "node scripts/check-knowledge.mjs",
     "knowledge:wiki": "node scripts/sync-knowledge-wiki.mjs",
     "knowledge:notion": "node scripts/sync-notion-wiki.mjs",
+    "stamp:native-version": "node --experimental-strip-types scripts/stampNativeVersion.ts",
+    "version:major": "node --experimental-strip-types scripts/bumpAppVersion.ts major",
+    "version:minor": "node --experimental-strip-types scripts/bumpAppVersion.ts minor",
+    "version:patch": "node --experimental-strip-types scripts/bumpAppVersion.ts patch",
+    "version:build": "node --experimental-strip-types scripts/bumpAppVersion.ts build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.2",
+    "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.4.2",
     "@capacitor/ios": "^8.4.2",
     "pitchy": "^4.1.0",

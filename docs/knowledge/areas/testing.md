@@ -10,7 +10,8 @@ then the smallest implementation. Do not write production code and match tests a
 - Command: `npm run test` (included in `npm run check`)
 - Config: `vite.config.ts` excludes `e2e/**` from Vitest
 - Rule: every `src/core/` module has colocated `*.test.ts`
-- Also: `src/audio/pitchDetector.test.ts`, `src/storage/customTuningsStore.test.ts`
+- Also: `src/audio/pitchDetector.test.ts`, `src/storage/customTuningsStore.test.ts`,
+  `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`
 - Prefer behavior tests (F1 detection, analyzer nearest string, storage migrate)
 
 ## E2E (Playwright — web / deterministic audio)
@@ -18,6 +19,7 @@ then the smallest implementation. Do not write production code and match tests a
 | File                            | Focus                                                                   |
 | ------------------------------- | ----------------------------------------------------------------------- |
 | `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers  |
+| `e2e/about.spec.ts`             | About sheet shows `package.json` version and build number               |
 | `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
 | `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |
 | `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                     |

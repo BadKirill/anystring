@@ -191,9 +191,15 @@ Pure math, no dependencies — write tests first.
 **Done when:** the same web build runs as a native app on both an Android emulator and an iOS simulator with working microphone.
 
 Implemented: `CAP_BUILD=1` switches Vite to a relative base with no service worker,
-`npm run cap:sync` rebuilds and syncs both projects, and both compile
-(`xcodebuild` for the simulator, `gradlew assembleDebug` with JDK 21). Microphone
-capture inside the webview is still unverified on real hardware.
+`npm run cap:sync` stamps iOS versions from `package.json`, rebuilds, and syncs
+both projects, and both compile (`xcodebuild` for the simulator, `gradlew
+assembleDebug` with JDK 21). Microphone capture inside the webview is still
+unverified on real hardware.
+
+**Versioning:** `package.json` `version` + `buildNumber` is the single source.
+Android reads it in Gradle; iOS is stamped on `cap:sync`. About on device uses
+`@capacitor/app` `App.getInfo()` (installed binary); PWA uses the Vite-bundled
+values. Bump with `npm run version:patch` (or `minor` / `major` / `build`).
 
 ### 9. Polish
 
