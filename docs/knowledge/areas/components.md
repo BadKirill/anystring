@@ -52,7 +52,7 @@ over without a jump — and without the black gap that used to sit between them.
 - Screen tabs reuse `.chip` / `.chip-selected`.
 - Preset picker: each instrument is a card. Tapping it expands **that** card’s
   background around its presets (`height: 0` → `auto`), so tunings sit
-  visually inside the instrument, not in a shared list below. One instrument
+  visually inside the instrument as raised chips, not in a shared list below. One instrument
   expanded (`activeTuning.instrument` after first paint); tapping the open header
   collapses it. My tunings stays expanded. Sheet children do not flex-shrink, so
   empty-state copy cannot sit under headers.

@@ -158,6 +158,7 @@ Purpose: locate any project file without scanning the tree. Excludes
 | --------------------------------- | ------------------- |
 | `e2e/helpers.ts`                  | Mic stubs & waits   |
 | `e2e/about.spec.ts`               | About version       |
+| `e2e/landing.spec.ts`             | Landing → /app      |
 | `e2e/smoke.spec.ts`               | Live smoke          |
 | `e2e/tuner.spec.ts`               | Tuner flow          |
 | `e2e/custom-tuning.spec.ts`       | Custom save         |

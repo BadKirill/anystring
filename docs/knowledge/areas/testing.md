@@ -29,6 +29,7 @@ then the smallest implementation. Do not write production code and match tests a
 | ------------------------------- | ----------------------------------------------------------------------- |
 | `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers  |
 | `e2e/about.spec.ts`             | About sheet shows `package.json` version and build number               |
+| `e2e/landing.spec.ts`           | Marketing landing names ukulele and opens `/app/`                       |
 | `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
 | `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |
 | `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                     |
