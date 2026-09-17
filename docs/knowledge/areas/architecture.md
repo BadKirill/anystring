@@ -36,6 +36,7 @@ boundaries and small functions — not class hierarchies.
 | ------------------ | ------------------------------------------------- | --------------------------------------------- |
 | `src/core/*`       | other core, nothing else                          | react, DOM, audio, components, state, storage |
 | `src/audio/*`      | core/music, core/signal (as needed), browser APIs | components UI details                         |
+| `src/platform/*`   | Capacitor, browser APIs                           | core / UI internals                           |
 | `src/storage/*`    | core/tunings, core/music types                    | React                                         |
 | `src/state/*`      | audio hooks, core, storage                        | —                                             |
 | `src/components/*` | core types/helpers, UI only                       | pitch detection internals                     |

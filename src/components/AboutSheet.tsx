@@ -1,3 +1,10 @@
+import { useEffect, useState } from 'react'
+
+import {
+  bundledAppVersion,
+  formatAppVersion,
+  installedAppVersion,
+} from '../platform/appVersion'
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
@@ -11,12 +18,24 @@ const LINKS = [
 ]
 
 export function AboutSheet({ onClose }: { onClose: () => void }) {
+  const [label, setLabel] = useState(() => formatAppVersion(bundledAppVersion()))
+
+  useEffect(() => {
+    let alive = true
+    void installedAppVersion().then((next) => {
+      if (alive) setLabel(formatAppVersion(next))
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
+
   return (
     <Sheet onClose={onClose}>
       <h2>{UI.aboutTitle}</h2>
       <p className="about-text">{UI.aboutTagline}</p>
       <p className="about-text">{UI.aboutPrivacy}</p>
-      <p className="about-version">{`${UI.aboutVersion} ${__APP_VERSION__}`}</p>
+      <p className="about-version">{`${UI.aboutVersion} ${label}`}</p>
       <div className="about-links">
         {LINKS.map((link) => (
           <a

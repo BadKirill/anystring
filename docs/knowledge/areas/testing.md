@@ -16,6 +16,7 @@ then the smallest implementation. Do not write production code and match tests a
 - Config: `vite.config.ts` excludes `e2e/**` from Vitest; setup is
   `src/test/vitest.setup.ts`.
 - Rule: every `src/core/` module has colocated `*.test.ts` / `*.test.tsx`.
+- Also: `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`.
 - Prefer behavior tests (F1 detection, analyzer nearest string, storage migrate,
   UI copy, start/stop). Do not assert tautologies (`typeof fn === 'function'`)
   or early-return after `toBeDefined()` so a missing value would still pass.
@@ -27,6 +28,8 @@ then the smallest implementation. Do not write production code and match tests a
 | File                            | Focus                                                                   |
 | ------------------------------- | ----------------------------------------------------------------------- |
 | `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers  |
+| `e2e/about.spec.ts`             | About sheet shows `package.json` version and build number               |
+| `e2e/landing.spec.ts`           | Marketing landing names ukulele and opens `/app/`                       |
 | `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
 | `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |
 | `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                     |
