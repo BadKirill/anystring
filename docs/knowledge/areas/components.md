@@ -26,23 +26,23 @@ over without a jump — and without the black gap that used to sit between them.
 
 ## Components
 
-| File                                           | Role                                                             |
-| ---------------------------------------------- | ---------------------------------------------------------------- |
-| `TunerGauge.tsx`                               | SVG needle ±50¢, green in-tune                                   |
-| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow swipes        |
-| `stringRailOverflow.ts`                        | Overflow metrics for the string rail                             |
-| `reviveOverflowScroll.ts`                      | Re-enable WebView overflow after Android recents/resume          |
-| `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)           |
-| `PresetPicker.tsx`                             | Instrument cards + nested presets + My tunings + save draft      |
-| `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                               |
-| `NotePicker.tsx`                               | Note + octave chips in Sheet; plays a reference tone per pick    |
-| `Sheet.tsx`                                    | Bottom sheet modal shell                                         |
-| `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                       |
-| `TextField.tsx`                                | Named input for save/rename                                      |
-| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native    |
-| `AboutSheet.tsx`                               | Version, privacy summary; links to anystring.app privacy/support |
-| `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                      |
-| `strings.ts`                                   | **All** user-facing English strings (`UI`)                       |
+| File                                           | Role                                                                   |
+| ---------------------------------------------- | ---------------------------------------------------------------------- |
+| `TunerGauge.tsx`                               | SVG needle ±50¢, green in-tune                                         |
+| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow swipes              |
+| `stringRailOverflow.ts`                        | Overflow metrics for the string rail                                   |
+| `reviveOverflowScroll.ts`                      | Re-enable WebView overflow after Android recents/resume                |
+| `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)                 |
+| `PresetPicker.tsx`                             | Instrument cards + nested presets + My tunings + save draft            |
+| `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                                     |
+| `NotePicker.tsx`                               | Note + octave chips in Sheet; plays a reference tone per pick          |
+| `Sheet.tsx`                                    | Bottom sheet modal shell                                               |
+| `SwipeableRow.tsx` + `useSwipeOffset.ts`       | Reveal edit/delete actions                                             |
+| `TextField.tsx`                                | Named input for save/rename                                            |
+| `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native          |
+| `AboutSheet.tsx`                               | Version from installed binary (native) or bundled `package.json` (web) |
+| `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                            |
+| `strings.ts`                                   | **All** user-facing English strings (`UI`)                             |
 
 ## Patterns
 
@@ -52,7 +52,7 @@ over without a jump — and without the black gap that used to sit between them.
 - Screen tabs reuse `.chip` / `.chip-selected`.
 - Preset picker: each instrument is a card. Tapping it expands **that** card’s
   background around its presets (`height: 0` → `auto`), so tunings sit
-  visually inside the instrument, not in a shared list below. One instrument
+  visually inside the instrument as raised chips, not in a shared list below. One instrument
   expanded (`activeTuning.instrument` after first paint); tapping another header
   leaves the first open. Tapping an open header collapses only that card.
   My tunings stays expanded. Sheet children do not flex-shrink, so

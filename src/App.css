@@ -423,7 +423,11 @@
 }
 
 .instrument-preset {
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface-raised) 62%, #31463d);
+  border: 1px solid rgb(255 255 255 / 7%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 10%),
+    0 2px 6px rgb(0 0 0 / 38%);
 }
 
 .instrument-header-text {

@@ -9,8 +9,10 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `dev`                        | Vite dev server                                                           |
 | `build`                      | `tsc -b` + Vite production build                                          |
 | `build:native`               | Same build with `CAP_BUILD=1`: relative base, no service worker           |
-| `cap:sync`                   | `build:native` + `cap sync` into `ios/` and `android/`                    |
+| `cap:sync`                   | Stamp iOS version, `build:native`, then `cap sync`                        |
 | `cap:ios` / `cap:android`    | Sync, then open Xcode / Android Studio                                    |
+| `stamp:native-version`       | Write iOS marketing/build numbers from `package.json`                     |
+| `version:*`                  | Bump `package.json` (`patch`/`minor`/`major`/`build`) and stamp iOS       |
 | `cap:build:ios-sim`          | Sync + Xcode Debug build for iOS Simulator                                |
 | `cap:build:android-debug`    | Sync + `gradlew assembleDebug` (JDK 21 / Studio JBR)                      |
 | `check`                      | lint + format:check + typecheck + unit tests (coverage) + knowledge:check |
@@ -42,6 +44,9 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `public/privacy.html` / `public/support.html`                | Store-required static pages                                |
 | `store/screenshots/`                                         | App Store / Play listing PNGs                              |
 | `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens    |
+| `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp marketing version + build number          |
+| `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                     |
+| `scripts/bumpAppVersion.ts`                                  | CLI for `npm run version:*`                                |
 | `scripts/native-e2e.sh`                                      | Capacitor debug build/install + Maestro                    |
 | `scripts/refresh-file-index.mjs`                             | Auto file inventory                                        |
 | `scripts/check-knowledge.mjs`                                | Knowledge integrity                                        |

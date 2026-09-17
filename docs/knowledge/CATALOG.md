@@ -28,7 +28,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 
 | Layer        | Path                          | Role                                            |
 | ------------ | ----------------------------- | ----------------------------------------------- |
-| Platform     | `src/platform/`               | Native-vs-web runtime checks (Capacitor)        |
+| Platform     | `src/platform/`               | Native-vs-web runtime, installed app version    |
 | Core music   | `src/core/music/`             | Notes, MIDI, Hz, cents, nearestPitch — pure TS  |
 | Core signal  | `src/core/signal/`            | Pitch display stabilizer, pluck synth           |
 | Core tunings | `src/core/tunings/`           | Tuning model, presets, analyzer, custom helpers |

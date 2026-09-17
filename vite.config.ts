@@ -6,11 +6,10 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { configDefaults, defineConfig } from 'vitest/config'
 
-const root = fileURLToPath(new URL('.', import.meta.url))
+import { parseReleaseVersion } from './scripts/appReleaseVersion.ts'
 
-const { version } = JSON.parse(readFileSync('./package.json', 'utf8')) as {
-  version: string
-}
+const root = fileURLToPath(new URL('.', import.meta.url))
+const release = parseReleaseVersion(readFileSync('./package.json', 'utf8'))
 
 const isNativeBuild = process.env.CAP_BUILD === '1'
 
@@ -51,7 +50,10 @@ export default defineConfig({
   root: isNativeBuild ? resolve(root, 'app') : root,
   publicDir: isNativeBuild ? resolve(root, 'public') : 'public',
   base: isNativeBuild ? './' : '/',
-  define: { __APP_VERSION__: JSON.stringify(version) },
+  define: {
+    __APP_VERSION__: JSON.stringify(release.version),
+    __APP_BUILD__: JSON.stringify(String(release.buildNumber)),
+  },
   build: {
     outDir: isNativeBuild ? resolve(root, 'dist') : 'dist',
     emptyOutDir: true,
