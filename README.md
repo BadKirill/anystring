@@ -1,6 +1,6 @@
 # anystring
 
-Free tuner for guitar and bass with **fully editable per-string tunings**.
+Free tuner for guitar, bass, and ukulele with **fully editable per-string tunings**.
 
 **Live site:** https://anystring.app/ — open the tuner at
 [/app/](https://anystring.app/app/) on your phone and add it to the home screen.

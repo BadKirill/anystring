@@ -1,6 +1,11 @@
 import { expect, test, type Locator } from '@playwright/test'
 
-import { APP_URL, EIGHT_STRING_TUNING, seedActiveTuning } from './helpers'
+import {
+  APP_URL,
+  EIGHT_STRING_TUNING,
+  seedActiveTuning,
+  simulateAppResume,
+} from './helpers'
 
 async function itemTops(locator: Locator): Promise<number[]> {
   return locator.evaluateAll((nodes) =>
@@ -34,7 +39,7 @@ test.describe('string row overflow', () => {
     await expect(page.locator('.string-item')).toHaveCount(6)
     expect(new Set(await itemTops(page.locator('.string-item'))).size).toBe(1)
     expect(await listOverflows(row)).toBe(false)
-    await expect(page.getByRole('slider', { name: 'Scroll strings' })).toHaveCount(0)
+    await expect(page.getByRole('slider')).toHaveCount(0)
   })
 
   test('keeps eight strings on one row and scrolls the rest into view', async ({
@@ -49,13 +54,42 @@ test.describe('string row overflow', () => {
     expect(await listOverflows(row)).toBe(true)
     await expect(page.getByRole('button', { name: '1 F#1' })).toBeVisible()
     expect(await isFullyInRow(row, '8 E4')).toBe(false)
+    await expect(page.getByRole('slider')).toHaveCount(0)
 
-    const slider = page.getByRole('slider', { name: 'Scroll strings' })
-    await expect(slider).toBeVisible()
+    await row.evaluate((node) => {
+      node.scrollLeft = node.scrollWidth
+    })
+    await expect.poll(async () => isFullyInRow(row, '8 E4')).toBe(true)
+  })
 
-    const max = await slider.getAttribute('max')
-    expect(Number(max)).toBeGreaterThan(0)
-    await slider.fill(max ?? '0')
+  test('keeps swipe scrolling after the app returns from the background', async ({
+    page,
+  }) => {
+    await seedActiveTuning(page, EIGHT_STRING_TUNING)
+    await page.addInitScript(() => {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'hidden') {
+          return
+        }
+        for (const node of Array.from(document.querySelectorAll('.string-list'))) {
+          if (node instanceof HTMLElement) {
+            node.style.overflowX = 'hidden'
+          }
+        }
+      })
+    })
+    await page.goto(APP_URL)
+
+    const row = page.locator('.string-list')
+    expect(await listOverflows(row)).toBe(true)
+    expect(await isFullyInRow(row, '8 E4')).toBe(false)
+
+    await simulateAppResume(page)
+    expect(await row.evaluate((node) => getComputedStyle(node).overflowX)).toBe('auto')
+
+    await row.evaluate((node) => {
+      node.scrollLeft = node.scrollWidth
+    })
     await expect.poll(async () => isFullyInRow(row, '8 E4')).toBe(true)
   })
 })

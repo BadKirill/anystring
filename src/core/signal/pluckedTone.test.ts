@@ -43,4 +43,14 @@ describe('pluckedTone', () => {
     const samples = normalizePluck(synthesizePluck(43.65, SAMPLE_RATE, 2))
     expect(rms(samples, 0, 800)).toBeGreaterThan(0.03)
   })
+
+  it('synthesizes a mid-range guitar note without collapsing to silence', () => {
+    const samples = normalizePluck(synthesizePluck(110, SAMPLE_RATE, 1))
+    expect(rms(samples, 0, 400)).toBeGreaterThan(0.05)
+  })
+
+  it('leaves an already-silent buffer unchanged', () => {
+    const silent = new Float32Array(32)
+    expect(normalizePluck(silent)).toBe(silent)
+  })
 })

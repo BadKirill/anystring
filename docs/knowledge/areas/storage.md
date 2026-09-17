@@ -46,7 +46,7 @@ Legacy absorbed (pre-rename and pre-v2): `anytune.v2.customTunings`,
 
 ## Patterns
 
-- Validate before use (`normalizeTuning`).
+- Validate before use (`normalizeTuning`); `instrument` via `isInstrument`.
 - Tests: in-memory `Storage` fake in `customTuningsStore.test.ts`.
 
 ## Open when

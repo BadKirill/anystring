@@ -69,7 +69,7 @@ Kept cheap by an architectural rule: **`src/core/` must be pure TypeScript — n
 - **`pitchy`** (McLeod Pitch Method) for pitch detection
 - **Capacitor** for iOS/Android store builds
 - **No backend.** Custom tunings stored in `localStorage`. Cloud sync can be added later if ever wanted.
-- **Vitest** for unit tests
+- **Vitest** for unit tests (`jsdom`, `@testing-library/react`, v8 coverage ≥ 95%)
 
 ## Code quality rules (ruff/complexipy equivalents for TypeScript)
 

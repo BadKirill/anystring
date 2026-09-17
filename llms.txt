@@ -1,6 +1,6 @@
 # Anystring
 
-> Free guitar/bass tuner PWA with editable per-string tunings.
+> Free guitar, bass, and ukulele tuner PWA with editable per-string tunings.
 > Live: https://badkirill.github.io/anystring/
 
 ## Agent entry (mandatory for code work)

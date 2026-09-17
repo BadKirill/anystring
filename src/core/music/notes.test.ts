@@ -27,6 +27,10 @@ describe('midiToPitch', () => {
     expect(midiToPitch(68.6)).toEqual<Pitch>({ note: 'A', octave: 4 })
     expect(midiToPitch(69.4)).toEqual<Pitch>({ note: 'A', octave: 4 })
   })
+
+  it('rejects a non-numeric midi value', () => {
+    expect(() => midiToPitch(Number.NaN)).toThrow(/MIDI number out of range/)
+  })
 })
 
 describe('formatPitch', () => {
