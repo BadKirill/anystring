@@ -4,7 +4,7 @@ import { formatPitch } from '../core/music'
 import {
   INSTRUMENTS,
   presetsFor,
-  toggleExclusiveInstrument,
+  toggleExpandedInstruments,
   type Instrument,
   type Tuning,
 } from '../core/tunings'
@@ -97,28 +97,28 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-function useExpandedInstrument(activeInstrument: Instrument): {
-  expanded: Instrument | null
+function useExpandedInstruments(activeInstrument: Instrument): {
+  isExpanded: (instrument: Instrument) => boolean
   toggle: (instrument: Instrument) => void
 } {
-  const [expanded, setExpanded] = useState<Instrument | null>(() =>
-    prefersReducedMotion() ? activeInstrument : null,
+  const [open, setOpen] = useState<readonly Instrument[]>(() =>
+    prefersReducedMotion() ? [activeInstrument] : [],
   )
   useEffect(() => {
     if (prefersReducedMotion()) {
       return
     }
     const frame = requestAnimationFrame(() => {
-      setExpanded((current) => current ?? activeInstrument)
+      setOpen((current) => (current.length === 0 ? [activeInstrument] : current))
     })
     return () => {
       cancelAnimationFrame(frame)
     }
   }, [activeInstrument])
   return {
-    expanded,
+    isExpanded: (instrument: Instrument) => open.includes(instrument),
     toggle: (instrument: Instrument) => {
-      setExpanded((current) => toggleExclusiveInstrument(current, instrument))
+      setOpen((current) => toggleExpandedInstruments(current, instrument))
     },
   }
 }
@@ -221,7 +221,7 @@ function InstrumentPresetList({
   activeTuning: Tuning
   onSelect: (tuning: Tuning) => void
 }) {
-  const { expanded, toggle } = useExpandedInstrument(activeTuning.instrument)
+  const { isExpanded, toggle } = useExpandedInstruments(activeTuning.instrument)
 
   return (
     <div className="instrument-list">
@@ -229,7 +229,7 @@ function InstrumentPresetList({
         <InstrumentPresetGroup
           key={instrument}
           instrument={instrument}
-          expanded={expanded === instrument}
+          expanded={isExpanded(instrument)}
           activeName={activeTuning.instrument === instrument ? activeTuning.name : null}
           onToggle={() => {
             toggle(instrument)

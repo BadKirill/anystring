@@ -53,8 +53,9 @@ over without a jump — and without the black gap that used to sit between them.
 - Preset picker: each instrument is a card. Tapping it expands **that** card’s
   background around its presets (`height: 0` → `auto`), so tunings sit
   visually inside the instrument, not in a shared list below. One instrument
-  expanded (`activeTuning.instrument` after first paint); tapping the open header
-  collapses it. My tunings stays expanded. Sheet children do not flex-shrink, so
+  expanded (`activeTuning.instrument` after first paint); tapping another header
+  leaves the first open. Tapping an open header collapses only that card.
+  My tunings stays expanded. Sheet children do not flex-shrink, so
   empty-state copy cannot sit under headers.
 - String rail: after the app returns from the background, `reviveOverflowScroll`
   toggles overflow so Chromium/WebView swipe scrolling starts again.
