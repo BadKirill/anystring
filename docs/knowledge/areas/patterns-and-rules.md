@@ -29,7 +29,8 @@ TDD.
 | TypeScript                     | strict + noUncheckedIndexedAccess (app)  |
 | Imports in `src/core`          | no react / platform layers / DOM globals |
 
-Relaxed for `*.test.ts` and `e2e/**` (length/cognitive).
+Relaxed for `*.test.ts` / `*.test.tsx` and `e2e/**` (length/cognitive).
+`src/test/**` and unit tests also relax test-double typing rules.
 
 ## Audio invariants
 

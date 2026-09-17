@@ -59,4 +59,49 @@ describe('stabilizePitchDisplay', () => {
     expect(unlocked.state.latched).toBe(false)
     expect(unlocked.cents).toBeGreaterThan(10)
   })
+
+  it('holds center for a small sharp drift while latched', () => {
+    let state = initialPitchStabilizerState()
+    state = stabilize(state, 0, 0.95, NOW).state
+    state = stabilize(state, 1, 0.95, NOW + 40).state
+    expect(state.latched).toBe(true)
+    const held = stabilize(state, 10, 0.95, NOW + 80)
+    expect(held.cents).toBe(0)
+    expect(held.direction).toBe('in-tune')
+    expect(held.state.latched).toBe(true)
+  })
+
+  it('does not latch after a single in-tune reading', () => {
+    const first = stabilize(undefined, 2, 0.95, NOW)
+    expect(first.state.latched).toBe(false)
+    expect(first.cents).toBe(2)
+  })
+
+  it('resets when the signal drops after the decay window', () => {
+    let state = initialPitchStabilizerState()
+    state = stabilize(state, 0, 0.95, NOW).state
+    state = stabilize(state, 1, 0.95, NOW + 40).state
+    const gone = stabilizePitchDisplay(state, {
+      cents: 12,
+      direction: 'loosen',
+      clarity: 0.2,
+      nowMs: NOW + 600,
+      hasSignal: false,
+    })
+    expect(gone.state.latched).toBe(false)
+    expect(gone.cents).toBe(12)
+    expect(gone.direction).toBe('loosen')
+  })
+
+  it('passes through a weak first reading without latching', () => {
+    const weak = stabilizePitchDisplay(initialPitchStabilizerState(), {
+      cents: 8,
+      direction: 'loosen',
+      clarity: 0.2,
+      nowMs: NOW,
+      hasSignal: true,
+    })
+    expect(weak.state.latched).toBe(false)
+    expect(weak.cents).toBe(8)
+  })
 })

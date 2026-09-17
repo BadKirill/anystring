@@ -10,22 +10,24 @@ predicates.
 
 ## Types (`types.ts`)
 
-- `Instrument = 'guitar' | 'bass'`
+- `Instrument = 'guitar' | 'bass' | 'ukulele'`
+- `INSTRUMENTS` — picker order; `isInstrument` for storage validation
 - `InstrumentString = { pitch: Pitch }`
 - `Tuning = { id, name, instrument, strings }`
 
 ## Modules
 
-| File          | Key API                                                                                                                     |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `presets.ts`  | `PRESET_TUNINGS`, `DEFAULT_TUNING_ID` (`guitar-standard`). Guitar includes 6/7/8-string standard; bass 4/5-string.          |
-| `analyzer.ts` | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis` |
-| `custom.ts`   | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`    |
-| `index.ts`    | barrel                                                                                                                      |
+| File          | Key API                                                                                                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `presets.ts`  | `PRESET_TUNINGS`, `presetsFor`, `toggleExclusiveInstrument`, `DEFAULT_TUNING_ID` (`guitar-standard`). Guitar 6/7/8-string; bass 4/5-string; ukulele High G, Low G, D tuning, Baritone, Open C. |
+| `analyzer.ts` | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`                                                                    |
+| `custom.ts`   | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`                                                                       |
+| `index.ts`    | barrel                                                                                                                                                                                         |
 
 ## Analyzer behavior
 
 - Auto: nearest target string on log-frequency scale → cents + direction.
+- Reentrant ukulele High G: G4 matches string 0, not A4.
 - Manual: fixed string index via `analyzeString`.
 - Chromatic: nearest 12-TET note via `nearestPitch` → `ChromaticAnalysis` (no tuning).
 - Direction: `tighten` (flat) / `loosen` (sharp) / `in-tune` (|¢| ≤ 5).

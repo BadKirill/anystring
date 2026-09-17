@@ -1,10 +1,12 @@
 import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 
+import { onAppResume } from '../audio/appResume'
 import {
   stringRailOverflow,
   type ScrollMetrics,
   type StringRailOverflow,
 } from './stringRailOverflow'
+import { reviveOverflowScroll } from './reviveOverflowScroll'
 
 const EMPTY_METRICS: ScrollMetrics = {
   scrollLeft: 0,
@@ -12,12 +14,32 @@ const EMPTY_METRICS: ScrollMetrics = {
   scrollWidth: 0,
 }
 
+function subscribeScroller(el: HTMLDivElement, measure: () => void): () => void {
+  const observer = new ResizeObserver(measure)
+  observer.observe(el)
+  const revive = () => {
+    reviveOverflowScroll(el)
+    measure()
+  }
+  const onVisible = () => {
+    if (document.visibilityState === 'hidden') {
+      return
+    }
+    revive()
+  }
+  document.addEventListener('visibilitychange', onVisible)
+  const stopResume = onAppResume(revive)
+  return () => {
+    observer.disconnect()
+    document.removeEventListener('visibilitychange', onVisible)
+    stopResume()
+  }
+}
+
 export function useStringRailScroll(itemCount: number): {
   ref: RefObject<HTMLDivElement | null>
   overflow: StringRailOverflow
-  metrics: ScrollMetrics
   onScroll: () => void
-  setScrollLeft: (left: number) => void
 } {
   const ref = useRef<HTMLDivElement>(null)
   const [metrics, setMetrics] = useState<ScrollMetrics>(EMPTY_METRICS)
@@ -40,27 +62,12 @@ export function useStringRailScroll(itemCount: number): {
     if (!el) {
       return
     }
-    const observer = new ResizeObserver(measure)
-    observer.observe(el)
-    return () => {
-      observer.disconnect()
-    }
+    return subscribeScroller(el, measure)
   }, [itemCount, measure])
-
-  const setScrollLeft = (left: number) => {
-    const el = ref.current
-    if (!el) {
-      return
-    }
-    el.scrollLeft = left
-    measure()
-  }
 
   return {
     ref,
     overflow: stringRailOverflow(metrics),
-    metrics,
     onScroll: measure,
-    setScrollLeft,
   }
 }

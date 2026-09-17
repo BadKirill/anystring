@@ -29,9 +29,11 @@ over without a jump — and without the black gap that used to sit between them.
 | File                                           | Role                                                                   |
 | ---------------------------------------------- | ---------------------------------------------------------------------- |
 | `TunerGauge.tsx`                               | SVG needle ±50¢, green in-tune                                         |
-| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow rail + slider       |
+| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow swipes              |
+| `stringRailOverflow.ts`                        | Overflow metrics for the string rail                                   |
+| `reviveOverflowScroll.ts`                      | Re-enable WebView overflow after Android recents/resume                |
 | `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)                 |
-| `PresetPicker.tsx`                             | Presets by instrument + My tunings + save draft                        |
+| `PresetPicker.tsx`                             | Instrument cards + nested presets + My tunings + save draft            |
 | `CustomTuningList.tsx` / `CustomTuningRow.tsx` | Saved customs: rename/delete/swipe                                     |
 | `NotePicker.tsx`                               | Note + octave chips in Sheet; plays a reference tone per pick          |
 | `Sheet.tsx`                                    | Bottom sheet modal shell                                               |
@@ -48,6 +50,14 @@ over without a jump — and without the black gap that used to sit between them.
 - Localization-ready: never hardcode user copy outside `strings.ts`.
 - Presentational components; side effects live in state/audio/storage.
 - Screen tabs reuse `.chip` / `.chip-selected`.
+- Preset picker: each instrument is a card. Tapping it expands **that** card’s
+  background around its presets (`height: 0` → `auto`), so tunings sit
+  visually inside the instrument, not in a shared list below. One instrument
+  expanded (`activeTuning.instrument` after first paint); tapping the open header
+  collapses it. My tunings stays expanded. Sheet children do not flex-shrink, so
+  empty-state copy cannot sit under headers.
+- String rail: after the app returns from the background, `reviveOverflowScroll`
+  toggles overflow so Chromium/WebView swipe scrolling starts again.
 
 ## Open when
 

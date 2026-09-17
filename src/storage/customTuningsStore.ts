@@ -1,5 +1,5 @@
 import type { Pitch } from '../core/music'
-import type { Tuning } from '../core/tunings'
+import { isInstrument, type Tuning } from '../core/tunings'
 import {
   appearsInPicker,
   belongsInMyTunings,
@@ -69,7 +69,7 @@ export function normalizeTuning(value: unknown): Tuning | null {
   if (
     typeof tuning.id !== 'string' ||
     typeof tuning.name !== 'string' ||
-    (tuning.instrument !== 'guitar' && tuning.instrument !== 'bass') ||
+    !isInstrument(tuning.instrument) ||
     !Array.isArray(tuning.strings) ||
     tuning.strings.length === 0
   ) {

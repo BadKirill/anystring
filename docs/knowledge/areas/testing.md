@@ -7,12 +7,21 @@ Tags: `test`, `vitest`, `playwright`, `e2e`, `maestro`
 TDD is mandatory for code changes ([sdd-tdd.md](sdd-tdd.md)): failing test first,
 then the smallest implementation. Do not write production code and match tests after.
 
-- Command: `npm run test` (included in `npm run check`)
-- Config: `vite.config.ts` excludes `e2e/**` from Vitest
-- Rule: every `src/core/` module has colocated `*.test.ts`
-- Also: `src/audio/pitchDetector.test.ts`, `src/storage/customTuningsStore.test.ts`,
-  `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`
-- Prefer behavior tests (F1 detection, analyzer nearest string, storage migrate)
+- Command: `npm run test` (included in `npm run check` and CI) — Vitest + v8
+  coverage. Watch without the gate: `npm run test:watch`.
+- Gate: **95%** lines, statements, functions, and branches on `src/**/*.{ts,tsx}`
+  excluding `src/main.tsx`, `*.d.ts`, tests, and `src/test/**`.
+- Environment: **jsdom**. React/hooks tests use Testing Library
+  (`@testing-library/react`, `user-event`).
+- Config: `vite.config.ts` excludes `e2e/**` from Vitest; setup is
+  `src/test/vitest.setup.ts`.
+- Rule: every `src/core/` module has colocated `*.test.ts` / `*.test.tsx`.
+- Also: `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`.
+- Prefer behavior tests (F1 detection, analyzer nearest string, storage migrate,
+  UI copy, start/stop). Do not assert tautologies (`typeof fn === 'function'`)
+  or early-return after `toBeDefined()` so a missing value would still pass.
+- Seed `Math.random` in audio/synth tests. Use fake timers instead of wall-clock
+  waits. `src/main.tsx` is bootstrap-only (Playwright covers load).
 
 ## E2E (Playwright — web / deterministic audio)
 
@@ -26,7 +35,8 @@ then the smallest implementation. Do not write production code and match tests a
 | `e2e/reference-tone.spec.ts`    | String tap + note picker buffer plays; listening stays up               |
 | `e2e/background-resume.spec.ts` | Tone + mic recovery after a 10-minute background (`stubLongBackground`) |
 | `e2e/custom-tuning.spec.ts`     | Edit/save custom                                                        |
-| `e2e/string-list.spec.ts`       | One-row string rail + overflow slider                                   |
+| `e2e/ukulele.spec.ts`           | Instrument cards + nested presets + Low G + empty My tunings copy       |
+| `e2e/string-list.spec.ts`       | One-row string rail; swipe; overflow revive after app resume            |
 | `e2e/stop-tuning.spec.ts`       | Stop listening                                                          |
 | `e2e/store/screenshots.spec.ts` | Store listing PNGs (not in default `test:e2e`)                          |
 
@@ -70,6 +80,8 @@ copy strings stay Playwright assertions (`e2e/mic-permissions.spec.ts`).
 - Reference tones counted via `AudioBufferSourceNode.start` spy (oscillator stubs do not count).
 - First mic prompt is the **OS** dialog — no in-app pre-permission screen.
 - E2E / test files relax max-lines / cognitive complexity in ESLint.
+- Unit tests must fail when the behavior is wrong (no vacuous `if (!x) return`
+  after `toBeDefined()`, no unseeded `Math.random` in pitch tests).
 
 ## Open when
 

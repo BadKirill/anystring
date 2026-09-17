@@ -46,4 +46,15 @@ describe('stringRailOverflow', () => {
       maxScroll: 160,
     })
   })
+
+  it('ignores a 1px rounding sliver as overflow', () => {
+    expect(
+      stringRailOverflow({ scrollLeft: 360, clientWidth: 360, scrollWidth: 361 }),
+    ).toEqual({
+      hasOverflow: false,
+      canScrollLeft: false,
+      canScrollRight: false,
+      maxScroll: 1,
+    })
+  })
 })

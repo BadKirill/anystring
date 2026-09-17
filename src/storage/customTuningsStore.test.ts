@@ -4,12 +4,23 @@ import { PRESET_TUNINGS, type Tuning } from '../core/tunings'
 import {
   deleteCustomTuning,
   mergePickerTunings,
+  normalizeTuning,
+  persistTuningToList,
   readActiveTuning,
   readCustomTunings,
   renameCustomTuning,
   saveCustomTuning,
   upsertInList,
+  writeActiveTuning,
 } from './customTuningsStore'
+
+function firstPreset(): Tuning {
+  const preset = PRESET_TUNINGS[0]
+  if (!preset) {
+    throw new Error('expected at least one preset tuning')
+  }
+  return preset
+}
 
 function memoryStorage(): Storage {
   const data = new Map<string, string>()
@@ -78,11 +89,8 @@ describe('customTuningsStore', () => {
   })
 
   it('does not save built-in presets as custom tunings', () => {
-    const preset = PRESET_TUNINGS[0]
-    expect(preset).toBeDefined()
-    if (preset) {
-      saveCustomTuning(preset)
-    }
+    const preset = firstPreset()
+    saveCustomTuning(preset)
     expect(readCustomTunings()).toEqual([])
   })
 
@@ -127,19 +135,13 @@ describe('customTuningsStore', () => {
   })
 
   it('migrates renamed legacy presets into my tunings', () => {
-    const preset = PRESET_TUNINGS[0]
-    expect(preset).toBeDefined()
-    if (!preset) {
-      return
-    }
+    const preset = firstPreset()
     const renamed = { ...preset, name: 'Test123' }
     sessionStorage.setItem('anytune.lastActiveTuning.session', JSON.stringify(renamed))
     const active = readActiveTuning()
     expect(active?.name).toBe('Test123')
     expect(active?.id.startsWith('custom-')).toBe(true)
-    if (active) {
-      expect(mergePickerTunings([], active)).toHaveLength(1)
-    }
+    expect(mergePickerTunings([], active ?? TUNING)).toHaveLength(1)
   })
 
   it('renames a saved tuning', () => {
@@ -194,5 +196,87 @@ describe('customTuningsStore', () => {
     expect(upsertInList([TUNING], { ...TUNING, name: 'Renamed' })).toEqual([
       { ...TUNING, name: 'Renamed' },
     ])
+  })
+
+  it('accepts ukulele tunings and rejects unknown instruments', () => {
+    const ukulele: Tuning = {
+      id: 'custom-uke',
+      name: 'My uke',
+      instrument: 'ukulele',
+      strings: [{ pitch: { note: 'G', octave: 4 } }],
+    }
+    expect(normalizeTuning(ukulele)).toEqual(ukulele)
+    expect(
+      normalizeTuning({
+        id: 'custom-uke',
+        name: 'My uke',
+        instrument: 'banjo',
+        strings: [{ pitch: { note: 'G', octave: 4 } }],
+      }),
+    ).toBeNull()
+  })
+
+  it('rejects malformed tunings and quota failures without throwing', () => {
+    expect(normalizeTuning(null)).toBeNull()
+    expect(
+      normalizeTuning({ id: 1, name: 'x', instrument: 'guitar', strings: [] }),
+    ).toBeNull()
+    expect(
+      normalizeTuning({
+        id: 'custom-bad',
+        name: 'Bad',
+        instrument: 'guitar',
+        strings: [{ pitch: { note: 1, octave: 2 } }],
+      }),
+    ).toBeNull()
+    expect(
+      normalizeTuning({
+        id: 'custom-bad',
+        name: 'Bad',
+        instrument: 'guitar',
+        strings: [{ pitch: { note: 'E', octave: 'nope' } }],
+      }),
+    ).toBeNull()
+    expect(
+      normalizeTuning({
+        id: 'custom-bad',
+        name: 'Bad',
+        instrument: 'guitar',
+        strings: [{ pitch: { note: 'E', octave: '' } }],
+      }),
+    ).toBeNull()
+    expect(
+      normalizeTuning({
+        id: 'custom-bad',
+        name: 'Bad',
+        instrument: 'guitar',
+        strings: ['nope'],
+      }),
+    ).toBeNull()
+    localStorage.setItem(
+      'anystring.v2.customTunings',
+      JSON.stringify({ v: 2, tunings: null }),
+    )
+    expect(readCustomTunings()).toEqual([])
+    const exploding: Storage = {
+      ...memoryStorage(),
+      setItem: () => {
+        throw new Error('quota')
+      },
+    }
+    vi.stubGlobal('localStorage', exploding)
+    vi.stubGlobal('sessionStorage', exploding)
+    expect(() => {
+      saveCustomTuning(TUNING)
+    }).not.toThrow()
+  })
+
+  it('ignores unmodified presets when writing the active tuning', () => {
+    const preset = firstPreset()
+    writeActiveTuning(preset)
+    expect(readActiveTuning()).toBeNull()
+    persistTuningToList(preset)
+    expect(upsertInList([], preset)).toEqual([])
+    expect(renameCustomTuning('missing', 'Nope')).toBeNull()
   })
 })

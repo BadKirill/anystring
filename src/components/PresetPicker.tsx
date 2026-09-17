@@ -1,7 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { formatPitch } from '../core/music'
-import { PRESET_TUNINGS, type Instrument, type Tuning } from '../core/tunings'
+import {
+  INSTRUMENTS,
+  presetsFor,
+  toggleExclusiveInstrument,
+  type Instrument,
+  type Tuning,
+} from '../core/tunings'
 import { appearsInPicker } from '../core/tunings/custom'
 import { mergePickerTunings } from '../storage/customTuningsStore'
 import { CustomTuningList } from './CustomTuningList'
@@ -30,7 +36,7 @@ function PresetRow({
   return (
     <button
       type="button"
-      className="list-row"
+      className="list-row instrument-preset"
       onClick={() => {
         onSelect(tuning)
       }}
@@ -77,8 +83,162 @@ function SaveDraftField({ onSave }: { onSave: (name: string) => void }) {
   )
 }
 
-function presetsFor(instrument: Instrument): Tuning[] {
-  return PRESET_TUNINGS.filter((t) => t.instrument === instrument)
+function instrumentLabel(instrument: Instrument): string {
+  if (instrument === 'guitar') {
+    return UI.guitar
+  }
+  if (instrument === 'bass') {
+    return UI.bass
+  }
+  return UI.ukulele
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function useExpandedInstrument(activeInstrument: Instrument): {
+  expanded: Instrument | null
+  toggle: (instrument: Instrument) => void
+} {
+  const [expanded, setExpanded] = useState<Instrument | null>(() =>
+    prefersReducedMotion() ? activeInstrument : null,
+  )
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      return
+    }
+    const frame = requestAnimationFrame(() => {
+      setExpanded((current) => current ?? activeInstrument)
+    })
+    return () => {
+      cancelAnimationFrame(frame)
+    }
+  }, [activeInstrument])
+  return {
+    expanded,
+    toggle: (instrument: Instrument) => {
+      setExpanded((current) => toggleExclusiveInstrument(current, instrument))
+    },
+  }
+}
+
+function InstrumentHeader({
+  instrument,
+  expanded,
+  activeName,
+  panelId,
+  onToggle,
+}: {
+  instrument: Instrument
+  expanded: boolean
+  activeName: string | null
+  panelId: string
+  onToggle: () => void
+}) {
+  const label = instrumentLabel(instrument)
+  return (
+    <button
+      type="button"
+      className="list-row instrument-header"
+      aria-expanded={expanded}
+      aria-controls={expanded ? panelId : undefined}
+      aria-label={label}
+      onClick={onToggle}
+    >
+      <span className="instrument-header-text">
+        <span className="list-row-title">{label}</span>
+        {activeName !== null && <span className="list-row-subtitle">{activeName}</span>}
+      </span>
+      <span className="instrument-chevron" aria-hidden="true" />
+    </button>
+  )
+}
+
+function InstrumentPresetPanel({
+  instrument,
+  collapsed,
+  onSelect,
+}: {
+  instrument: Instrument
+  collapsed: boolean
+  onSelect: (tuning: Tuning) => void
+}) {
+  return (
+    <div
+      id={`presets-${instrument}`}
+      className="instrument-presets"
+      aria-hidden={collapsed}
+      inert={collapsed}
+    >
+      {presetsFor(instrument).map((tuning) => (
+        <PresetRow key={tuning.id} tuning={tuning} onSelect={onSelect} />
+      ))}
+    </div>
+  )
+}
+
+function InstrumentPresetGroup({
+  instrument,
+  expanded,
+  activeName,
+  onToggle,
+  onSelect,
+}: {
+  instrument: Instrument
+  expanded: boolean
+  activeName: string | null
+  onToggle: () => void
+  onSelect: (tuning: Tuning) => void
+}) {
+  const panelId = `presets-${instrument}`
+  return (
+    <div
+      className={expanded ? 'instrument-group instrument-group-open' : 'instrument-group'}
+    >
+      <InstrumentHeader
+        instrument={instrument}
+        expanded={expanded}
+        activeName={activeName}
+        panelId={panelId}
+        onToggle={onToggle}
+      />
+      <div className="instrument-panel-inner">
+        <InstrumentPresetPanel
+          instrument={instrument}
+          collapsed={!expanded}
+          onSelect={onSelect}
+        />
+      </div>
+    </div>
+  )
+}
+
+function InstrumentPresetList({
+  activeTuning,
+  onSelect,
+}: {
+  activeTuning: Tuning
+  onSelect: (tuning: Tuning) => void
+}) {
+  const { expanded, toggle } = useExpandedInstrument(activeTuning.instrument)
+
+  return (
+    <div className="instrument-list">
+      {INSTRUMENTS.map((instrument) => (
+        <InstrumentPresetGroup
+          key={instrument}
+          instrument={instrument}
+          expanded={expanded === instrument}
+          activeName={activeTuning.instrument === instrument ? activeTuning.name : null}
+          onToggle={() => {
+            toggle(instrument)
+          }}
+          onSelect={onSelect}
+        />
+      ))}
+    </div>
+  )
 }
 
 export function PresetPicker({
@@ -112,14 +272,7 @@ export function PresetPicker({
         onDelete={onDeleteCustom}
         onRename={onRenameCustom}
       />
-      <h3>{UI.guitar}</h3>
-      {presetsFor('guitar').map((tuning) => (
-        <PresetRow key={tuning.id} tuning={tuning} onSelect={onSelect} />
-      ))}
-      <h3>{UI.bass}</h3>
-      {presetsFor('bass').map((tuning) => (
-        <PresetRow key={tuning.id} tuning={tuning} onSelect={onSelect} />
-      ))}
+      <InstrumentPresetList activeTuning={activeTuning} onSelect={onSelect} />
     </Sheet>
   )
 }
