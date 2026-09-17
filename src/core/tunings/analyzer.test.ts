@@ -50,10 +50,12 @@ describe('analyze', () => {
     expect(analyze(nearHigh, DEMIURGE)?.stringIndex).toBe(1)
   })
 
-  it('treats offsets within 5 cents as in tune', () => {
+  it('treats offsets within 5 cents as in tune and 6 cents as out', () => {
     const target = pitchToFrequency({ note: 'G#', octave: 2 })
     const fourCentsSharp = target * 2 ** (4 / 1200)
+    const sixCentsSharp = target * 2 ** (6 / 1200)
     expect(analyze(fourCentsSharp, DEMIURGE)?.direction).toBe('in-tune')
+    expect(analyze(sixCentsSharp, DEMIURGE)?.direction).toBe('loosen')
   })
 
   it('returns null for a tuning with no strings', () => {
@@ -89,10 +91,12 @@ describe('analyzeChromatic', () => {
     expect(analyzeChromatic(a4 * 1.02).direction).toBe('loosen')
   })
 
-  it('treats offsets within 5 cents as in tune', () => {
+  it('treats offsets within 5 cents as in tune and 6 cents as out', () => {
     const target = pitchToFrequency({ note: 'E', octave: 2 })
     const fourCentsSharp = target * 2 ** (4 / 1200)
+    const sixCentsSharp = target * 2 ** (6 / 1200)
     expect(analyzeChromatic(fourCentsSharp).direction).toBe('in-tune')
+    expect(analyzeChromatic(sixCentsSharp).direction).toBe('loosen')
   })
 
   it('picks the nearer note between two semitones', () => {
@@ -104,11 +108,23 @@ describe('analyzeChromatic', () => {
 })
 
 describe('PRESET_TUNINGS', () => {
-  it('orders every preset from lowest string to highest', () => {
+  it('orders guitar and bass presets from lowest string to highest', () => {
     for (const tuning of PRESET_TUNINGS) {
+      if (tuning.instrument === 'ukulele') {
+        continue
+      }
       const freqs = tuning.strings.map((s) => pitchToFrequency(s.pitch))
       const sorted = [...freqs].sort((a, b) => a - b)
       expect(freqs).toEqual(sorted)
     }
+  })
+
+  it('matches reentrant High G to the G string, not A', () => {
+    const highG = PRESET_TUNINGS.find((tuning) => tuning.id === 'ukulele-standard')
+    if (!highG) {
+      throw new Error('ukulele-standard preset is missing')
+    }
+    const g4 = pitchToFrequency({ note: 'G', octave: 4 })
+    expect(analyze(g4, highG)?.stringIndex).toBe(0)
   })
 })

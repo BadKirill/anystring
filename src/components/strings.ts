@@ -10,7 +10,6 @@ export const UI = {
   playSelectedString: 'Play the selected string',
   playANote: 'Play a note to begin',
   tapAgainToEdit: 'Tap a string to target it, tap again to change its note',
-  scrollStrings: 'Scroll strings',
   micDenied: 'Microphone access denied. Allow it in settings and retry.',
   micMissing: 'No microphone found on this device.',
   micUnavailable: 'Microphone is unavailable.',
@@ -24,6 +23,7 @@ export const UI = {
   tunings: 'Tunings',
   guitar: 'Guitar',
   bass: 'Bass',
+  ukulele: 'Ukulele',
   myTunings: 'My tunings',
   noCustomTunings: 'No saved tunings yet — edit a string, name it, then tap Save above.',
   saveCurrent: 'Save current tuning',
@@ -37,7 +37,8 @@ export const UI = {
   installHint: 'Install this app: Share, then "Add to Home Screen"',
   about: 'About',
   aboutTitle: 'About Anystring',
-  aboutTagline: 'Free tuner for guitar and bass with fully editable per-string tunings.',
+  aboutTagline:
+    'Free tuner for guitar, bass, and ukulele with fully editable per-string tunings.',
   aboutPrivacy:
     'The microphone is only used while you are tuning. Audio is analysed on your device, never recorded and never uploaded. Your tunings stay in this app.',
   aboutVersion: 'Version',

@@ -93,6 +93,47 @@ export const PRESET_TUNINGS: Tuning[] = [
     ['D', 2],
     ['G', 2],
   ]),
+  preset('ukulele-standard', 'Standard (High G)', 'ukulele', [
+    ['G', 4],
+    ['C', 4],
+    ['E', 4],
+    ['A', 4],
+  ]),
+  preset('ukulele-low-g', 'Low G', 'ukulele', [
+    ['G', 3],
+    ['C', 4],
+    ['E', 4],
+    ['A', 4],
+  ]),
+  preset('ukulele-d', 'D tuning', 'ukulele', [
+    ['A', 4],
+    ['D', 4],
+    ['F#', 4],
+    ['B', 4],
+  ]),
+  preset('ukulele-baritone', 'Baritone', 'ukulele', [
+    ['D', 3],
+    ['G', 3],
+    ['B', 3],
+    ['E', 4],
+  ]),
+  preset('ukulele-open-c', 'Open C', 'ukulele', [
+    ['G', 4],
+    ['C', 4],
+    ['E', 4],
+    ['G', 4],
+  ]),
 ]
+
+export function presetsFor(instrument: Instrument): Tuning[] {
+  return PRESET_TUNINGS.filter((tuning) => tuning.instrument === instrument)
+}
+
+export function toggleExclusiveInstrument(
+  current: Instrument | null,
+  tapped: Instrument,
+): Instrument | null {
+  return current === tapped ? null : tapped
+}
 
 export const DEFAULT_TUNING_ID = 'guitar-standard'

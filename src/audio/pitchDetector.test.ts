@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   detectPitch,
+  frequencyJumpCents,
   minClarityFor,
   minRmsFor,
   removeDc,
@@ -42,7 +43,23 @@ function quietRumble(frequency: number, amplitude: number): Float32Array {
   return samples
 }
 
+function seedRandom(seed: number): void {
+  let state = seed
+  vi.spyOn(Math, 'random').mockImplementation(() => {
+    state = (state * 1664525 + 1013904223) >>> 0
+    return state / 0x1_0000_0000
+  })
+}
+
 describe('detectPitch', () => {
+  beforeEach(() => {
+    seedRandom(0xc0ffee)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('detects low bass F1 (~43.65 Hz, Demiurge low string)', () => {
     const reading = detectPitch(pluckedTone(43.65), SAMPLE_RATE)
     expect(reading).not.toBeNull()
@@ -93,12 +110,23 @@ describe('pitch gates', () => {
   })
 
   it('keeps bass clarity strict enough to reject weak correlations', () => {
-    expect(minClarityFor(43)).toBeGreaterThanOrEqual(0.88)
+    expect(minClarityFor(43)).toBe(0.88)
+    expect(minClarityFor(80)).toBe(0.88)
+    expect(minClarityFor(120)).toBe(0.9)
   })
 
   it('removeDc centers a constant offset at zero', () => {
     const biased = new Float32Array([0.2, 0.2, 0.2, 0.2])
     const centered = removeDc(biased)
     expect(signalRms(centered)).toBeCloseTo(0, 5)
+  })
+
+  it('removeDc returns the same buffer when there is no DC offset', () => {
+    const samples = new Float32Array([0.1, -0.1, 0.1, -0.1])
+    expect(removeDc(samples)).toBe(samples)
+  })
+
+  it('measures an octave jump as 1200 cents', () => {
+    expect(frequencyJumpCents(440, 880)).toBeCloseTo(1200, 6)
   })
 })

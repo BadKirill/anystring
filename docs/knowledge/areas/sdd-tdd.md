@@ -51,7 +51,7 @@ Rules:
 - User-visible flows get Playwright (web) or Maestro (native shell) coverage
   when the behavior is new or the existing e2e would lie.
 - Tests assert **behavior** (F1 detection, nearest string, migrate v1→v2). Skip
-  trivial “it is a function” assertions.
+  trivial “it is a function” assertions. Vitest coverage must stay ≥ 95%.
 - Do not write the implementation and then “add tests to match.” If tests were
   written after the fact, delete the implementation path and redo Red→Green.
 

@@ -75,5 +75,19 @@ export default tseslint.config(
       'sonarjs/cognitive-complexity': 'off',
     },
   },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx', 'src/test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/no-misused-spread': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
+    },
+  },
   prettier,
 )

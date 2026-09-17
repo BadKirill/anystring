@@ -7,7 +7,7 @@ Every push and pull request runs the **CI** workflow with five separate checks v
 | Lint (ESLint)          | `npm run lint`                        |
 | Format (Prettier)      | `npm run format:check`                |
 | Typecheck (TypeScript) | `npm run typecheck`                   |
-| Unit tests (Vitest)    | `npm run test`                        |
+| Unit tests (Vitest)    | `npm run test` (95% coverage)         |
 | Knowledge graph        | `npm run knowledge:check`             |
 | E2E (Playwright local) | `npm run test:e2e` against dev server |
 

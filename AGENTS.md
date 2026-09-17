@@ -1,6 +1,6 @@
 # Anystring — agent guide
 
-Anystring is a mobile-first guitar/bass tuner with fully editable per-string tunings.
+Anystring is a mobile-first guitar, bass, and ukulele tuner with fully editable per-string tunings.
 One TypeScript codebase: Vite + React PWA, wrapped with Capacitor for the app stores.
 
 This file is the **tool-agnostic** entry for Cursor, ChatGPT/Codex, Claude Code,
@@ -71,7 +71,7 @@ Do not introduce libraries, frameworks, or patterns outside this list without an
 | Pitch detection | **`pitchy`** (McLeod Pitch Method), window 4096–8192 samples                    |
 | Mobile stores   | **Capacitor** (iOS/Android wrappers around the same web build)                  |
 | Persistence     | **`localStorage`** via `src/storage/` — no backend                              |
-| Unit tests      | **Vitest**                                                                      |
+| Unit tests      | **Vitest** (`jsdom` + Testing Library, v8 coverage ≥ 95%)                       |
 | E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)             |
 | Native UI e2e   | **Maestro** (Capacitor iOS/Android simulators — permissions + shell smoke)      |
 | Lint / format   | **ESLint** (`typescript-eslint` strict, `eslint-plugin-sonarjs`) + **Prettier** |
@@ -112,7 +112,8 @@ src/storage/        — localStorage persistence
 
 | Command                     | Purpose                                                                      |
 | --------------------------- | ---------------------------------------------------------------------------- |
-| `npm run check`             | Lint + format check + typecheck + unit tests — run before every PR           |
+| `npm run check`             | Lint + format check + typecheck + unit tests (95% coverage) + knowledge      |
+| `npm run test`              | Vitest + v8 coverage gate (95% lines/statements/functions/branches)          |
 | `npm run test:e2e`          | Full Playwright suite against local dev server                               |
 | `npm run test:e2e:live`     | Smoke tests against production (`PLAYWRIGHT_BASE_URL=https://anystring.app`) |
 | `npm run test:e2e:native`   | Maestro flows on iOS Simulator / Android emulator (`scripts/native-e2e.sh`)  |

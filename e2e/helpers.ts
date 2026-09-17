@@ -164,6 +164,20 @@ export async function simulateBackground(page: Page, hiddenMs: number): Promise<
   }, hiddenMs)
 }
 
+export async function simulateAppResume(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const setVisibility = (state: DocumentVisibilityState) => {
+      Object.defineProperty(document, 'visibilityState', {
+        configurable: true,
+        get: () => state,
+      })
+      document.dispatchEvent(new Event('visibilitychange'))
+    }
+    setVisibility('hidden')
+    setVisibility('visible')
+  })
+}
+
 export const APP_URL = '/app/'
 
 export const EIGHT_STRING_TUNING = {

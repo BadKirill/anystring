@@ -16,6 +16,9 @@ dist-ssr
 test-results
 playwright-report
 
+# Vitest coverage
+coverage
+
 # Native local builds (cap:build:ios-sim / gradlew)
 ios/build/
 android/.gradle/

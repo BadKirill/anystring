@@ -13,7 +13,7 @@ to the GitHub Wiki home page.
 
 ## 1. Product
 
-Mobile-first guitar/bass tuner with fully editable per-string tunings plus a
+Mobile-first guitar, bass, and ukulele tuner with fully editable per-string tunings plus a
 chromatic (nearest-note) tab. One TypeScript codebase: a Vite + React PWA, wrapped
 by Capacitor for the App Store and Google Play. No backend — custom tunings live
 in `localStorage`.
@@ -46,7 +46,8 @@ Presets + custom editor → storage → active Tuning → string analyzer
 ## 3. Stack (allowed only)
 
 Vite, React 19, TypeScript strict, `vite-plugin-pwa`, Web Audio + AudioWorklet,
-`pitchy` (MPM), Capacitor 8 (iOS + Android shells), localStorage, Vitest,
+`pitchy` (MPM), Capacitor 8 (iOS + Android shells), localStorage, Vitest
+(jsdom, Testing Library, 95% coverage),
 Playwright, Maestro (native shell), ESLint (`typescript-eslint` strict + sonarjs), Prettier.
 
 Not in scope: Redux/Zustand/TanStack Query, backend, cloud sync, RN (unless

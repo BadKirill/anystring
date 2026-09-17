@@ -3,8 +3,6 @@ import { useLayoutEffect } from 'react'
 import { playReferencePitch, warmReferenceAudio } from '../audio/referenceTone'
 import { formatPitch, pitchToMidi, type Pitch } from '../core/music'
 import type { Tuning } from '../core/tunings'
-import type { StringRailOverflow } from './stringRailOverflow'
-import { UI } from './strings'
 import { useStringRailScroll } from './useStringRailScroll'
 
 function stringThickness(pitch: Pitch): number {
@@ -102,33 +100,6 @@ function StringItem({
   )
 }
 
-function StringRailChrome({
-  overflow,
-  scrollLeft,
-  onScrollLeft,
-}: {
-  overflow: StringRailOverflow
-  scrollLeft: number
-  onScrollLeft: (left: number) => void
-}) {
-  if (!overflow.hasOverflow) {
-    return null
-  }
-  return (
-    <input
-      type="range"
-      className="string-rail-slider"
-      min={0}
-      max={overflow.maxScroll}
-      value={scrollLeft}
-      aria-label={UI.scrollStrings}
-      onChange={(event) => {
-        onScrollLeft(Number(event.target.value))
-      }}
-    />
-  )
-}
-
 export function StringList({
   tuning,
   activeIndex,
@@ -161,11 +132,6 @@ export function StringList({
           />
         ))}
       </div>
-      <StringRailChrome
-        overflow={rail.overflow}
-        scrollLeft={rail.metrics.scrollLeft}
-        onScrollLeft={rail.setScrollLeft}
-      />
     </div>
   )
 }

@@ -19,9 +19,10 @@ const pwa = VitePWA({
   includeAssets: ['icon.svg', 'apple-touch-icon.png'],
   manifest: {
     id: '/app/',
-    name: 'Anystring — custom guitar & bass tuner',
+    name: 'Anystring — custom guitar, bass & ukulele tuner',
     short_name: 'Anystring',
-    description: 'Free tuner for guitar and bass with fully editable per-string tunings.',
+    description:
+      'Free tuner for guitar, bass, and ukulele with fully editable per-string tunings.',
     theme_color: '#0d1412',
     background_color: '#0d1412',
     display: 'standalone',
@@ -65,7 +66,27 @@ export default defineConfig({
   },
   test: {
     root,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/vitest.setup.ts'],
     exclude: [...configDefaults.exclude, 'e2e/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.d.ts',
+        'src/**/*.test.ts',
+        'src/**/*.test.tsx',
+        'src/test/**',
+        'src/main.tsx',
+      ],
+      thresholds: {
+        lines: 95,
+        statements: 95,
+        functions: 95,
+        branches: 95,
+      },
+    },
   },
   plugins: isNativeBuild ? [react()] : [react(), pwa],
 })
