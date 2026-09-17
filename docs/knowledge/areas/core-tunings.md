@@ -19,7 +19,7 @@ predicates.
 
 | File          | Key API                                                                                                                                                                                        |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `presets.ts`  | `PRESET_TUNINGS`, `presetsFor`, `toggleExclusiveInstrument`, `DEFAULT_TUNING_ID` (`guitar-standard`). Guitar 6/7/8-string; bass 4/5-string; ukulele High G, Low G, D tuning, Baritone, Open C. |
+| `presets.ts`  | `PRESET_TUNINGS`, `presetsFor`, `toggleExpandedInstruments`, `DEFAULT_TUNING_ID` (`guitar-standard`). Guitar 6/7/8-string; bass 4/5-string; ukulele High G, Low G, D tuning, Baritone, Open C. |
 | `analyzer.ts` | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`                                                                    |
 | `custom.ts`   | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`                                                                       |
 | `index.ts`    | barrel                                                                                                                                                                                         |

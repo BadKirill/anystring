@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { PRESET_TUNINGS, presetsFor, toggleExclusiveInstrument } from './presets'
+import { PRESET_TUNINGS, presetsFor, toggleExpandedInstruments } from './presets'
 import { INSTRUMENTS, type Tuning } from './types'
 
 function presetById(id: string): Tuning {
@@ -47,10 +47,21 @@ describe('PRESET_TUNINGS', () => {
     ])
   })
 
-  it('toggles exclusive instrument expansion', () => {
-    expect(toggleExclusiveInstrument('guitar', 'guitar')).toBeNull()
-    expect(toggleExclusiveInstrument('guitar', 'ukulele')).toBe('ukulele')
-    expect(toggleExclusiveInstrument(null, 'bass')).toBe('bass')
+  it('toggles independent instrument expansion', () => {
+    expect(toggleExpandedInstruments(['guitar'], 'guitar')).toEqual([])
+    expect(toggleExpandedInstruments(['guitar'], 'ukulele')).toEqual([
+      'guitar',
+      'ukulele',
+    ])
+    expect(toggleExpandedInstruments([], 'bass')).toEqual(['bass'])
+    expect(toggleExpandedInstruments(['guitar', 'ukulele'], 'guitar')).toEqual([
+      'ukulele',
+    ])
+    expect(toggleExpandedInstruments(['guitar', 'bass'], 'ukulele')).toEqual([
+      'guitar',
+      'bass',
+      'ukulele',
+    ])
   })
 
   it('lists guitar, bass, then ukulele for the picker', () => {

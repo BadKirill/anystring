@@ -1,5 +1,5 @@
 import type { NoteName, Pitch } from '../music'
-import type { Instrument, Tuning } from './types'
+import { INSTRUMENTS, type Instrument, type Tuning } from './types'
 
 function pitches(specs: [NoteName, number][]): { pitch: Pitch }[] {
   return specs.map(([note, octave]) => ({ pitch: { note, octave } }))
@@ -129,11 +129,17 @@ export function presetsFor(instrument: Instrument): Tuning[] {
   return PRESET_TUNINGS.filter((tuning) => tuning.instrument === instrument)
 }
 
-export function toggleExclusiveInstrument(
-  current: Instrument | null,
+export function toggleExpandedInstruments(
+  open: readonly Instrument[],
   tapped: Instrument,
-): Instrument | null {
-  return current === tapped ? null : tapped
+): readonly Instrument[] {
+  const next = new Set(open)
+  if (next.has(tapped)) {
+    next.delete(tapped)
+  } else {
+    next.add(tapped)
+  }
+  return INSTRUMENTS.filter((instrument) => next.has(instrument))
 }
 
 export const DEFAULT_TUNING_ID = 'guitar-standard'

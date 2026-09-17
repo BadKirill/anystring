@@ -83,9 +83,13 @@ test('picker opens instrument presets inside that instrument card', async ({ pag
     .toBe(true)
 
   await page.getByRole('button', { name: 'Ukulele' }).click()
-  await expect(guitarCard.getByRole('button', { name: /^Drop D D2/ })).toHaveCount(0)
+  await expect(drop).toBeVisible()
   await expect(ukeCard.getByRole('button', { name: /^Low G G3/ })).toBeVisible()
   await expect(ukeCard.getByRole('button', { name: /^Baritone D3/ })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Guitar' }).click()
+  await expect(guitarCard.getByRole('button', { name: /^Drop D D2/ })).toHaveCount(0)
+  await expect(ukeCard.getByRole('button', { name: /^Low G G3/ })).toBeVisible()
 
   await page.getByRole('button', { name: /^Low G G3/ }).click()
   await expect(page.getByRole('button', { name: 'Low G' })).toBeVisible()
