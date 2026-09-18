@@ -35,7 +35,7 @@ Refresh inventory: `npm run knowledge:refresh`.
 | gauge, sheet, picker, swipe, InstallHint, UI copy, screen tabs, splash       | [components.md](areas/components.md)                 |
 | useTunerState, draft save, manual/auto string, Strings/Chromatic screen      | [state.md](areas/state.md)                           |
 | localStorage, v2 keys, migrate, persist                                      | [storage.md](areas/storage.md)                       |
-| vitest, playwright, stub mic, e2e                                            | [testing.md](areas/testing.md)                       |
+| vitest, playwright, stub mic, e2e, maestro, coverage                         | [testing.md](areas/testing.md)                       |
 | CI, deploy, Pages, workflows                                                 | [ci-cd.md](areas/ci-cd.md)                           |
 | Capacitor, iOS, Android, native build, permissions, store submission         | [native-shell.md](areas/native-shell.md)             |
 | eslint, prettier, complexity, stack limits                                   | [patterns-and-rules.md](areas/patterns-and-rules.md) |

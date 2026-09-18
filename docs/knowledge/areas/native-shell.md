@@ -46,8 +46,8 @@ and grants the WebView only if each result is `true`; a permission missing from
 the manifest always returns `false`, so the mic stays denied no matter what the
 user taps in the system dialog.
 
-Version numbers live in `package.json` as `version` (marketing, e.g. `1.0.3`)
-and `buildNumber` (store integer, e.g. `8`). That is the only source of truth.
+Version numbers live in `package.json` as `version` (marketing, e.g. `1.1.0`)
+and `buildNumber` (store integer, e.g. `9`). That is the only source of truth.
 
 - Android `build.gradle` reads both fields at compile time.
 - `npm run stamp:native-version` writes iOS `MARKETING_VERSION` and
@@ -56,7 +56,7 @@ and `buildNumber` (store integer, e.g. `8`). That is the only source of truth.
 - About on a native install reads OS metadata via `@capacitor/app`
   (`App.getInfo()`), so the sheet shows the installed binary, not a
   leftover JS constant. Web/PWA uses the bundled values. Display is
-  `Version 1.0.3 (8)`.
+  `Version 1.1.0 (9)`.
 - Bump with `npm run version:patch|minor|major|build` (always increments
   `buildNumber`). Vitest fails if iOS or Android drift from `package.json`.
   Do not edit versions in Xcode or Android Studio.
@@ -122,7 +122,7 @@ selecting an `AVAudioEngine` plugin that posts 8192-sample Float32 windows.
 Listing PNGs live in `store/screenshots/{ios,android}/` (see README there).
 Regenerate with `npm run screenshots:store` (Playwright device viewports + stub
 mic). Optional native pass: Maestro `.maestro/screenshots.yaml` after a debug
-install.
+install. Play Console copy lives in `store/play-listing/COPY.md`.
 
 ## Native UI automation (Maestro)
 

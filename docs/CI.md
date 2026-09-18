@@ -1,6 +1,6 @@
 # CI/CD pipeline
 
-Every push and pull request runs the **CI** workflow with five separate checks visible in GitHub:
+Every push and pull request runs the **CI** workflow with six separate checks visible in GitHub:
 
 | Job                    | What it runs                          |
 | ---------------------- | ------------------------------------- |
@@ -43,5 +43,5 @@ For interactive visual review in Cursor, use the **cursor-ide-browser** MCP (`br
 
 In GitHub → Settings → Branches → Add rule for `master`:
 
-- Require status checks: all five CI jobs before merge
+- Require status checks: all six CI jobs before merge
 - Optional: require Deploy UI check to pass (only runs after merge to master)

@@ -43,6 +43,7 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `public/CNAME`                                               | Custom domain `anystring.app` for GitHub Pages             |
 | `public/privacy.html` / `public/support.html`                | Store-required static pages                                |
 | `store/screenshots/`                                         | App Store / Play listing PNGs                              |
+| `store/play-listing/COPY.md`                                 | Google Play listing name/descriptions                      |
 | `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens    |
 | `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp marketing version + build number          |
 | `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                     |

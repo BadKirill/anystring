@@ -33,19 +33,23 @@ Purpose: locate any project file without scanning the tree. Excludes
 | `eslint.config.js`                | Lint + core portability |
 | `vite.config.ts`                  | Vite, PWA, Vitest       |
 | `playwright.config.ts`            | E2E                     |
+| `playwright.store.config.ts`      | Store screenshot config |
+| `capacitor.config.ts`             | Capacitor app id/name   |
 | `tsconfig.json`                   | Solution                |
 | `tsconfig.app.json`               | App TS                  |
 | `tsconfig.node.json`              | Node/tooling TS         |
 | `.prettierrc` / `.prettierignore` | Format                  |
 | `.gitignore`                      | Ignores                 |
-| `index.html`                      | HTML entry              |
+| `index.html`                      | Marketing landing       |
+| `app/index.html`                  | Tuner SPA shell         |
 
 ## CI
 
-| Path                           | Purpose            |
-| ------------------------------ | ------------------ |
-| `.github/workflows/ci.yml`     | Five PR checks     |
-| `.github/workflows/deploy.yml` | Pages + live smoke |
+| Path                                   | Purpose                         |
+| -------------------------------------- | ------------------------------- |
+| `.github/workflows/ci.yml`             | Six PR checks (incl. knowledge) |
+| `.github/workflows/deploy.yml`         | Pages + live smoke              |
+| `.github/workflows/knowledge-wiki.yml` | Manual GitHub/Notion wiki sync  |
 
 ## `src/` entry
 
@@ -98,6 +102,7 @@ Purpose: locate any project file without scanning the tree. Excludes
 | `pitchGate.ts`                  | Suppress during reference |
 | `referenceTone.ts`              | Play reference pitch      |
 | `appResume.ts`                  | Visibility resume         |
+| `audioContextResume.ts`         | Bounded resume / rebuild  |
 | `worklet-types.d.ts`            | Types                     |
 
 ## `src/platform/`
@@ -125,6 +130,7 @@ Purpose: locate any project file without scanning the tree. Excludes
 | `SwipeableRow.tsx` / `useSwipeOffset.ts`       | Swipe actions        |
 | `TextField.tsx`                                | Text input           |
 | `InstallHint.tsx`                              | PWA install tip      |
+| `AboutSheet.tsx`                               | Version / privacy    |
 | `useLockBodyScroll.ts`                         | Scroll lock          |
 | `strings.ts`                                   | UI copy              |
 
@@ -154,22 +160,32 @@ Purpose: locate any project file without scanning the tree. Excludes
 
 ## E2E & scripts / public
 
-| Path                              | Purpose             |
-| --------------------------------- | ------------------- |
-| `e2e/helpers.ts`                  | Mic stubs & waits   |
-| `e2e/about.spec.ts`               | About version       |
-| `e2e/landing.spec.ts`             | Landing → /app      |
-| `e2e/smoke.spec.ts`               | Live smoke          |
-| `e2e/tuner.spec.ts`               | Tuner flow          |
-| `e2e/custom-tuning.spec.ts`       | Custom save         |
-| `e2e/stop-tuning.spec.ts`         | Stop listening      |
-| `scripts/generate-icons.mjs`      | Icons               |
-| `scripts/appReleaseVersion.ts`    | Version SSOT logic  |
-| `scripts/stampNativeVersion.ts`   | Stamp iOS versions  |
-| `scripts/bumpAppVersion.ts`       | `npm run version:*` |
-| `scripts/check-knowledge.mjs`     | Knowledge integrity |
-| `scripts/sync-knowledge-wiki.mjs` | Wiki sync           |
-| `public/*`                        | PWA icons / svg     |
+| Path                              | Purpose                  |
+| --------------------------------- | ------------------------ |
+| `e2e/helpers.ts`                  | Mic stubs & waits        |
+| `e2e/about.spec.ts`               | About version            |
+| `e2e/landing.spec.ts`             | Landing → /app           |
+| `e2e/smoke.spec.ts`               | Live smoke               |
+| `e2e/tuner.spec.ts`               | Tuner flow               |
+| `e2e/mic-permissions.spec.ts`     | Mic deny / missing copy  |
+| `e2e/reference-tone.spec.ts`      | String/note reference    |
+| `e2e/background-resume.spec.ts`   | Long-background recovery |
+| `e2e/custom-tuning.spec.ts`       | Custom save              |
+| `e2e/ukulele.spec.ts`             | Instrument cards         |
+| `e2e/string-list.spec.ts`         | One-row string rail      |
+| `e2e/stop-tuning.spec.ts`         | Stop listening           |
+| `e2e/store/screenshots.spec.ts`   | Store listing PNGs       |
+| `scripts/generate-icons.mjs`      | Icons                    |
+| `scripts/appReleaseVersion.ts`    | Version SSOT logic       |
+| `scripts/stampNativeVersion.ts`   | Stamp iOS versions       |
+| `scripts/bumpAppVersion.ts`       | `npm run version:*`      |
+| `scripts/check-knowledge.mjs`     | Knowledge integrity      |
+| `scripts/refresh-file-index.mjs`  | Auto inventory           |
+| `scripts/sync-knowledge-wiki.mjs` | GitHub Wiki sync         |
+| `scripts/sync-notion-wiki.mjs`    | Notion Wiki sync         |
+| `scripts/native-e2e.sh`           | Maestro native e2e       |
+| `store/play-listing/COPY.md`      | Play Console listing     |
+| `public/*`                        | PWA icons / svg          |
 
 ## When to update this page
 
