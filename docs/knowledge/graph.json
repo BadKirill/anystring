@@ -76,7 +76,7 @@
       "id": "testing",
       "title": "Unit & E2E tests",
       "path": "docs/knowledge/areas/testing.md",
-      "tags": ["test", "vitest", "playwright", "e2e"],
+      "tags": ["test", "vitest", "playwright", "e2e", "maestro", "coverage"],
       "roots": [
         "e2e/",
         "**/*.test.ts",

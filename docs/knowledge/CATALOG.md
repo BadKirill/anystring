@@ -14,7 +14,9 @@ to the GitHub Wiki home page.
 ## 1. Product
 
 Mobile-first guitar, bass, and ukulele tuner with fully editable per-string tunings plus a
-chromatic (nearest-note) tab. One TypeScript codebase: a Vite + React PWA, wrapped
+chromatic (nearest-note) tab. Built-in presets cover 6/7/8-string guitar, 4/5-string bass,
+and five ukulele tunings (High G, Low G, D, Baritone, Open C). Marketing site at `/`,
+tuner PWA at `/app/`. One TypeScript codebase: a Vite + React PWA, wrapped
 by Capacitor for the App Store and Google Play. No backend — custom tunings live
 in `localStorage`.
 
