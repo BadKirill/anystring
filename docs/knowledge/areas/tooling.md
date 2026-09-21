@@ -4,27 +4,27 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 
 ## Scripts (`package.json`)
 
-| Script                       | Purpose                                                                   |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| `dev`                        | Vite dev server                                                           |
-| `build`                      | `tsc -b` + Vite production build                                          |
-| `build:native`               | Same build with `CAP_BUILD=1`: relative base, no service worker           |
-| `cap:sync`                   | Stamp iOS version, `build:native`, then `cap sync`                        |
-| `cap:ios` / `cap:android`    | Sync, then open Xcode / Android Studio                                    |
-| `stamp:native-version`       | Write iOS marketing/build numbers from `package.json`                     |
-| `version:*`                  | Bump `package.json` (`patch`/`minor`/`major`/`build`) and stamp iOS       |
-| `cap:build:ios-sim`          | Sync + Xcode Debug build for iOS Simulator                                |
-| `cap:build:android-debug`    | Sync + `gradlew assembleDebug` (JDK 21 / Studio JBR)                      |
-| `check`                      | lint + format:check + typecheck + unit tests (coverage) + knowledge:check |
-| `test`                       | Vitest run + v8 coverage (95% lines/statements/functions/branches)        |
-| `test:watch`                 | Vitest watch (no coverage gate)                                           |
-| `test:e2e` / `test:e2e:live` | Playwright (store shots excluded via `testIgnore`)                        |
-| `test:e2e:native`            | Maestro on sim/emulator (`scripts/native-e2e.sh`)                         |
-| `screenshots:store`          | Playwright store PNGs (`playwright.store.config.ts`)                      |
-| `knowledge:refresh`          | Regenerate auto file inventory in `file-index.md`                         |
-| `knowledge:check`            | Validate local knowledge graph / index / file coverage                    |
-| `knowledge:wiki`             | Explicit: mirror → GitHub Wiki (+ read-back)                              |
-| `knowledge:notion`           | Explicit: mirror → Notion Wiki (`NOTION_API_KEY`, + read-back)            |
+| Script                       | Purpose                                                                    |
+| ---------------------------- | -------------------------------------------------------------------------- |
+| `dev`                        | Vite dev server                                                            |
+| `build`                      | `tsc -b` + Vite production build                                           |
+| `build:native`               | Same build with `CAP_BUILD=1`: relative base, no service worker            |
+| `cap:sync`                   | Stamp iOS version, `build:native`, then `cap sync`                         |
+| `cap:ios` / `cap:android`    | Sync, then open Xcode / Android Studio                                     |
+| `stamp:native-version`       | Write iOS marketing/build numbers from `package.json`                      |
+| `version:*`                  | Bump `package.json` (`patch`/`minor`/`major`/`build`) and stamp iOS        |
+| `cap:build:ios-sim`          | Sync + Xcode Debug build for iOS Simulator                                 |
+| `cap:build:android-debug`    | Sync + `gradlew assembleDebug` (JDK 21 / Studio JBR)                       |
+| `check`                      | lint + format:check + typecheck + unit tests (coverage) + knowledge:check  |
+| `test`                       | Vitest run + v8 coverage (95% lines/statements/functions/branches)         |
+| `test:watch`                 | Vitest watch (no coverage gate)                                            |
+| `test:e2e` / `test:e2e:live` | Playwright (store shots excluded via `testIgnore`)                         |
+| `test:e2e:native`            | Maestro on sim/emulator (`scripts/native-e2e.sh`)                          |
+| `screenshots:store`          | Playwright store PNGs with marketing frames (`playwright.store.config.ts`) |
+| `knowledge:refresh`          | Regenerate auto file inventory in `file-index.md`                          |
+| `knowledge:check`            | Validate local knowledge graph / index / file coverage                     |
+| `knowledge:wiki`             | Explicit: mirror → GitHub Wiki (+ read-back)                               |
+| `knowledge:notion`           | Explicit: mirror → Notion Wiki (`NOTION_API_KEY`, + read-back)             |
 
 ## Config files
 
