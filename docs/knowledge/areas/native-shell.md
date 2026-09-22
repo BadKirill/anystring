@@ -121,8 +121,10 @@ selecting an `AVAudioEngine` plugin that posts 8192-sample Float32 windows.
 
 Listing PNGs live in `store/screenshots/{ios,android}/` (see README there).
 Regenerate with `npm run screenshots:store` (Playwright device viewports + stub
-mic). Optional native pass: Maestro `.maestro/screenshots.yaml` after a debug
-install. Play Console copy lives in `store/play-listing/COPY.md`.
+mic, then a headline/phone marketing frame). Scenes cover each tuner function:
+auto-detect, chromatic cents, presets, note picker, My tunings, direction
+hint, Drop D. Optional native pass: Maestro `.maestro/screenshots.yaml` after a
+debug install. Play Console copy lives in `store/play-listing/COPY.md`.
 
 ## Native UI automation (Maestro)
 

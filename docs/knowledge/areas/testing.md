@@ -39,14 +39,17 @@ then the smallest implementation. Do not write production code and match tests a
 | `e2e/ukulele.spec.ts`           | Instrument cards + nested presets + Low G + empty My tunings copy       |
 | `e2e/string-list.spec.ts`       | One-row string rail; swipe; overflow revive after app resume            |
 | `e2e/stop-tuning.spec.ts`       | Stop listening                                                          |
-| `e2e/store/screenshots.spec.ts` | Store listing PNGs (not in default `test:e2e`)                          |
+| `e2e/store/screenshots.spec.ts` | Store listing PNGs with marketing frames (not in default `test:e2e`)    |
+| `e2e/store/marketingFrame.ts`   | Headline + phone-frame compositor for store PNGs                        |
 
 Commands:
 
 - Local full: `npm run test:e2e` (`testIgnore: **/store/**`)
 - Live smoke: `npm run test:e2e:live` (or `PLAYWRIGHT_BASE_URL=...`)
 - Store screenshots: `npm run screenshots:store` → `store/screenshots/{ios,android}/`
-  (`playwright.store.config.ts`: iPhone 6.7" 430×932@3x, Android 432×768@2.5 → 1080×1920)
+  (`playwright.store.config.ts`: iPhone 6.7" 430×932@3x, Android 432×768@2.5 → 1080×1920).
+  Each shot is a framed marketing PNG (eyebrow + headline + phone) covering auto
+  detect, cents, presets, note picker, My tunings, tighten/loosen, and Drop D.
 
 ## Native E2E (Maestro)
 

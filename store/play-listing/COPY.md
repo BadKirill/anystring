@@ -75,7 +75,7 @@ Anystring — бесплатный тюнер для гитары, баса и �
 | App icon        | `icon-512.png`                 | 512×512 PNG  |
 | Feature graphic | `feature-graphic-1024x500.png` | 1024×500 PNG |
 
-Phone screenshots: `store/screenshots/android/` (01–07).
+Phone screenshots: `store/screenshots/android/` (01–07, marketing frames).
 
 ## Tablet screenshots?
 
