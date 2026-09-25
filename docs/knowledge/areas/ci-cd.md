@@ -10,7 +10,7 @@ Separate GitHub checks:
 1. Lint — `npm run lint`
 2. Format — `npm run format:check`
 3. Typecheck — `npm run typecheck`
-4. Unit tests — `npm run test` (Vitest + 95% coverage)
+4. Unit tests — `npm run test` (Vitest + 95% coverage + edge-case coverage ≥ 80%)
 5. Knowledge graph — `npm run knowledge:check` (local snapshot only)
 6. E2E local — `npm run test:e2e`
 

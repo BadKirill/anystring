@@ -10,13 +10,13 @@ cents, nearest note.
 
 ## Modules
 
-| File             | Exports / purpose                                                                              |
-| ---------------- | ---------------------------------------------------------------------------------------------- |
-| `notes.ts`       | `NOTE_NAMES`, `NoteName`, `Pitch`, `pitchToMidi`, `midiToPitch`, `formatPitch`, `pitchesEqual` |
-| `frequency.ts`   | `midiToFrequency`, `frequencyToMidiFloat`, `pitchToFrequency` (A4=440, MIDI 69)                |
-| `cents.ts`       | `centsBetween(actual, target)` — +sharp / −flat                                                |
-| `nearestNote.ts` | `nearestPitch(frequency)` — 12-TET round via float MIDI                                        |
-| `*.test.ts`      | A4, E2, F1≈43.65, G#1, round-trips, nearest-note rounding                                      |
+| File             | Exports / purpose                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `notes.ts`       | `NOTE_NAMES`, `isNoteName`, `MIN_OCTAVE`/`MAX_OCTAVE` (0–6), `Pitch`, `pitchToMidi`, `midiToPitch`, `formatPitch`, `pitchesEqual` |
+| `frequency.ts`   | `midiToFrequency`, `frequencyToMidiFloat`, `pitchToFrequency` (A4=440, MIDI 69)                                                   |
+| `cents.ts`       | `centsBetween(actual, target)` — +sharp / −flat                                                                                   |
+| `nearestNote.ts` | `nearestPitch(frequency)` — 12-TET round via float MIDI                                                                           |
+| `*.test.ts`      | A4, E2, F1≈43.65, G#1, round-trips, nearest-note rounding                                                                         |
 
 ## Patterns
 

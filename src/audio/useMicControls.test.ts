@@ -71,7 +71,7 @@ describe('useMicControls', () => {
     })
   })
 
-  it('restarts after a long background while listening', async () => {
+  it('EC-stale-30s restarts after a long background while listening', async () => {
     let now = 1_000
     vi.spyOn(Date, 'now').mockImplementation(() => now)
     startMicSession.mockResolvedValue(fakeSession())

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { frequencyToMidiFloat, midiToFrequency, pitchToFrequency } from './frequency'
 
 describe('midiToFrequency', () => {
-  it('maps A4 (69) to 440 Hz', () => {
+  it('EC-a440 maps A4 (69) to 440 Hz', () => {
     expect(midiToFrequency(69)).toBeCloseTo(440, 6)
   })
 

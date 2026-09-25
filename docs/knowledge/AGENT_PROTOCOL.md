@@ -63,6 +63,9 @@ was seen or changed. Never commit API tokens.
 - Mic: `echoCancellation`, `noiseSuppression`, `autoGainControl` = **false**
 - Pitch window: **8192** samples
 - Functions ≤ 50 lines; complexity/cognitive ≤ 10; nesting ≤ 3
+- Edge-case coverage ≥ **80%**: research boundaries for every feature, add them
+  to `src/quality/edgeCases.ts`, and lock each one with a test. Uncovered cases
+  count against the ratio.
 - `src/core/` stays pure TS (no React/DOM/platform imports)
 - One branch + PR per change; no Cursor/ChatGPT attribution in commits/PRs
 

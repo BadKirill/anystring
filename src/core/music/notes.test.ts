@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatPitch, midiToPitch, pitchToMidi, pitchesEqual, type Pitch } from './notes'
+import {
+  formatPitch,
+  isNoteName,
+  MAX_OCTAVE,
+  midiToPitch,
+  MIN_OCTAVE,
+  pitchToMidi,
+  pitchesEqual,
+  type Pitch,
+} from './notes'
 
 describe('pitchToMidi', () => {
   it('maps C4 to 60 and A4 to 69', () => {
@@ -37,6 +46,17 @@ describe('formatPitch', () => {
   it('formats note and octave', () => {
     expect(formatPitch({ note: 'G#', octave: 1 })).toBe('G#1')
     expect(formatPitch({ note: 'E', octave: 2 })).toBe('E2')
+  })
+})
+
+describe('isNoteName', () => {
+  it('EC-bad-note accepts the 12 sharp names and rejects flats and unknowns', () => {
+    expect(isNoteName('E')).toBe(true)
+    expect(isNoteName('G#')).toBe(true)
+    expect(isNoteName('Bb')).toBe(false)
+    expect(isNoteName('H')).toBe(false)
+    expect(MIN_OCTAVE).toBe(0)
+    expect(MAX_OCTAVE).toBe(6)
   })
 })
 

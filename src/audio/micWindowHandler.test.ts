@@ -31,19 +31,33 @@ describe('createMicWindowHandler', () => {
     vi.restoreAllMocks()
   })
 
-  it('ignores windows while inactive or suppressed', () => {
+  it('ignores windows while inactive', () => {
     const setState = vi.fn()
     const recent: number[] = []
     const handler = createMicWindowHandler(() => false, recent, setState)
     handler(pluckedTone(440), SAMPLE_RATE)
     expect(setState).not.toHaveBeenCalled()
-    vi.spyOn(pitchGate, 'isPitchDetectionSuppressed').mockReturnValue(true)
-    const active = createMicWindowHandler(() => true, recent, setState)
-    active(pluckedTone(440), SAMPLE_RATE)
-    expect(setState).not.toHaveBeenCalled()
   })
 
-  it('requires three stable readings before publishing a frequency', () => {
+  it('EC-suppress-clear blanks a frozen pitch while the reference tone is playing', () => {
+    const states: PitchState[] = []
+    const setState = vi.fn((update: PitchState | ((prev: PitchState) => PitchState)) => {
+      const prev = states[states.length - 1] ?? {
+        ...emptyState(),
+        frequency: 440,
+        clarity: 0.95,
+      }
+      states.push(typeof update === 'function' ? update(prev) : update)
+    })
+    const recent = [440, 440, 440]
+    vi.spyOn(pitchGate, 'isPitchDetectionSuppressed').mockReturnValue(true)
+    const handler = createMicWindowHandler(() => true, recent, setState)
+    handler(pluckedTone(440), SAMPLE_RATE)
+    expect(recent).toHaveLength(0)
+    expect(states[states.length - 1]?.frequency).toBeNull()
+  })
+
+  it('EC-confirm-3 requires three stable readings before publishing a frequency', () => {
     const setState = vi.fn((update: PitchState | ((prev: PitchState) => PitchState)) => {
       if (typeof update === 'function') {
         update(emptyState())
@@ -65,7 +79,7 @@ describe('createMicWindowHandler', () => {
     expect(afterThree?.clarity).toBeGreaterThan(0.8)
   })
 
-  it('clears the window on silence or a huge jump', () => {
+  it('EC-jump-150 clears the window on silence or a huge jump', () => {
     const states: PitchState[] = []
     const setState = vi.fn((update: PitchState | ((prev: PitchState) => PitchState)) => {
       const next = typeof update === 'function' ? update(emptyState()) : update

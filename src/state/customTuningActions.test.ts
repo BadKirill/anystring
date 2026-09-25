@@ -23,7 +23,7 @@ describe('customTuningActions', () => {
     vi.stubGlobal('sessionStorage', memoryStorage())
   })
 
-  it('ignores a blank draft name and saves a trimmed name', () => {
+  it('EC-blank-save ignores a blank draft name and saves a trimmed name', () => {
     let tuning = DRAFT
     let saved: Tuning[] = []
     let bumps = 0

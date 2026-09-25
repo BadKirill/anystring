@@ -41,7 +41,13 @@ Legacy absorbed (pre-rename and pre-v2): `anytune.v2.customTunings`,
 - List file always `{ v: 2, tunings }` via `writeTuningList` (both storages).
 - `ensureStoredId`: drafts and unmodified presets keep ids; others get `custom-*`
   if missing.
-- `writeRaw` swallows quota/blocked storage errors (mobile until gesture).
+- `writeRaw` swallows quota/blocked storage errors (mobile until gesture) and
+  reports whether the write landed. A successful v2 list write deletes legacy
+  list keys, so a deleted tuning cannot come back from `anytune.*`.
+- Stored notes must be `NOTE_NAMES`. Octave is an integer from `MIN_OCTAVE` to
+  `MAX_OCTAVE` (0–6). Anything else is dropped; a tuning with no remaining
+  strings is dropped.
+- `createCustomId` stays unique when two saves share one millisecond.
 - Membership / picker visibility comes from `core/tunings/custom`, not duplicated here.
 
 ## Patterns

@@ -27,7 +27,12 @@ export function createMicWindowHandler(
   setState: Dispatch<SetStateAction<PitchState>>,
 ): (samples: Float32Array, sampleRate: number) => void {
   return (samples, sampleRate) => {
-    if (!isActive() || isPitchDetectionSuppressed()) {
+    if (!isActive()) {
+      return
+    }
+    if (isPitchDetectionSuppressed()) {
+      recent.length = 0
+      setState((prev) => ({ ...prev, frequency: null, clarity: null }))
       return
     }
     const reading = detectPitch(samples, sampleRate)

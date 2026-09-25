@@ -77,7 +77,7 @@ describe('TuneDirectionHint', () => {
     expect(screen.getByText(UI.playANote)).toBeTruthy()
   })
 
-  it('describes string and chromatic analysis', () => {
+  it('EC-hint-round describes string and chromatic analysis', () => {
     const { rerender } = render(
       <TuneDirectionHint
         pitch={{ ...idle, status: 'listening', frequency: 82 }}
@@ -153,6 +153,22 @@ describe('TuneDirectionHint', () => {
       />,
     )
     expect(screen.getByText(/\+18¢/)).toBeTruthy()
+    rerender(
+      <TuneDirectionHint
+        pitch={{ ...idle, status: 'listening', frequency: 442 }}
+        analysis={{
+          kind: 'chromatic',
+          pitch: { note: 'A', octave: 4 },
+          cents: 5.4,
+          direction: 'loosen',
+        }}
+        tuning={TUNING}
+        manualMode={false}
+        chromatic
+      />,
+    )
+    expect(screen.getByText(/\+5¢/)).toBeTruthy()
+    expect(screen.getByText(/sharp — tune down/)).toBeTruthy()
   })
 
   it('falls back to edit hint, empty chromatic, and missing-string copy', () => {

@@ -48,7 +48,7 @@ describe('micSessionControl', () => {
     expect(startMicSession).not.toHaveBeenCalled()
   })
 
-  it('marks listening after the mic opens and stops a stale generation', async () => {
+  it('EC-stale-start marks listening after the mic opens and stops a stale generation', async () => {
     const live = fakeSession()
     const stale = fakeSession()
     startMicSession.mockResolvedValueOnce(stale).mockResolvedValueOnce(live)

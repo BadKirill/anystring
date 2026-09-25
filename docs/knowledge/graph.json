@@ -76,12 +76,21 @@
       "id": "testing",
       "title": "Unit & E2E tests",
       "path": "docs/knowledge/areas/testing.md",
-      "tags": ["test", "vitest", "playwright", "e2e", "maestro", "coverage"],
+      "tags": [
+        "test",
+        "vitest",
+        "playwright",
+        "e2e",
+        "maestro",
+        "coverage",
+        "edge-cases"
+      ],
       "roots": [
         "e2e/",
         "**/*.test.ts",
         "**/*.test.tsx",
         "src/test/",
+        "src/quality/",
         "playwright.config.ts"
       ]
     },

@@ -45,7 +45,7 @@ Knowledge lookup:
 | Presets / My tunings / analyzer  | `tuning`, `custom`, `analyzer` |
 | Gauge / picker / copy            | `ui`, `gauge`, `strings`       |
 | Save/load / migrate              | `storage`, `persist`           |
-| Tests / CI                       | `test`, `ci`                   |
+| Tests / CI / edge-case coverage  | `test`, `ci`, `edge-cases`     |
 | New folder / architecture        | `architecture`, `patterns`     |
 | SDD / TDD / SOLID / how to write | `sdd`, `tdd`, `solid`          |
 

@@ -39,6 +39,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 | State        | `src/state/`                  | `useTunerState` and helpers                     |
 | Storage      | `src/storage/`                | localStorage v2 + legacy migration              |
 | E2E          | `e2e/`, `.maestro/`, `store/` | Playwright + Maestro + store screenshots        |
+| Quality      | `src/quality/`                | Edge-case catalog and the 80% coverage gate     |
 | Docs         | `docs/`                       | Plan, CI, this knowledge tree                   |
 | Agent rules  | `AGENTS.md`, `.cursor/rules/` | Workflow + SDD/TDD + style                      |
 
@@ -49,7 +50,7 @@ Presets + custom editor → storage → active Tuning → string analyzer
 
 Vite, React 19, TypeScript strict, `vite-plugin-pwa`, Web Audio + AudioWorklet,
 `pitchy` (MPM), Capacitor 8 (iOS + Android shells), localStorage, Vitest
-(jsdom, Testing Library, 95% coverage),
+(jsdom, Testing Library, 95% line coverage, 80% edge-case coverage),
 Playwright, Maestro (native shell), ESLint (`typescript-eslint` strict + sonarjs), Prettier.
 
 Not in scope: Redux/Zustand/TanStack Query, backend, cloud sync, RN (unless
@@ -76,6 +77,8 @@ See [sdd-tdd](areas/sdd-tdd.md) and [patterns-and-rules](areas/patterns-and-rule
 - Mic processing filters off; window 8192; in-tune ±5 cents.
 - Complexity budgets enforced by ESLint — do not disable.
 - `npm run check` must pass; one branch/PR per change.
+- Edge-case coverage ≥ 80% (`src/quality/edgeCases.ts`). Every feature researches
+  its boundaries and adds them to the catalog with tests.
 
 ## 6. Area guides
 

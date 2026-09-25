@@ -15,6 +15,13 @@ export const NOTE_NAMES = [
 
 export type NoteName = (typeof NOTE_NAMES)[number]
 
+export const MIN_OCTAVE = 0
+export const MAX_OCTAVE = 6
+
+export function isNoteName(value: string): value is NoteName {
+  return NOTE_NAMES.some((name) => name === value)
+}
+
 export interface Pitch {
   note: NoteName
   octave: number

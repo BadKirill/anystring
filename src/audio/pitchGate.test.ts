@@ -13,7 +13,7 @@ describe('pitchGate', () => {
     vi.useRealTimers()
   })
 
-  it('suppresses detection until the duration elapses and later calls can extend it', () => {
+  it('EC-suppress-window suppresses detection until the duration elapses and later calls can extend it', () => {
     expect(isPitchDetectionSuppressed()).toBe(false)
     suppressPitchDetection(200)
     expect(isPitchDetectionSuppressed()).toBe(true)

@@ -33,7 +33,7 @@ describe('appResume', () => {
     expect(seen).toHaveLength(1)
   })
 
-  it('treats a persisted pageshow as an unknown background duration', async () => {
+  it('EC-bfcache treats a persisted pageshow as an unknown background duration', async () => {
     const seen: AppResumeInfo[] = []
     const stop = onAppResume((info) => {
       seen.push(info)

@@ -6,6 +6,8 @@ Follow [`AGENTS.md`](AGENTS.md) and the portable protocol
 Code changes follow **SDD + TDD** (Linus taste + SOLID):
 [`docs/knowledge/areas/sdd-tdd.md`](docs/knowledge/areas/sdd-tdd.md).
 Spec in types → failing test → smallest implementation → refactor.
+Edge-case coverage stays ≥ 80% (`src/quality/edgeCases.ts`): research boundaries
+for every feature and add a test per case.
 
 For any code change: start at [`docs/knowledge/INDEX.md`](docs/knowledge/INDEX.md),
 read only matching area pages, then touch listed files. After structural changes

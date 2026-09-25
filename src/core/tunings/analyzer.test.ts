@@ -50,7 +50,7 @@ describe('analyze', () => {
     expect(analyze(nearHigh, DEMIURGE)?.stringIndex).toBe(1)
   })
 
-  it('treats offsets within 5 cents as in tune and 6 cents as out', () => {
+  it('EC-intune-5 treats offsets within 5 cents as in tune and 6 cents as out', () => {
     const target = pitchToFrequency({ note: 'G#', octave: 2 })
     const fourCentsSharp = target * 2 ** (4 / 1200)
     const sixCentsSharp = target * 2 ** (6 / 1200)
@@ -58,7 +58,7 @@ describe('analyze', () => {
     expect(analyze(sixCentsSharp, DEMIURGE)?.direction).toBe('loosen')
   })
 
-  it('returns null for a tuning with no strings', () => {
+  it('EC-empty-tuning returns null for a tuning with no strings', () => {
     expect(analyze(440, tuningOf([]))).toBeNull()
   })
 })
@@ -71,8 +71,18 @@ describe('analyzeString', () => {
     expect(result?.direction).toBe('tighten')
   })
 
-  it('returns null for an out-of-range string index', () => {
+  it('EC-manual-oor returns null for an out-of-range string index', () => {
     expect(analyzeString(440, DEMIURGE, 9)).toBeNull()
+  })
+
+  it('EC-manual-far still reports direction when the played note is far from the selected string', () => {
+    const highE = pitchToFrequency({ note: 'E', octave: 4 })
+    const result = analyzeString(highE, DEMIURGE, 0)
+    if (!result) {
+      throw new Error('expected analysis')
+    }
+    expect(result.stringIndex).toBe(0)
+    expect(Math.abs(result.cents)).toBeGreaterThan(50)
   })
 })
 
@@ -99,7 +109,7 @@ describe('analyzeChromatic', () => {
     expect(analyzeChromatic(sixCentsSharp).direction).toBe('loosen')
   })
 
-  it('picks the nearer note between two semitones', () => {
+  it('EC-chromatic-boundary picks the nearer note between two semitones', () => {
     const f1 = pitchToFrequency({ note: 'F', octave: 1 })
     const fSharp1 = pitchToFrequency({ note: 'F#', octave: 1 })
     expect(analyzeChromatic(f1 * 1.02).pitch).toEqual({ note: 'F', octave: 1 })
@@ -119,7 +129,39 @@ describe('PRESET_TUNINGS', () => {
     }
   })
 
-  it('matches reentrant High G to the G string, not A', () => {
+  it('EC-tie-first keeps the earlier string when two targets are the same pitch', () => {
+    const twins = tuningOf([
+      ['E', 2],
+      ['E', 2],
+    ])
+    expect(analyze(pitchToFrequency({ note: 'E', octave: 2 }), twins)?.stringIndex).toBe(
+      0,
+    )
+  })
+
+  it('EC-open-c-unison matches the first of two identical Open C G strings', () => {
+    const openC = PRESET_TUNINGS.find((tuning) => tuning.id === 'ukulele-open-c')
+    if (!openC) {
+      throw new Error('ukulele-open-c preset is missing')
+    }
+    const g4 = pitchToFrequency({ note: 'G', octave: 4 })
+    expect(analyze(g4, openC)?.stringIndex).toBe(0)
+  })
+
+  it('EC-octave-apart tells guitar low E from high E', () => {
+    const standard = PRESET_TUNINGS.find((tuning) => tuning.id === 'guitar-standard')
+    if (!standard) {
+      throw new Error('guitar-standard preset is missing')
+    }
+    expect(
+      analyze(pitchToFrequency({ note: 'E', octave: 2 }), standard)?.stringIndex,
+    ).toBe(0)
+    expect(
+      analyze(pitchToFrequency({ note: 'E', octave: 4 }), standard)?.stringIndex,
+    ).toBe(5)
+  })
+
+  it('EC-high-g matches reentrant High G to the G string, not A', () => {
     const highG = PRESET_TUNINGS.find((tuning) => tuning.id === 'ukulele-standard')
     if (!highG) {
       throw new Error('ukulele-standard preset is missing')

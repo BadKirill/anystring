@@ -11,7 +11,7 @@ vi.mock('../audio/referenceTone', () => ({
 }))
 
 describe('NotePicker', () => {
-  it('previews a picked note and confirms the selection', async () => {
+  it('EC-octave-picker previews a picked note and confirms the selection', async () => {
     const user = userEvent.setup()
     const onConfirm = vi.fn()
     const onClose = vi.fn()
@@ -22,6 +22,9 @@ describe('NotePicker', () => {
         onClose={onClose}
       />,
     )
+    expect(screen.getByRole('button', { name: '0' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: '6' })).toBeTruthy()
+    expect(screen.queryByRole('button', { name: '7' })).toBeNull()
     await user.click(screen.getByRole('button', { name: 'A' }))
     await user.click(screen.getByRole('button', { name: '3' }))
     await user.click(screen.getByRole('button', { name: UI.done }))

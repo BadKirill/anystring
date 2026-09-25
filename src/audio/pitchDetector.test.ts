@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { pitchToFrequency } from '../core/music'
 import {
   detectPitch,
   frequencyJumpCents,
@@ -82,6 +83,15 @@ describe('detectPitch', () => {
     expect(reading?.frequency).toBeCloseTo(440, 0)
   })
 
+  it('EC-band-low EC-band-high rejects pitches outside 25–1000 Hz', () => {
+    const low = pitchToFrequency({ note: 'C', octave: 0 })
+    const high = pitchToFrequency({ note: 'C', octave: 6 })
+    expect(low).toBeLessThan(25)
+    expect(high).toBeGreaterThan(1000)
+    expect(detectPitch(pluckedTone(low), SAMPLE_RATE)).toBeNull()
+    expect(detectPitch(pluckedTone(high), SAMPLE_RATE)).toBeNull()
+  })
+
   it('rejects silence', () => {
     expect(detectPitch(new Float32Array(WINDOW_SIZE), SAMPLE_RATE)).toBeNull()
   })
@@ -90,7 +100,7 @@ describe('detectPitch', () => {
     expect(detectPitch(quietNoise(1), SAMPLE_RATE)).toBeNull()
   })
 
-  it('rejects quiet WKWebView-like bass hum that pitchy finds with high clarity', () => {
+  it('EC-hum-rms rejects quiet WKWebView-like bass hum that pitchy finds with high clarity', () => {
     const hum = quietRumble(40, 0.005)
     expect(signalRms(hum)).toBeLessThan(minRmsFor(40))
     expect(detectPitch(hum, SAMPLE_RATE)).toBeNull()
@@ -104,18 +114,18 @@ describe('detectPitch', () => {
 })
 
 describe('pitch gates', () => {
-  it('asks for a louder floor under 55 Hz than at guitar range', () => {
+  it('EC-rms-floor asks for a louder floor under 55 Hz than at guitar range', () => {
     expect(minRmsFor(43)).toBeGreaterThan(minRmsFor(82))
     expect(minRmsFor(82)).toBeGreaterThan(minRmsFor(440))
   })
 
-  it('keeps bass clarity strict enough to reject weak correlations', () => {
+  it('EC-clarity keeps bass clarity strict enough to reject weak correlations', () => {
     expect(minClarityFor(43)).toBe(0.88)
     expect(minClarityFor(80)).toBe(0.88)
     expect(minClarityFor(120)).toBe(0.9)
   })
 
-  it('removeDc centers a constant offset at zero', () => {
+  it('EC-dc removeDc centers a constant offset at zero', () => {
     const biased = new Float32Array([0.2, 0.2, 0.2, 0.2])
     const centered = removeDc(biased)
     expect(signalRms(centered)).toBeCloseTo(0, 5)

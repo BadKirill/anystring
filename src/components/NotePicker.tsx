@@ -1,11 +1,20 @@
 import { useState } from 'react'
 
 import { playReferencePitch } from '../audio/referenceTone'
-import { NOTE_NAMES, type NoteName, type Pitch } from '../core/music'
+import {
+  MAX_OCTAVE,
+  MIN_OCTAVE,
+  NOTE_NAMES,
+  type NoteName,
+  type Pitch,
+} from '../core/music'
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
-const OCTAVES = [0, 1, 2, 3, 4, 5, 6]
+const OCTAVES = Array.from(
+  { length: MAX_OCTAVE - MIN_OCTAVE + 1 },
+  (_, index) => MIN_OCTAVE + index,
+)
 
 function preview(pitch: Pitch): void {
   playReferencePitch(pitch).catch(() => undefined)
