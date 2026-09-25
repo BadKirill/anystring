@@ -17,6 +17,13 @@ Separate GitHub checks:
 External Wiki sync is **not** run on push/PR. Manual
 `workflow_dispatch` only (`.github/workflows/knowledge-wiki.yml`).
 
+## Version bump (`version-bump.yml`) — push to `master`
+
+Runs `npm run version:patch` (marketing patch + `buildNumber`) and pushes
+`Bump version to x.y.z (n).` back to `master`. That commit does not bump again.
+Store builds taken from `master` after this job show the new version in About.
+The workflow token must be allowed to push to `master`.
+
 ## Deploy (`deploy.yml`) — push to `master`
 
 1. Build Vite → Pages artifact (`base: /`, landing + `/app` tuner)

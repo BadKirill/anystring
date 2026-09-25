@@ -1,0 +1,55 @@
+name: Version bump
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: version-bump-master
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: Bump patch version
+    if: ${{ !startsWith(github.event.head_commit.message, 'Bump version to ') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Bump version and push to master
+        run: |
+          bump_tip() {
+            git fetch origin master || return 1
+            git checkout -B master origin/master || return 1
+            if node --experimental-strip-types --input-type=module -e "
+              import { execFileSync } from 'node:child_process'
+              import { isVersionBumpCommit } from './scripts/appReleaseVersion.ts'
+              const message = execFileSync('git', ['log', '-1', '--format=%s'], { encoding: 'utf8' })
+              process.exit(isVersionBumpCommit(message) ? 0 : 1)
+            "; then
+              echo "HEAD is already a version bump"
+              return 0
+            fi
+            npm run version:patch || return 1
+            git add package.json ios/App/App.xcodeproj/project.pbxproj || return 1
+            message=$(node --experimental-strip-types --input-type=module -e "
+              import { readFileSync } from 'node:fs'
+              import { parseReleaseVersion, versionBumpCommitMessage } from './scripts/appReleaseVersion.ts'
+              console.log(versionBumpCommitMessage(parseReleaseVersion(readFileSync('package.json', 'utf8'))))
+            ") || return 1
+            git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "$message" || return 1
+            git push origin master
+          }
+          bump_tip || bump_tip
