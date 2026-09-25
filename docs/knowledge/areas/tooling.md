@@ -16,7 +16,7 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `cap:build:ios-sim`          | Sync + Xcode Debug build for iOS Simulator                                 |
 | `cap:build:android-debug`    | Sync + `gradlew assembleDebug` (JDK 21 / Studio JBR)                       |
 | `check`                      | lint + format:check + typecheck + unit tests (coverage) + knowledge:check  |
-| `test`                       | Vitest run + v8 coverage (95% lines/statements/functions/branches)         |
+| `test`                       | Vitest run + v8 coverage (95%) and edge-case coverage (≥ 80%)              |
 | `test:watch`                 | Vitest watch (no coverage gate)                                            |
 | `test:e2e` / `test:e2e:live` | Playwright (store shots excluded via `testIgnore`)                         |
 | `test:e2e:native`            | Maestro on sim/emulator (`scripts/native-e2e.sh`)                          |

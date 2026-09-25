@@ -6,6 +6,10 @@ import { resumeAudioContext, STALE_BACKGROUND_MS } from './audioContextResume'
 import { suppressPitchDetection } from './pitchGate'
 
 const NOTE_DURATION_S = 1.4
+
+// Below the lowest preset fundamental (five-string bass B0) so the preview
+// keeps that fundamental instead of sounding an octave higher.
+export const REFERENCE_HIGHPASS_HZ = 20
 const SUPPRESS_MS = NOTE_DURATION_S * 1000 + 300
 const OUTPUT_GAIN = 0.88
 
@@ -66,7 +70,7 @@ function pluckBuffer(ctx: AudioContext, frequency: number): AudioBuffer {
 function guitarChain(ctx: AudioContext, source: AudioNode, frequency: number): AudioNode {
   const highPass = ctx.createBiquadFilter()
   highPass.type = 'highpass'
-  highPass.frequency.value = 70
+  highPass.frequency.value = REFERENCE_HIGHPASS_HZ
   source.connect(highPass)
   track(highPass)
 

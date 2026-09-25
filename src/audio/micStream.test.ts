@@ -64,7 +64,7 @@ describe('startMicSession', () => {
     expect(context.close).toHaveBeenCalled()
   })
 
-  it('maps getUserMedia errors onto tuner reasons', async () => {
+  it('EC-security-denied EC-not-readable maps getUserMedia errors onto tuner reasons', async () => {
     stubDevices(async () => {
       throw new DOMException('denied', 'NotAllowedError')
     })
@@ -90,12 +90,18 @@ describe('startMicSession', () => {
       reason: 'no-microphone',
     })
     stubDevices(async () => {
+      throw new DOMException('busy', 'NotReadableError')
+    })
+    await expect(startMicSession(vi.fn())).rejects.toMatchObject({
+      reason: 'unavailable',
+    })
+    stubDevices(async () => {
       throw new Error('boom')
     })
     await expect(startMicSession(vi.fn())).rejects.toBeInstanceOf(MicStreamError)
   })
 
-  it('refuses to resume when tracks are dead and notifies on ended', async () => {
+  it('EC-hidden-ended refuses to resume when tracks are dead and notifies on ended', async () => {
     const track = fakeTrack()
     const stream = fakeStream([track])
     stubDevices(async () => stream)

@@ -37,6 +37,8 @@ Relaxed for `*.test.ts` / `*.test.tsx` and `e2e/**` (length/cognitive).
 - Never enable echoCancellation, noiseSuppression, autoGainControl.
 - Keep 8192-sample window unless real-device evidence says otherwise.
 - In-tune band: ±5 cents (`IN_TUNE_CENTS`).
+- Edge-case coverage ≥ 80% (`src/quality/edgeCases.ts`). New features add
+  boundaries to the catalog with tests; uncovered cases count against the ratio.
 
 ## Workflow invariants
 

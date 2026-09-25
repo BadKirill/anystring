@@ -40,8 +40,8 @@ describe('isSavedCustomTuning', () => {
   })
 })
 
-describe('belongsInMyTunings', () => {
-  it('includes saved customs and edited presets but not drafts or bare presets', () => {
+describe('EC-draft-hidden belongsInMyTunings', () => {
+  it('EC-draft-hidden includes saved customs and edited presets but not drafts or bare presets', () => {
     const preset = firstPreset()
     expect(belongsInMyTunings(SAVED)).toBe(true)
     expect(belongsInMyTunings(preset)).toBe(false)

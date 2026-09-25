@@ -33,7 +33,7 @@ function iosBrowser(): void {
 }
 
 describe('InstallHint', () => {
-  it('stays hidden on native shells and non-iOS browsers', () => {
+  it('EC-install-native stays hidden on native shells and non-iOS browsers', () => {
     isNativePlatform.mockReturnValue(true)
     const { rerender } = render(<InstallHint />)
     expect(screen.queryByText(UI.installHint)).toBeNull()

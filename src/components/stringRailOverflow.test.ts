@@ -47,7 +47,7 @@ describe('stringRailOverflow', () => {
     })
   })
 
-  it('ignores a 1px rounding sliver as overflow', () => {
+  it('EC-rail-slop ignores a 1px rounding sliver as overflow', () => {
     expect(
       stringRailOverflow({ scrollLeft: 360, clientWidth: 360, scrollWidth: 361 }),
     ).toEqual({

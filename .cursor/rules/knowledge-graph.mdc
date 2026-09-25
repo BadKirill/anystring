@@ -15,6 +15,8 @@ alwaysApply: true
 - Source of truth for agents: `docs/knowledge/` (local General Wiki snapshot).
 - Selective reading: `AGENT_PROTOCOL.md` → `INDEX.md` → matching `areas/*.md`.
 - After structural code changes: update local knowledge + `npm run knowledge:check`.
+- Edge-case coverage ≥ 80% lives in the local wiki (`areas/sdd-tdd.md`,
+  `areas/testing.md`) and in `src/quality/edgeCases.ts`.
   Do **not** call Notion or push GitHub Wiki unless the user asked.
 
 ## External Wiki (Notion / GitHub Wiki)

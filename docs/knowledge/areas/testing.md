@@ -11,12 +11,19 @@ then the smallest implementation. Do not write production code and match tests a
   coverage. Watch without the gate: `npm run test:watch`.
 - Gate: **95%** lines, statements, functions, and branches on `src/**/*.{ts,tsx}`
   excluding `src/main.tsx`, `*.d.ts`, tests, and `src/test/**`.
+- **Edge-case coverage ≥ 80%** (`MIN_EDGE_CASE_COVERAGE` in
+  `src/quality/edgeCaseCoverage.ts`). The catalog is `src/quality/edgeCases.ts`.
+  Each covered entry names a test file that contains its id (`EC-…`). Hardware
+  cases may stay `testFile: null` with a reason, and they still count in the
+  denominator. Every new feature adds its boundaries to the catalog in the same
+  change so the ratio does not fall.
 - Environment: **jsdom**. React/hooks tests use Testing Library
   (`@testing-library/react`, `user-event`).
 - Config: `vite.config.ts` excludes `e2e/**` from Vitest; setup is
   `src/test/vitest.setup.ts`.
 - Rule: every `src/core/` module has colocated `*.test.ts` / `*.test.tsx`.
-- Also: `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`.
+- Also: `scripts/appReleaseVersion.test.ts`, `src/platform/appVersion.test.ts`,
+  `src/quality/edgeCases.test.ts` (the 80% catalog gate).
 - Prefer behavior tests (F1 detection, analyzer nearest string, storage migrate,
   UI copy, start/stop). Do not assert tautologies (`typeof fn === 'function'`)
   or early-return after `toBeDefined()` so a missing value would still pass.

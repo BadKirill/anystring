@@ -1,4 +1,4 @@
-import type { Pitch } from '../core/music'
+import { isNoteName, MAX_OCTAVE, MIN_OCTAVE } from '../core/music'
 import { isInstrument, type Tuning } from '../core/tunings'
 import {
   appearsInPicker,
@@ -46,19 +46,28 @@ function parseOctave(value: unknown): number | null {
   return null
 }
 
+function isStoredOctave(octave: number | null): octave is number {
+  return (
+    octave !== null &&
+    Number.isInteger(octave) &&
+    octave >= MIN_OCTAVE &&
+    octave <= MAX_OCTAVE
+  )
+}
+
 function normalizeString(value: unknown): Tuning['strings'][number] | null {
   if (!value || typeof value !== 'object') {
     return null
   }
   const pitch = (value as { pitch?: { note?: unknown; octave?: unknown } }).pitch
-  if (typeof pitch?.note !== 'string') {
+  if (typeof pitch?.note !== 'string' || !isNoteName(pitch.note)) {
     return null
   }
   const octave = parseOctave(pitch.octave)
-  if (octave === null) {
+  if (!isStoredOctave(octave)) {
     return null
   }
-  return { pitch: { note: pitch.note as Pitch['note'], octave } }
+  return { pitch: { note: pitch.note, octave } }
 }
 
 export function normalizeTuning(value: unknown): Tuning | null {
@@ -100,11 +109,21 @@ function readRaw(storage: Storage, key: string): unknown {
   }
 }
 
-function writeRaw(storage: Storage, key: string, value: unknown): void {
+function writeRaw(storage: Storage, key: string, value: unknown): boolean {
   try {
     storage.setItem(key, JSON.stringify(value))
+    return true
   } catch {
-    return
+    return false
+  }
+}
+
+function clearLegacyListKeys(): void {
+  for (const key of LEGACY_LIST_KEYS) {
+    localStorage.removeItem(key)
+  }
+  for (const key of LEGACY_LIST_SESSION_KEYS) {
+    sessionStorage.removeItem(key)
   }
 }
 
@@ -157,8 +176,11 @@ function ensureStoredId(tuning: Tuning): Tuning {
 
 function writeTuningList(tunings: Tuning[]): void {
   const file: TuningListFile = { v: 2, tunings: dedupeTuningList(tunings) }
-  writeRaw(localStorage, LIST_KEY, file)
-  writeRaw(sessionStorage, LIST_SESSION_KEY, file)
+  const wroteLocal = writeRaw(localStorage, LIST_KEY, file)
+  const wroteSession = writeRaw(sessionStorage, LIST_SESSION_KEY, file)
+  if (wroteLocal || wroteSession) {
+    clearLegacyListKeys()
+  }
 }
 
 function absorbTunings(merged: Map<string, Tuning>, raw: unknown): void {
@@ -358,6 +380,16 @@ export function upsertInList(list: Tuning[], tuning: Tuning): Tuning[] {
   return dedupeTuningList([...list.filter((entry) => entry.id !== stored.id), stored])
 }
 
-export function createCustomId(): string {
-  return `custom-${String(Date.now())}`
+let lastCustomIdMs = 0
+let customIdSeq = 0
+
+export function createCustomId(now = Date.now()): string {
+  if (now === lastCustomIdMs) {
+    customIdSeq += 1
+  } else {
+    lastCustomIdMs = now
+    customIdSeq = 0
+  }
+  const suffix = customIdSeq === 0 ? '' : `-${String(customIdSeq)}`
+  return `custom-${String(now)}${suffix}`
 }

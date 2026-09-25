@@ -10,7 +10,7 @@
 - [Knowledge index](docs/knowledge/INDEX.md): tag → area routing (read this first)
 - [Knowledge catalog](docs/knowledge/CATALOG.md): human overview
 - [Knowledge graph](docs/knowledge/graph.json): machine nodes/edges
-- [SDD + TDD](docs/knowledge/areas/sdd-tdd.md): spec first, test first, Linus taste, SOLID
+- [SDD + TDD](docs/knowledge/areas/sdd-tdd.md): spec first, test first, Linus taste, SOLID, edge-case coverage ≥ 80% (`src/quality/edgeCases.ts`)
 
 ## Area guides
 

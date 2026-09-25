@@ -6,7 +6,9 @@ You are working in the AnyTune repository. Obey [`AGENTS.md`](../AGENTS.md) and
 Code changes follow **SDD + TDD** (Linus taste + SOLID):
 [`docs/knowledge/areas/sdd-tdd.md`](../docs/knowledge/areas/sdd-tdd.md).
 Specify in types → failing test → smallest implementation → refactor. Do not
-implement first and match tests after.
+implement first and match tests after. Edge-case coverage stays ≥ 80%
+(`src/quality/edgeCases.ts`): research boundaries for every feature and name
+each case in a test. Uncovered cases count against the ratio.
 
 ## Required reading order for code tasks
 

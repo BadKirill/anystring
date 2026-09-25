@@ -1,9 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { pitchToFrequency } from '../core/music'
+import {
+  FakeAudioContext,
+  FakeBiquadFilter,
+  FakeBufferSource,
+} from '../test/fakeAudioContext'
 import { installAppResumeHandlers } from './appResume'
 import { STALE_BACKGROUND_MS } from './audioContextResume'
 import { playReferencePitch } from './referenceTone'
-import { FakeAudioContext, FakeBufferSource } from '../test/fakeAudioContext'
 
 describe('referenceTone', () => {
   const contexts: FakeAudioContext[] = []
@@ -25,7 +30,7 @@ describe('referenceTone', () => {
     vi.useRealTimers()
   })
 
-  it('plays a plucked buffer through a guitar-like filter chain', async () => {
+  it('EC-highpass-bass plays a plucked buffer through a guitar-like filter chain', async () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
     await playReferencePitch({ note: 'E', octave: 2 })
     const ctx = contexts[0]
@@ -35,6 +40,11 @@ describe('referenceTone', () => {
     expect(source.started).toBe(true)
     expect(source.buffer).not.toBeNull()
     expect(ctx?.createBiquadFilter).toHaveBeenCalled()
+    const highpass = ctx?.createBiquadFilter.mock.results[0]?.value as FakeBiquadFilter
+    expect(highpass.type).toBe('highpass')
+    expect(highpass.frequency.value).toBeLessThan(
+      pitchToFrequency({ note: 'B', octave: 0 }),
+    )
     await playReferencePitch({ note: 'E', octave: 2 })
     expect(ctx?.createBuffer).toHaveBeenCalledTimes(1)
   })

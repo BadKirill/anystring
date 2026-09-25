@@ -11,6 +11,7 @@ Human-readable, simple code is the top priority. Enforced by `npm run check`
 Process: **SDD + TDD**, Linus taste, SOLID — see `.cursor/rules/sdd-tdd.mdc` and
 `docs/knowledge/areas/sdd-tdd.md`. Spec in types → failing test → implement →
 refactor. Do not write production code first and match tests after.
+Edge-case coverage stays ≥ 80% (`src/quality/edgeCases.ts`).
 
 ## Structure
 

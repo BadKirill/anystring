@@ -52,6 +52,12 @@ Rules:
   when the behavior is new or the existing e2e would lie.
 - Tests assert **behavior** (F1 detection, nearest string, migrate v1→v2). Skip
   trivial “it is a function” assertions. Vitest coverage must stay ≥ 95%.
+- **Edge-case coverage** must stay ≥ **80%**. For every feature, research the
+  boundaries first (empty, duplicate, off-scale, denied, corrupt, resume, tie),
+  add each one to `src/quality/edgeCases.ts`, and assert the expected outcome
+  in an automated test named with that id. Coverage is covered cases ÷ catalog
+  size (`edgeCaseCoverage`). A case with `testFile: null` counts against the
+  ratio. `npm run check` fails below 80%.
 - Do not write the implementation and then “add tests to match.” If tests were
   written after the fact, delete the implementation path and redo Red→Green.
 
@@ -93,6 +99,7 @@ Layer table: [architecture.md](architecture.md).
 ## What “done” means
 
 - Spec is visible in types + tests.
+- New behavior has its edge cases in the catalog, and edge-case coverage is ≥ 80%.
 - Tests were red, then green.
 - No new special cases that a better type would remove.
 - `npm run check` passes.

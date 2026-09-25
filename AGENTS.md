@@ -63,18 +63,18 @@ Every new feature, fix, refactor, or doc change gets its **own branch and its ow
 
 Do not introduce libraries, frameworks, or patterns outside this list without an explicit user decision recorded in `docs/DEVELOPMENT_PLAN.md`.
 
-| Layer           | Choice                                                                          |
-| --------------- | ------------------------------------------------------------------------------- |
-| App shell       | **Vite + React + TypeScript (strict)**                                          |
-| PWA             | `vite-plugin-pwa`                                                               |
-| Audio capture   | **Web Audio API + AudioWorklet**                                                |
-| Pitch detection | **`pitchy`** (McLeod Pitch Method), window 4096–8192 samples                    |
-| Mobile stores   | **Capacitor** (iOS/Android wrappers around the same web build)                  |
-| Persistence     | **`localStorage`** via `src/storage/` — no backend                              |
-| Unit tests      | **Vitest** (`jsdom` + Testing Library, v8 coverage ≥ 95%)                       |
-| E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)             |
-| Native UI e2e   | **Maestro** (Capacitor iOS/Android simulators — permissions + shell smoke)      |
-| Lint / format   | **ESLint** (`typescript-eslint` strict, `eslint-plugin-sonarjs`) + **Prettier** |
+| Layer           | Choice                                                                              |
+| --------------- | ----------------------------------------------------------------------------------- |
+| App shell       | **Vite + React + TypeScript (strict)**                                              |
+| PWA             | `vite-plugin-pwa`                                                                   |
+| Audio capture   | **Web Audio API + AudioWorklet**                                                    |
+| Pitch detection | **`pitchy`** (McLeod Pitch Method), window 4096–8192 samples                        |
+| Mobile stores   | **Capacitor** (iOS/Android wrappers around the same web build)                      |
+| Persistence     | **`localStorage`** via `src/storage/` — no backend                                  |
+| Unit tests      | **Vitest** (`jsdom` + Testing Library, v8 coverage ≥ 95%, edge-case coverage ≥ 80%) |
+| E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)                 |
+| Native UI e2e   | **Maestro** (Capacitor iOS/Android simulators — permissions + shell smoke)          |
+| Lint / format   | **ESLint** (`typescript-eslint` strict, `eslint-plugin-sonarjs`) + **Prettier**     |
 
 **Not in scope:** Redux, Zustand, TanStack Query, backend/API, cloud sync, React Native (unless planned later), alternative pitch libraries, CSS frameworks (Tailwind, MUI, etc.), or test runners other than Vitest/Playwright/Maestro.
 
@@ -87,6 +87,7 @@ src/audio/          — mic capture, AudioWorklet, pitchy wrapper
 src/components/     — React UI
 src/state/          — app state hooks
 src/storage/        — localStorage persistence
+src/quality/        — edge-case catalog and the 80% coverage gate
 ```
 
 - `src/core/` must stay **pure TypeScript**: no React, no DOM, no browser APIs (ESLint enforces this). Keeps a future React Native migration cheap.
@@ -97,6 +98,7 @@ src/storage/        — localStorage persistence
 
 - Run `npm run check` (lint + format + typecheck + unit tests) before finishing any task; it must pass.
 - Write code through **SDD + TDD** (Linus taste + SOLID): spec → failing test → implement → refactor. See [docs/knowledge/areas/sdd-tdd.md](docs/knowledge/areas/sdd-tdd.md).
+- **Edge-case coverage ≥ 80%.** For every new feature, research the boundaries, add them to `src/quality/edgeCases.ts`, and assert each expected outcome in a test named with that id. Cases without a test count against the ratio. `npm run check` fails below 80%.
 - Microphone capture must keep `echoCancellation`, `noiseSuppression`, and `autoGainControl` **disabled** — they destroy low-frequency tuner input.
 - Pitch-detection window stays at **8192 samples** unless real-device testing justifies a change (needed for ~43 Hz bass).
 - Functions: max **50 lines**, cyclomatic complexity ≤ **10**, cognitive complexity ≤ **10**, nesting depth ≤ **3** — ESLint errors, do not disable.

@@ -81,6 +81,8 @@ Ruff and complexipy are Python-only tools; the TypeScript equivalents, enforced 
 - Rules documented in `.cursor/rules/` so the agent always follows them
 - **SDD + TDD** (Linus Torvalds taste + SOLID) is mandatory for every code
   change: spec in types → failing test → smallest implementation → refactor.
+  **Edge-case coverage ≥ 80%** (`src/quality/edgeCases.ts`): every feature
+  adds its boundaries to that catalog with an automated test.
   Full agent contract: `docs/knowledge/areas/sdd-tdd.md` and
   `.cursor/rules/sdd-tdd.mdc`. SOLID here is layer boundaries and small
   functions, not class hierarchies.

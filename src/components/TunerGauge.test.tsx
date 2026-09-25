@@ -15,7 +15,7 @@ describe('TunerGauge', () => {
     expect(needle?.outerHTML).toContain('rotate(0deg)')
   })
 
-  it('rotates toward sharp, clamps at ±50 cents, and marks in-tune', () => {
+  it('EC-gauge-clamp rotates toward sharp, clamps at ±50 cents, and marks in-tune', () => {
     const { container, rerender } = render(
       <TunerGauge cents={25} targetLabel="E2" inTune={false} />,
     )

@@ -65,7 +65,7 @@ describe('resumeAudioContext', () => {
     await expect(resumeAudioContext(context)).resolves.toBe(false)
   })
 
-  it('gives up instead of hanging when resume never settles', async () => {
+  it('EC-resume-timeout gives up instead of hanging when resume never settles', async () => {
     vi.useFakeTimers()
     const context = stubContext('suspended', never)
 

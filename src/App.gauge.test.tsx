@@ -36,10 +36,15 @@ describe('App pitch display', () => {
     pitch.clarity = 0.95
   })
 
-  it('centers the gauge on an in-tune string and shows chromatic cents', async () => {
+  it('EC-gauge-center centers the gauge on an in-tune string and shows chromatic cents', async () => {
     const user = userEvent.setup()
+    const e2 = pitchToFrequency({ note: 'E', octave: 2 })
+    pitch.frequency = e2 * 2 ** (4 / 1200)
     const { container } = render(<App />)
     expect(container.querySelector('.gauge-note')?.textContent).toBe('E2')
+    expect(container.querySelector('line[stroke-linecap="round"]')?.outerHTML).toContain(
+      'rotate(0deg)',
+    )
     expect(container.querySelector('.gauge-note-in-tune')).toBeTruthy()
     await user.click(screen.getByRole('tab', { name: UI.screenChromatic }))
     expect(container.querySelector('.gauge-note')?.textContent).toBe('E2')

@@ -20,13 +20,13 @@ function stabilize(
 }
 
 describe('stabilizePitchDisplay', () => {
-  it('damps sharp attack transients', () => {
+  it('EC-attack-sharp damps sharp attack transients', () => {
     const first = stabilize(undefined, 18, 0.95, NOW)
     expect(first.cents).toBeLessThan(18)
     expect(first.cents).toBeGreaterThan(6)
   })
 
-  it('latches to center after consecutive in-tune readings', () => {
+  it('EC-lock-2 latches to center after consecutive in-tune readings', () => {
     const first = stabilize(undefined, 2, 0.95, NOW)
     const second = stabilize(first.state, 3, 0.95, NOW + 40)
     expect(second.cents).toBe(0)
@@ -91,6 +91,23 @@ describe('stabilizePitchDisplay', () => {
     expect(gone.state.latched).toBe(false)
     expect(gone.cents).toBe(12)
     expect(gone.direction).toBe('loosen')
+  })
+
+  it('EC-attack-flat shows a flat attack at full cents', () => {
+    const first = stabilize(undefined, -18, 0.95, NOW)
+    expect(first.cents).toBe(-18)
+  })
+
+  it('EC-unlock-14 holds a 14-cent drift and releases at 15', () => {
+    let state = initialPitchStabilizerState()
+    state = stabilize(state, 0, 0.95, NOW).state
+    state = stabilize(state, 1, 0.95, NOW + 40).state
+    const held = stabilize(state, 14, 0.95, NOW + 500)
+    expect(held.cents).toBe(0)
+    expect(held.state.latched).toBe(true)
+    const released = stabilize(state, 15, 0.95, NOW + 500)
+    expect(released.state.latched).toBe(false)
+    expect(released.cents).toBe(15)
   })
 
   it('passes through a weak first reading without latching', () => {

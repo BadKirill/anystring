@@ -15,6 +15,8 @@ Full spec: `docs/knowledge/areas/sdd-tdd.md`. Do not skip it on code tasks.
 4. **Refactor** — remove special cases; keep SOLID; tests stay green.
 5. **`npm run check`**
 
+**Edge-case coverage ≥ 80%.** For every feature, research boundaries (empty, duplicate, off-scale, denied, corrupt, resume, tie), add them to `src/quality/edgeCases.ts`, and assert each outcome in a test named with that id. A case with no test counts against the ratio. Full spec: `docs/knowledge/areas/sdd-tdd.md` and `docs/knowledge/areas/testing.md`.
+
 Skip only for docs/config/copy/format-only. Spikes are thrown away or rewritten through this loop.
 
 ## Linus taste

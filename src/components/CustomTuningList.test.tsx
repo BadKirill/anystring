@@ -51,7 +51,7 @@ describe('CustomTuningList', () => {
     expect(onRename).toHaveBeenCalledWith('custom-1', 'New')
   })
 
-  it('does not rename when the edited name is blank', async () => {
+  it('EC-blank-rename does not rename when the edited name is blank', async () => {
     const user = userEvent.setup()
     const onRename = vi.fn()
     render(

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PRESET_TUNINGS, type Tuning } from '../core/tunings'
 import {
+  createCustomId,
   deleteCustomTuning,
   mergePickerTunings,
   normalizeTuning,
@@ -72,13 +73,65 @@ describe('customTuningsStore', () => {
     expect(readCustomTunings()[0]?.name).toBe('Renamed')
   })
 
+  it('EC-legacy-delete drops a tuning that still sits in a legacy key', () => {
+    localStorage.setItem('anytune.customTunings', JSON.stringify([TUNING]))
+    expect(readCustomTunings()).toEqual([TUNING])
+    deleteCustomTuning(TUNING.id)
+    expect(readCustomTunings()).toEqual([])
+    expect(localStorage.getItem('anytune.customTunings')).toBeNull()
+  })
+
+  it('EC-dedupe collapses identical instrument, name, and pitches', () => {
+    saveCustomTuning(TUNING)
+    saveCustomTuning({ ...TUNING, id: 'custom-2' })
+    const saved = readCustomTunings()
+    expect(saved).toHaveLength(1)
+    expect(saved[0]?.id).toBe('custom-2')
+    expect(saved[0]?.strings).toEqual(TUNING.strings)
+  })
+
+  it('EC-unique-id keeps two ids distinct inside the same millisecond', () => {
+    vi.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000)
+    expect(createCustomId()).not.toBe(createCustomId())
+    vi.restoreAllMocks()
+  })
+
+  it('EC-bad-note EC-partial-string drops unknown notes and keeps the rest', () => {
+    expect(
+      normalizeTuning({
+        id: 'custom-bad',
+        name: 'Bad',
+        instrument: 'guitar',
+        strings: [{ pitch: { note: 'H', octave: 2 } }],
+      }),
+    ).toBeNull()
+    expect(
+      normalizeTuning({
+        id: 'custom-mix',
+        name: 'Mix',
+        instrument: 'guitar',
+        strings: [
+          { pitch: { note: 'E', octave: 2 } },
+          { pitch: { note: 'Bb', octave: 2 } },
+          { pitch: { note: 'A', octave: 7 } },
+          { pitch: { note: 'D', octave: 2.5 } },
+        ],
+      }),
+    ).toEqual({
+      id: 'custom-mix',
+      name: 'Mix',
+      instrument: 'guitar',
+      strings: [{ pitch: { note: 'E', octave: 2 } }],
+    })
+  })
+
   it('removes a tuning by id', () => {
     saveCustomTuning(TUNING)
     deleteCustomTuning(TUNING.id)
     expect(readCustomTunings()).toEqual([])
   })
 
-  it('recovers from corrupted storage', () => {
+  it('EC-corrupt-json recovers from corrupted storage', () => {
     localStorage.setItem('anystring.v2.customTunings', 'not json {')
     expect(readCustomTunings()).toEqual([])
   })
@@ -198,7 +251,7 @@ describe('customTuningsStore', () => {
     ])
   })
 
-  it('accepts ukulele tunings and rejects unknown instruments', () => {
+  it('EC-unknown-instrument accepts ukulele tunings and rejects unknown instruments', () => {
     const ukulele: Tuning = {
       id: 'custom-uke',
       name: 'My uke',
@@ -216,7 +269,7 @@ describe('customTuningsStore', () => {
     ).toBeNull()
   })
 
-  it('rejects malformed tunings and quota failures without throwing', () => {
+  it('EC-quota rejects malformed tunings and quota failures without throwing', () => {
     expect(normalizeTuning(null)).toBeNull()
     expect(
       normalizeTuning({ id: 1, name: 'x', instrument: 'guitar', strings: [] }),
