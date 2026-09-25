@@ -9,9 +9,12 @@ import {
   bumpReleaseVersion,
   iosBuildNumbers,
   iosMarketingVersions,
+  isVersionBumpCommit,
   parseReleaseVersion,
   releaseVersionErrors,
   stampIosPbxproj,
+  VERSION_BUMP_COMMIT_PREFIX,
+  versionBumpCommitMessage,
 } from './appReleaseVersion.ts'
 
 const PBX = `
@@ -64,6 +67,25 @@ describe('bumpReleaseVersion', () => {
       version: '1.0.3',
       buildNumber: 9,
     })
+  })
+})
+
+describe('version bump commits', () => {
+  it('names the marketing version and build number', () => {
+    expect(versionBumpCommitMessage({ version: '1.1.1', buildNumber: 10 })).toBe(
+      'Bump version to 1.1.1 (10).',
+    )
+  })
+
+  it('recognizes only the generated subject line', () => {
+    const message = versionBumpCommitMessage({ version: '1.1.1', buildNumber: 10 })
+    expect(isVersionBumpCommit(message)).toBe(true)
+    expect(isVersionBumpCommit(`${message}\n\nbody`)).toBe(true)
+    expect(
+      isVersionBumpCommit(
+        'Merge pull request #54 from BadKirill/feat/edge-case-coverage',
+      ),
+    ).toBe(false)
   })
 })
 
@@ -131,6 +153,12 @@ describe('releaseVersionErrors', () => {
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 describe('repo release versions', () => {
+  it('uses the bump prefix so the master workflow does not bump its own commit', () => {
+    const bump = readFileSync(join(ROOT, '.github/workflows/version-bump.yml'), 'utf8')
+    expect(bump).toContain(VERSION_BUMP_COMMIT_PREFIX)
+    expect(bump).toContain('isVersionBumpCommit')
+  })
+
   it('keeps iOS metadata and Android Gradle in step with package.json', () => {
     const release = parseReleaseVersion(readFileSync(join(ROOT, 'package.json'), 'utf8'))
     expect(

@@ -15,6 +15,14 @@ Pushes to `master` that touch `docs/knowledge/**` do **not** auto-sync external
 wikis. GitHub/Notion wiki sync is manual (`workflow_dispatch` only). Local
 `knowledge:check` still runs on every PR.
 
+Pushes to `master` also run **Version bump**, then the **Deploy** workflow:
+
+| Job                | What it runs                                                                |
+| ------------------ | --------------------------------------------------------------------------- |
+| Bump patch version | `npm run version:patch`, commit `Bump version to x.y.z (n).`, push `master` |
+
+The bump job skips its own commit, so it does not loop. GitHub Actions needs permission to push to `master` (branch protection must allow that token). The following store archive is built from that commit, so About shows the new version.
+
 Pushes to `master` also run the **Deploy** workflow:
 
 | Job                   | What it runs                                                         |

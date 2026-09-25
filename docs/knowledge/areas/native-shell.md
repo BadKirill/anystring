@@ -57,9 +57,12 @@ and `buildNumber` (store integer, e.g. `9`). That is the only source of truth.
   (`App.getInfo()`), so the sheet shows the installed binary, not a
   leftover JS constant. Web/PWA uses the bundled values. Display is
   `Version 1.1.0 (9)`.
-- Bump with `npm run version:patch|minor|major|build` (always increments
-  `buildNumber`). Vitest fails if iOS or Android drift from `package.json`.
-  Do not edit versions in Xcode or Android Studio.
+- A push to `master` bumps the patch version and `buildNumber` in CI
+  (`.github/workflows/version-bump.yml`) and pushes that commit. `minor`,
+  `major`, and `build` stay manual (`npm run version:minor|major|build`).
+  Vitest fails if iOS or Android drift from `package.json`.
+  Do not edit versions in Xcode or Android Studio. Build store binaries from
+  `master` after the bump commit so About matches the binary.
 
 ## Icons and splash
 

@@ -5,6 +5,17 @@ export interface ReleaseVersion {
 
 export type VersionBump = 'major' | 'minor' | 'patch' | 'build'
 
+export const VERSION_BUMP_COMMIT_PREFIX = 'Bump version to '
+
+export function versionBumpCommitMessage(release: ReleaseVersion): string {
+  return `${VERSION_BUMP_COMMIT_PREFIX}${release.version} (${String(release.buildNumber)}).`
+}
+
+export function isVersionBumpCommit(message: string): boolean {
+  const subject = message.split('\n')[0] ?? ''
+  return subject.startsWith(VERSION_BUMP_COMMIT_PREFIX)
+}
+
 function packageFields(packageJsonText: string): {
   version: unknown
   buildNumber: unknown

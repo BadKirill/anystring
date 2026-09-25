@@ -201,7 +201,9 @@ unverified on real hardware.
 **Versioning:** `package.json` `version` + `buildNumber` is the single source.
 Android reads it in Gradle; iOS is stamped on `cap:sync`. About on device uses
 `@capacitor/app` `App.getInfo()` (installed binary); PWA uses the Vite-bundled
-values. Bump with `npm run version:patch` (or `minor` / `major` / `build`).
+values. A push to `master` runs `.github/workflows/version-bump.yml`, which
+applies `npm run version:patch` and pushes the result. `minor` / `major` /
+`build` stay manual. Store archives are cut from `master` after that commit.
 
 ### 9. Polish
 
