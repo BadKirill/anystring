@@ -45,7 +45,8 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `store/screenshots/`                                         | App Store / Play listing PNGs                              |
 | `store/play-listing/COPY.md`                                 | Google Play listing name/descriptions                      |
 | `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens    |
-| `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp marketing version + build number          |
+| `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp version; pick the store-release commit    |
+| `scripts/resolveReleaseCommit.ts`                            | Print the bump commit to upload, or nothing                |
 | `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                     |
 | `scripts/bumpAppVersion.ts`                                  | CLI for `npm run version:*`                                |
 | `scripts/native-e2e.sh`                                      | Capacitor debug build/install + Maestro                    |

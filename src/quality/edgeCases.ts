@@ -314,6 +314,36 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     testFile: 'src/core/tunings/custom.test.ts',
   },
   {
+    id: 'EC-release-empty',
+    area: 'ci',
+    summary: 'No store upload while the version-bump commit is not on master yet',
+    testFile: 'scripts/appReleaseVersion.test.ts',
+  },
+  {
+    id: 'EC-release-bump',
+    area: 'ci',
+    summary: 'The first child of a green CI commit is uploaded when it is a version bump',
+    testFile: 'scripts/appReleaseVersion.test.ts',
+  },
+  {
+    id: 'EC-release-skipped',
+    area: 'ci',
+    summary: 'A non-bump child is not uploaded',
+    testFile: 'scripts/appReleaseVersion.test.ts',
+  },
+  {
+    id: 'EC-release-first',
+    area: 'ci',
+    summary: 'Only the first child on master is considered for upload',
+    testFile: 'scripts/appReleaseVersion.test.ts',
+  },
+  {
+    id: 'EC-release-head',
+    area: 'ci',
+    summary: 'A version-bump commit is uploaded as itself on a manual re-run',
+    testFile: 'scripts/appReleaseVersion.test.ts',
+  },
+  {
     id: 'EC-manual-wkwebview',
     area: 'native',
     summary: 'WKWebView may deliver silent mic samples while iOS is capturing',

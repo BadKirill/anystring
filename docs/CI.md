@@ -23,6 +23,15 @@ Pushes to `master` also run **Version bump**, then the **Deploy** workflow:
 
 The bump job skips its own commit, so it does not loop. GitHub Actions needs permission to push to `master` (branch protection must allow that token). The following store archive is built from that commit, so About shows the new version.
 
+When that CI run succeeds, **Store release** uploads the bump commit:
+
+| Job           | What it uploads                                                                  |
+| ------------- | -------------------------------------------------------------------------------- |
+| TestFlight    | `xcodebuild` archive (`macos-26`) and `exportArchive` with `destination: upload` |
+| Play internal | `gradlew bundleRelease`, then the Play `internal` track                          |
+
+The bump commit cannot start the workflow itself (`GITHUB_TOKEN` pushes do not trigger Actions). The workflow waits for CI on the parent commit, then takes the bump child. Re-upload from Actions → Store release (`sha` defaults to `master`). Signing uses repository secrets listed in `docs/knowledge/areas/ci-cd.md`. There is no Fastlane.
+
 Pushes to `master` also run the **Deploy** workflow:
 
 | Job                   | What it runs                                                         |
