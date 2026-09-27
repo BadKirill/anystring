@@ -64,6 +64,13 @@ and `buildNumber` (store integer, e.g. `9`). That is the only source of truth.
   Do not edit versions in Xcode or Android Studio. Build store binaries from
   `master` after the bump commit so About matches the binary.
 
+A green CI run on `master` uploads the next version-bump commit
+(`.github/workflows/store-release.yml`): TestFlight via `xcodebuild
+-exportArchive` (`destination: upload`) and Google Play internal via
+`gradlew bundleRelease`. Secrets and the manual re-upload live in
+[ci-cd.md](ci-cd.md). Do not commit the keystore, `keystore.properties`, or
+the App Store Connect key.
+
 ## Icons and splash
 
 `node scripts/generate-icons.mjs` renders everything from `public/icon.svg`:
@@ -155,4 +162,4 @@ updating Maestro / store screenshot pipelines.
 - [audio.md](audio.md) — the mic path the shell reuses
 - [testing.md](testing.md) — Playwright + Maestro + store screenshots
 - [tooling.md](tooling.md) — Vite config and npm scripts
-- [ci-cd.md](ci-cd.md) — web deploy; native builds are manual
+- [ci-cd.md](ci-cd.md) — web deploy and TestFlight / Play internal upload

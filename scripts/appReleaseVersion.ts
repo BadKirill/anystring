@@ -16,6 +16,27 @@ export function isVersionBumpCommit(message: string): boolean {
   return subject.startsWith(VERSION_BUMP_COMMIT_PREFIX)
 }
 
+export interface ReleaseCommit {
+  sha: string
+  subject: string
+}
+
+export function releaseCommitAfter(
+  children: readonly ReleaseCommit[],
+): string | undefined {
+  const first = children.at(0)
+  if (first === undefined || !isVersionBumpCommit(first.subject)) return undefined
+  return first.sha
+}
+
+export function storeReleaseSha(
+  head: ReleaseCommit,
+  children: readonly ReleaseCommit[],
+): string | undefined {
+  if (isVersionBumpCommit(head.subject)) return head.sha
+  return releaseCommitAfter(children)
+}
+
 function packageFields(packageJsonText: string): {
   version: unknown
   buildNumber: unknown

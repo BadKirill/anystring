@@ -1,0 +1,216 @@
+name: Store release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Commit to upload (a version bump, or the commit CI tested)
+        required: false
+        default: master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: store-release
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Resolve bump commit
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.pick.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - id: pick
+        name: Wait for the version-bump commit
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            base="${{ inputs.sha }}"
+          else
+            base="${{ github.event.workflow_run.head_sha }}"
+          fi
+          if [ "$base" = "master" ]; then
+            base="origin/master"
+          fi
+          release=""
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            git fetch origin master
+            release="$(node --experimental-strip-types scripts/resolveReleaseCommit.ts "$base")"
+            if [ -n "$release" ]; then
+              break
+            fi
+            if [ "$attempt" -lt 10 ]; then
+              sleep 30
+            fi
+          done
+          echo "sha=$release" >> "$GITHUB_OUTPUT"
+
+  ios-testflight:
+    name: TestFlight
+    needs: resolve
+    if: needs.resolve.outputs.sha != ''
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build:native && npx cap sync ios
+
+      - name: Import signing
+        id: signing
+        env:
+          IOS_DIST_CERT_P12_BASE64: ${{ secrets.IOS_DIST_CERT_P12_BASE64 }}
+          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          keychain="$RUNNER_TEMP/app-signing.keychain-db"
+          keychain_password="$(openssl rand -base64 24)"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          node --input-type=module -e "
+            import { writeFileSync } from 'node:fs'
+            const dir = process.env.RUNNER_TEMP
+            writeFileSync(dir + '/cert.p12', Buffer.from(process.env.IOS_DIST_CERT_P12_BASE64, 'base64'))
+            writeFileSync(dir + '/profile.mobileprovision', Buffer.from(process.env.IOS_PROVISIONING_PROFILE_BASE64, 'base64'))
+          "
+          security import "$RUNNER_TEMP/cert.p12" -P "$IOS_DIST_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$keychain"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain"
+          security list-keychains -d user -s "$keychain" $(security list-keychains -d user | sed -e 's/^ *//' -e 's/"//g')
+          security cms -D -i "$RUNNER_TEMP/profile.mobileprovision" > "$RUNNER_TEMP/profile.plist"
+          uuid="$(plutil -extract UUID raw "$RUNNER_TEMP/profile.plist")"
+          name="$(plutil -extract Name raw "$RUNNER_TEMP/profile.plist")"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$RUNNER_TEMP/profile.mobileprovision" "$HOME/Library/MobileDevice/Provisioning Profiles/$uuid.mobileprovision"
+          mkdir -p "$HOME/private_keys"
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          chmod 600 "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          /usr/libexec/PlistBuddy -c "Set :teamID $APPLE_TEAM_ID" ios/App/ExportOptions.plist
+          /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:com.badkirill.anystring string $name" ios/App/ExportOptions.plist
+          echo "profile_name=$name" >> "$GITHUB_OUTPUT"
+          echo "keychain_path=$keychain" >> "$GITHUB_OUTPUT"
+
+      - name: Archive and upload to TestFlight
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild archive \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath build/App.xcarchive \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            "CODE_SIGN_IDENTITY=Apple Distribution" \
+            "PROVISIONING_PROFILE_SPECIFIER=${{ steps.signing.outputs.profile_name }}" \
+            "OTHER_CODE_SIGN_FLAGS=--keychain ${{ steps.signing.outputs.keychain_path }}"
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportPath build/export \
+            -exportOptionsPlist ios/App/ExportOptions.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+
+      - name: Remove signing material
+        if: always()
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          security delete-keychain "$RUNNER_TEMP/app-signing.keychain-db" || true
+          rm -f "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+            "$RUNNER_TEMP/cert.p12" \
+            "$RUNNER_TEMP/profile.mobileprovision" \
+            "$RUNNER_TEMP/profile.plist"
+
+  android-internal:
+    name: Play internal
+    needs: resolve
+    if: needs.resolve.outputs.sha != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve.outputs.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - run: npm ci
+      - run: npm run build:native && npx cap sync android
+
+      - name: Write release keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          node --input-type=module -e "
+            import { writeFileSync } from 'node:fs'
+            writeFileSync('android/upload-keystore.jks', Buffer.from(process.env.ANDROID_KEYSTORE_BASE64, 'base64'))
+            const props = [
+              'storeFile=upload-keystore.jks',
+              'storePassword=' + process.env.ANDROID_KEYSTORE_PASSWORD,
+              'keyAlias=' + process.env.ANDROID_KEY_ALIAS,
+              'keyPassword=' + process.env.ANDROID_KEY_PASSWORD,
+            ].join('\n') + '\n'
+            writeFileSync('android/keystore.properties', props)
+          "
+
+      - name: Build release bundle
+        working-directory: android
+        run: ./gradlew bundleRelease
+
+      - uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.badkirill.anystring
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          tracks: internal
+          status: completed
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab

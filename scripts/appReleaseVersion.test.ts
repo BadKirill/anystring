@@ -11,8 +11,10 @@ import {
   iosMarketingVersions,
   isVersionBumpCommit,
   parseReleaseVersion,
+  releaseCommitAfter,
   releaseVersionErrors,
   stampIosPbxproj,
+  storeReleaseSha,
   VERSION_BUMP_COMMIT_PREFIX,
   versionBumpCommitMessage,
 } from './appReleaseVersion.ts'
@@ -89,6 +91,56 @@ describe('version bump commits', () => {
   })
 })
 
+describe('releaseCommitAfter', () => {
+  const bump = {
+    sha: 'abc123',
+    subject: versionBumpCommitMessage({ version: '1.1.2', buildNumber: 11 }),
+  }
+
+  it('EC-release-empty waits while the bump commit is not on master yet', () => {
+    expect(releaseCommitAfter([])).toBeUndefined()
+  })
+
+  it('EC-release-bump returns the first child when it is the version bump', () => {
+    expect(releaseCommitAfter([bump])).toBe('abc123')
+  })
+
+  it('EC-release-skipped returns nothing when the first child is not a bump', () => {
+    expect(
+      releaseCommitAfter([{ sha: 'def456', subject: 'Fix the gauge' }]),
+    ).toBeUndefined()
+  })
+
+  it('EC-release-first ignores later children and uses only the first', () => {
+    expect(
+      releaseCommitAfter([{ sha: 'def456', subject: 'Fix the gauge' }, bump]),
+    ).toBeUndefined()
+    expect(releaseCommitAfter([bump, { sha: 'def456', subject: 'Fix the gauge' }])).toBe(
+      'abc123',
+    )
+  })
+})
+
+describe('storeReleaseSha', () => {
+  const bumpSubject = versionBumpCommitMessage({ version: '1.1.2', buildNumber: 11 })
+
+  it('EC-release-head uploads the commit itself when that commit is the version bump', () => {
+    expect(
+      storeReleaseSha({ sha: 'abc123', subject: bumpSubject }, [
+        { sha: 'def456', subject: 'Fix the gauge' },
+      ]),
+    ).toBe('abc123')
+  })
+
+  it('uploads the bump child of a CI commit', () => {
+    expect(
+      storeReleaseSha({ sha: 'parent', subject: 'Merge pull request #60' }, [
+        { sha: 'abc123', subject: bumpSubject },
+      ]),
+    ).toBe('abc123')
+  })
+})
+
 describe('stampIosPbxproj', () => {
   it('writes MARKETING_VERSION and CURRENT_PROJECT_VERSION from the release', () => {
     const stamped = stampIosPbxproj(PBX, { version: '1.0.3', buildNumber: 8 })
@@ -157,6 +209,21 @@ describe('repo release versions', () => {
     const bump = readFileSync(join(ROOT, '.github/workflows/version-bump.yml'), 'utf8')
     expect(bump).toContain(VERSION_BUMP_COMMIT_PREFIX)
     expect(bump).toContain('isVersionBumpCommit')
+  })
+
+  it('uploads that bump commit to TestFlight and Play internal after CI', () => {
+    const workflow = readFileSync(
+      join(ROOT, '.github/workflows/store-release.yml'),
+      'utf8',
+    )
+    const exportOptions = readFileSync(join(ROOT, 'ios/App/ExportOptions.plist'), 'utf8')
+    expect(workflow).toContain('workflows: [CI]')
+    expect(workflow).toContain('resolveReleaseCommit.ts')
+    expect(workflow).toContain('tracks: internal')
+    expect(workflow).toContain('macos-26')
+    expect(exportOptions).toContain('<string>upload</string>')
+    expect(exportOptions).toContain('<string>app-store-connect</string>')
+    expect(exportOptions).toContain('<string>manual</string>')
   })
 
   it('keeps iOS metadata and Android Gradle in step with package.json', () => {
