@@ -251,6 +251,18 @@ describe('customTuningsStore', () => {
     ])
   })
 
+  it('EC-bowed-instrument accepts violin, viola, cello, and double bass tunings', () => {
+    for (const instrument of ['violin', 'viola', 'cello', 'double-bass']) {
+      const tuning = {
+        id: `custom-${instrument}`,
+        name: 'Mine',
+        instrument,
+        strings: [{ pitch: { note: 'G', octave: 3 } }],
+      }
+      expect(normalizeTuning(tuning)).toEqual(tuning)
+    }
+  })
+
   it('EC-unknown-instrument accepts ukulele tunings and rejects unknown instruments', () => {
     const ukulele: Tuning = {
       id: 'custom-uke',

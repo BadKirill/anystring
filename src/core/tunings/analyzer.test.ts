@@ -161,6 +161,22 @@ describe('PRESET_TUNINGS', () => {
     ).toBe(5)
   })
 
+  it('EC-d-modal-octaves keeps violin D3, D4, and D5 on different strings', () => {
+    const dModal = PRESET_TUNINGS.find((tuning) => tuning.id === 'violin-d-modal')
+    if (!dModal) {
+      throw new Error('violin-d-modal preset is missing')
+    }
+    expect(analyze(pitchToFrequency({ note: 'D', octave: 3 }), dModal)?.stringIndex).toBe(
+      0,
+    )
+    expect(analyze(pitchToFrequency({ note: 'D', octave: 4 }), dModal)?.stringIndex).toBe(
+      1,
+    )
+    expect(analyze(pitchToFrequency({ note: 'D', octave: 5 }), dModal)?.stringIndex).toBe(
+      3,
+    )
+  })
+
   it('EC-high-g matches reentrant High G to the G string, not A', () => {
     const highG = PRESET_TUNINGS.find((tuning) => tuning.id === 'ukulele-standard')
     if (!highG) {

@@ -4,10 +4,22 @@ import { isInstrument, INSTRUMENTS } from './types'
 
 describe('isInstrument', () => {
   it('accepts the supported instruments and rejects unknown names', () => {
-    expect(INSTRUMENTS).toEqual(['guitar', 'bass', 'ukulele'])
+    expect(INSTRUMENTS).toEqual([
+      'guitar',
+      'bass',
+      'ukulele',
+      'violin',
+      'viola',
+      'cello',
+      'double-bass',
+    ])
     expect(isInstrument('guitar')).toBe(true)
     expect(isInstrument('bass')).toBe(true)
     expect(isInstrument('ukulele')).toBe(true)
+    expect(isInstrument('violin')).toBe(true)
+    expect(isInstrument('viola')).toBe(true)
+    expect(isInstrument('cello')).toBe(true)
+    expect(isInstrument('double-bass')).toBe(true)
     expect(isInstrument('banjo')).toBe(false)
     expect(isInstrument(1)).toBe(false)
   })

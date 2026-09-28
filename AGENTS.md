@@ -1,6 +1,6 @@
 # Anystring — agent guide
 
-Anystring is a mobile-first guitar, bass, and ukulele tuner with fully editable per-string tunings.
+Anystring is a mobile-first tuner for guitar, bass, ukulele, violin, viola, cello, and double bass with fully editable per-string tunings.
 One TypeScript codebase: Vite + React PWA, wrapped with Capacitor for the app stores.
 
 This file is the **tool-agnostic** entry for Cursor, ChatGPT/Codex, Claude Code,

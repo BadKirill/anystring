@@ -46,7 +46,7 @@ test('picker opens instrument presets inside that instrument card', async ({ pag
   await page.getByRole('button', { name: 'Standard E' }).click()
   await expect(page.getByRole('heading', { name: 'Tunings', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Guitar' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Bass' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Bass', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Ukulele' })).toBeVisible()
 
   const guitarCard = instrumentCard(page, 'Guitar')
@@ -59,7 +59,9 @@ test('picker opens instrument presets inside that instrument card', async ({ pag
   await expect
     .poll(async () => {
       const guitarBox = await page.getByRole('button', { name: 'Guitar' }).boundingBox()
-      const bassBox = await page.getByRole('button', { name: 'Bass' }).boundingBox()
+      const bassBox = await page
+        .getByRole('button', { name: 'Bass', exact: true })
+        .boundingBox()
       const ukeBox = await page.getByRole('button', { name: 'Ukulele' }).boundingBox()
       const dropBox = await drop.boundingBox()
       const guitarCardBox = await guitarCard.boundingBox()

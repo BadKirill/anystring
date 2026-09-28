@@ -83,14 +83,18 @@ function SaveDraftField({ onSave }: { onSave: (name: string) => void }) {
   )
 }
 
+const INSTRUMENT_LABEL: Record<Instrument, string> = {
+  guitar: UI.guitar,
+  bass: UI.bass,
+  ukulele: UI.ukulele,
+  violin: UI.violin,
+  viola: UI.viola,
+  cello: UI.cello,
+  'double-bass': UI.doubleBass,
+}
+
 function instrumentLabel(instrument: Instrument): string {
-  if (instrument === 'guitar') {
-    return UI.guitar
-  }
-  if (instrument === 'bass') {
-    return UI.bass
-  }
-  return UI.ukulele
+  return INSTRUMENT_LABEL[instrument]
 }
 
 function prefersReducedMotion(): boolean {

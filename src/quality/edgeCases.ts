@@ -140,6 +140,18 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     testFile: 'src/core/tunings/analyzer.test.ts',
   },
   {
+    id: 'EC-d-modal-octaves',
+    area: 'tuning',
+    summary: 'D modal violin keeps D3, D4, and D5 on different strings',
+    testFile: 'src/core/tunings/analyzer.test.ts',
+  },
+  {
+    id: 'EC-preset-band',
+    area: 'tuning',
+    summary: 'Every preset string sits inside the 25–1000 Hz detection band',
+    testFile: 'src/core/tunings/presets.test.ts',
+  },
+  {
     id: 'EC-empty-tuning',
     area: 'tuning',
     summary: 'A tuning with no strings has no analysis',
@@ -275,6 +287,12 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     id: 'EC-unknown-instrument',
     area: 'storage',
     summary: 'An unknown instrument drops the tuning',
+    testFile: 'src/storage/customTuningsStore.test.ts',
+  },
+  {
+    id: 'EC-bowed-instrument',
+    area: 'storage',
+    summary: 'Violin, viola, cello, and double bass tunings can be saved',
     testFile: 'src/storage/customTuningsStore.test.ts',
   },
   {

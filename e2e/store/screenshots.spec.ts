@@ -80,7 +80,7 @@ test.describe('store screenshots', () => {
   test('03 presets guitar bass ukulele', async ({ page }) => {
     await openApp(page)
     await openTunings(page, 'Standard E')
-    await page.getByRole('button', { name: 'Bass' }).click()
+    await page.getByRole('button', { name: 'Bass', exact: true }).click()
     await page.getByRole('button', { name: 'Ukulele' }).click()
     await page.getByRole('button', { name: 'Guitar' }).click()
     await page.addStyleTag({

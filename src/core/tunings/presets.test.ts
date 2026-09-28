@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
+import { pitchToFrequency } from '../music'
 import { PRESET_TUNINGS, presetsFor, toggleExpandedInstruments } from './presets'
-import { INSTRUMENTS, type Tuning } from './types'
+import { INSTRUMENTS, type Instrument, type Tuning } from './types'
 
 function presetById(id: string): Tuning {
   const tuning = PRESET_TUNINGS.find((entry) => entry.id === id)
@@ -64,8 +65,16 @@ describe('PRESET_TUNINGS', () => {
     ])
   })
 
-  it('lists guitar, bass, then ukulele for the picker', () => {
-    expect(INSTRUMENTS).toEqual(['guitar', 'bass', 'ukulele'])
+  it('lists fretted instruments, then violin, viola, cello, and double bass', () => {
+    expect(INSTRUMENTS).toEqual([
+      'guitar',
+      'bass',
+      'ukulele',
+      'violin',
+      'viola',
+      'cello',
+      'double-bass',
+    ])
   })
 
   it('groups presets by instrument', () => {
@@ -137,5 +146,271 @@ describe('PRESET_TUNINGS', () => {
       expect(tuning.instrument).toBe('ukulele')
       expect(pitchesOf(tuning)).toEqual([...entry.pitches])
     }
+  })
+
+  it('EC-preset-band keeps every preset string inside 25–1000 Hz', () => {
+    for (const tuning of PRESET_TUNINGS) {
+      for (const string of tuning.strings) {
+        const hz = pitchToFrequency(string.pitch)
+        expect(hz).toBeGreaterThanOrEqual(25)
+        expect(hz).toBeLessThanOrEqual(1000)
+      }
+    }
+  })
+
+  it('includes standard and known alternate bowed-string tunings', () => {
+    const expected: {
+      id: string
+      name: string
+      instrument: Instrument
+      pitches: { note: string; octave: number }[]
+    }[] = [
+      {
+        id: 'violin-standard',
+        name: 'Standard',
+        instrument: 'violin',
+        pitches: [
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'E', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-cross-a',
+        name: 'Cross A',
+        instrument: 'violin',
+        pitches: [
+          { note: 'A', octave: 3 },
+          { note: 'E', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'E', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-sawmill',
+        name: 'Sawmill',
+        instrument: 'violin',
+        pitches: [
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'G', octave: 4 },
+          { note: 'D', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-d-modal',
+        name: 'D modal',
+        instrument: 'violin',
+        pitches: [
+          { note: 'D', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'D', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-high-bass',
+        name: 'High bass',
+        instrument: 'violin',
+        pitches: [
+          { note: 'A', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'E', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-g-modal',
+        name: 'G modal',
+        instrument: 'violin',
+        pitches: [
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'D', octave: 5 },
+        ],
+      },
+      {
+        id: 'violin-calico',
+        name: 'Calico',
+        instrument: 'violin',
+        pitches: [
+          { note: 'A', octave: 3 },
+          { note: 'E', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'C#', octave: 5 },
+        ],
+      },
+      {
+        id: 'viola-standard',
+        name: 'Standard',
+        instrument: 'viola',
+        pitches: [
+          { note: 'C', octave: 3 },
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+        ],
+      },
+      {
+        id: 'viola-five-string',
+        name: 'Five-string',
+        instrument: 'viola',
+        pitches: [
+          { note: 'C', octave: 3 },
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'E', octave: 5 },
+        ],
+      },
+      {
+        id: 'viola-violin-pitch',
+        name: 'Violin pitch',
+        instrument: 'viola',
+        pitches: [
+          { note: 'G', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+          { note: 'E', octave: 5 },
+        ],
+      },
+      {
+        id: 'viola-cross-da',
+        name: 'Cross D-A',
+        instrument: 'viola',
+        pitches: [
+          { note: 'D', octave: 3 },
+          { note: 'A', octave: 3 },
+          { note: 'D', octave: 4 },
+          { note: 'A', octave: 4 },
+        ],
+      },
+      {
+        id: 'cello-standard',
+        name: 'Standard',
+        instrument: 'cello',
+        pitches: [
+          { note: 'C', octave: 2 },
+          { note: 'G', octave: 2 },
+          { note: 'D', octave: 3 },
+          { note: 'A', octave: 3 },
+        ],
+      },
+      {
+        id: 'cello-five-string',
+        name: 'Five-string',
+        instrument: 'cello',
+        pitches: [
+          { note: 'C', octave: 2 },
+          { note: 'G', octave: 2 },
+          { note: 'D', octave: 3 },
+          { note: 'A', octave: 3 },
+          { note: 'E', octave: 4 },
+        ],
+      },
+      {
+        id: 'cello-bach-5',
+        name: 'Bach Suite V',
+        instrument: 'cello',
+        pitches: [
+          { note: 'C', octave: 2 },
+          { note: 'G', octave: 2 },
+          { note: 'D', octave: 3 },
+          { note: 'G', octave: 3 },
+        ],
+      },
+      {
+        id: 'cello-kodaly',
+        name: 'Kodaly',
+        instrument: 'cello',
+        pitches: [
+          { note: 'B', octave: 1 },
+          { note: 'F#', octave: 2 },
+          { note: 'D', octave: 3 },
+          { note: 'A', octave: 3 },
+        ],
+      },
+      {
+        id: 'double-bass-standard',
+        name: 'Standard',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'E', octave: 1 },
+          { note: 'A', octave: 1 },
+          { note: 'D', octave: 2 },
+          { note: 'G', octave: 2 },
+        ],
+      },
+      {
+        id: 'double-bass-solo',
+        name: 'Solo',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'F#', octave: 1 },
+          { note: 'B', octave: 1 },
+          { note: 'E', octave: 2 },
+          { note: 'A', octave: 2 },
+        ],
+      },
+      {
+        id: 'double-bass-five-b',
+        name: 'Five-string (low B)',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'B', octave: 0 },
+          { note: 'E', octave: 1 },
+          { note: 'A', octave: 1 },
+          { note: 'D', octave: 2 },
+          { note: 'G', octave: 2 },
+        ],
+      },
+      {
+        id: 'double-bass-low-c',
+        name: 'Low C',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'C', octave: 1 },
+          { note: 'E', octave: 1 },
+          { note: 'A', octave: 1 },
+          { note: 'D', octave: 2 },
+          { note: 'G', octave: 2 },
+        ],
+      },
+      {
+        id: 'double-bass-fifths',
+        name: 'Fifths',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'C', octave: 1 },
+          { note: 'G', octave: 1 },
+          { note: 'D', octave: 2 },
+          { note: 'A', octave: 2 },
+        ],
+      },
+      {
+        id: 'double-bass-drop-d',
+        name: 'Drop D',
+        instrument: 'double-bass',
+        pitches: [
+          { note: 'D', octave: 1 },
+          { note: 'A', octave: 1 },
+          { note: 'D', octave: 2 },
+          { note: 'G', octave: 2 },
+        ],
+      },
+    ]
+
+    for (const entry of expected) {
+      const tuning = presetById(entry.id)
+      expect(tuning.name).toBe(entry.name)
+      expect(tuning.instrument).toBe(entry.instrument)
+      expect(pitchesOf(tuning)).toEqual(entry.pitches)
+    }
+    expect(presetsFor('violin')).toHaveLength(7)
+    expect(presetsFor('viola')).toHaveLength(4)
+    expect(presetsFor('cello')).toHaveLength(4)
+    expect(presetsFor('double-bass')).toHaveLength(6)
   })
 })
