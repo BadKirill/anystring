@@ -96,6 +96,22 @@ export function iosMarketingVersions(pbxproj: string): string[] {
   return [...pbxproj.matchAll(/MARKETING_VERSION = ([^;]+);/g)].map((match) => match[1])
 }
 
+export function iphoneOnlyErrors(pbxproj: string, infoPlist: string): string[] {
+  const families = [...pbxproj.matchAll(/TARGETED_DEVICE_FAMILY = ([^;]+);/g)].map(
+    (match) => match[1],
+  )
+  const familyErrors =
+    families.length === 0
+      ? ['TARGETED_DEVICE_FAMILY missing']
+      : [...new Set(families.filter((value) => value !== '1'))].map(
+          (value) => `TARGETED_DEVICE_FAMILY ${value} !== 1`,
+        )
+  const ipadOrientations = infoPlist.includes('UISupportedInterfaceOrientations~ipad')
+    ? ['Info.plist still declares iPad orientations']
+    : []
+  return [...familyErrors, ...ipadOrientations]
+}
+
 export function iosBuildNumbers(pbxproj: string): string[] {
   return [...pbxproj.matchAll(/CURRENT_PROJECT_VERSION = ([^;]+);/g)].map(
     (match) => match[1],

@@ -9,6 +9,7 @@ import {
   bumpReleaseVersion,
   iosBuildNumbers,
   iosMarketingVersions,
+  iphoneOnlyErrors,
   isVersionBumpCommit,
   parseReleaseVersion,
   releaseCommitAfter,
@@ -69,6 +70,25 @@ describe('bumpReleaseVersion', () => {
       version: '1.0.3',
       buildNumber: 9,
     })
+  })
+})
+
+describe('iphoneOnlyErrors', () => {
+  it('accepts a single iPhone device family', () => {
+    expect(iphoneOnlyErrors('TARGETED_DEVICE_FAMILY = 1;', '<plist></plist>')).toEqual([])
+  })
+
+  it('rejects iPad and a missing family', () => {
+    expect(
+      iphoneOnlyErrors('TARGETED_DEVICE_FAMILY = "1,2";', '<plist></plist>'),
+    ).toEqual(['TARGETED_DEVICE_FAMILY "1,2" !== 1'])
+    expect(
+      iphoneOnlyErrors(
+        'TARGETED_DEVICE_FAMILY = 1;',
+        '<key>UISupportedInterfaceOrientations~ipad</key>',
+      ),
+    ).toEqual(['Info.plist still declares iPad orientations'])
+    expect(iphoneOnlyErrors('', '')).toEqual(['TARGETED_DEVICE_FAMILY missing'])
   })
 })
 
@@ -211,6 +231,15 @@ describe('repo release versions', () => {
     expect(bump).toContain('isVersionBumpCommit')
   })
 
+  it('targets iPhone only so App Store does not require iPad screenshots', () => {
+    const pbxproj = readFileSync(
+      join(ROOT, 'ios/App/App.xcodeproj/project.pbxproj'),
+      'utf8',
+    )
+    const infoPlist = readFileSync(join(ROOT, 'ios/App/App/Info.plist'), 'utf8')
+    expect(iphoneOnlyErrors(pbxproj, infoPlist)).toEqual([])
+  })
+
   it('uploads that bump commit to TestFlight and Play internal after CI', () => {
     const workflow = readFileSync(
       join(ROOT, '.github/workflows/store-release.yml'),
@@ -221,6 +250,7 @@ describe('repo release versions', () => {
     expect(workflow).toContain('resolveReleaseCommit.ts')
     expect(workflow).toContain('tracks: internal')
     expect(workflow).toContain('macos-26')
+    expect(workflow).toContain('TARGETED_DEVICE_FAMILY=1')
     expect(exportOptions).toContain('<string>upload</string>')
     expect(exportOptions).toContain('<string>app-store-connect</string>')
     expect(exportOptions).toContain('<string>manual</string>')
