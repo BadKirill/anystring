@@ -205,6 +205,12 @@ values. A push to `master` runs `.github/workflows/version-bump.yml`, which
 applies `npm run version:patch` and pushes the result. `minor` / `major` /
 `build` stay manual. Store archives are cut from `master` after that commit.
 
+**Store upload:** GitHub Actions (`.github/workflows/store-release.yml`), not
+Fastlane. After CI succeeds on `master`, the workflow uploads the version-bump
+commit: Xcode `exportArchive` (`destination: upload`) to TestFlight, and
+`gradlew bundleRelease` plus `r0adkll/upload-google-play` to the Play internal
+track.
+
 ### 9. Polish
 
 1. Test on at least one real Android and one real iOS phone: noisy room, quiet room, low bass strings.
