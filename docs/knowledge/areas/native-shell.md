@@ -63,6 +63,12 @@ and `buildNumber` (store integer, e.g. `9`). That is the only source of truth.
   Vitest fails if iOS or Android drift from `package.json`.
   Do not edit versions in Xcode or Android Studio. Build store binaries from
   `master` after the bump commit so About matches the binary.
+- iOS builds are iPhone only: `TARGETED_DEVICE_FAMILY = 1` in both Debug and
+  Release, and `Info.plist` has no `UISupportedInterfaceOrientations~ipad`.
+  The TestFlight archive passes the same setting
+  (`TARGETED_DEVICE_FAMILY=1`). A universal (`"1,2"`) binary makes App Store
+  Connect require a 13-inch iPad screenshot. Do not add iPad. Vitest fails if
+  the project drifts.
 
 A green CI run on `master` uploads the next version-bump commit
 (`.github/workflows/store-release.yml`): TestFlight via `xcodebuild

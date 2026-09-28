@@ -100,6 +100,7 @@ src/quality/        — edge-case catalog and the 80% coverage gate
 - Write code through **SDD + TDD** (Linus taste + SOLID): spec → failing test → implement → refactor. See [docs/knowledge/areas/sdd-tdd.md](docs/knowledge/areas/sdd-tdd.md).
 - **Edge-case coverage ≥ 80%.** For every new feature, research the boundaries, add them to `src/quality/edgeCases.ts`, and assert each expected outcome in a test named with that id. Cases without a test count against the ratio. `npm run check` fails below 80%.
 - Microphone capture must keep `echoCancellation`, `noiseSuppression`, and `autoGainControl` **disabled** — they destroy low-frequency tuner input.
+- iOS builds are **iPhone only**. `TARGETED_DEVICE_FAMILY` stays `1`. Do not add iPad (or `"1,2"`); App Store then requires a 13-inch iPad screenshot.
 - Pitch-detection window stays at **8192 samples** unless real-device testing justifies a change (needed for ~43 Hz bass).
 - Functions: max **50 lines**, cyclomatic complexity ≤ **10**, cognitive complexity ≤ **10**, nesting depth ≤ **3** — ESLint errors, do not disable.
 - No `any`, no non-null assertions, no `@ts-ignore`. Model uncertainty in types.
