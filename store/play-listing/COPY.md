@@ -9,30 +9,30 @@ Anystring
 ## Short description (краткое описание) — 80 chars max
 
 ```
-Free guitar, bass & ukulele tuner with fully editable per-string tunings.
+Free tuner for guitar, bass, ukulele, and bowed strings.
 ```
 
-(73 characters.)
+(56 characters.)
 
 Russian alternative if you use ru-RU locale:
 
 ```
-Бесплатный тюнер гитары, баса и укулеле со своими строями на каждую струну.
+Тюнер гитары, баса, укулеле, скрипки и смычковых.
 ```
 
 ## Full description (полное описание) — 4000 chars max
 
 ```
-Anystring is a free tuner for guitar, bass, and ukulele with fully editable per-string tunings.
+Anystring is a free tuner for guitar, bass, ukulele, violin, viola, cello, and double bass with fully editable per-string tunings.
 
-Most free tuners lock you into fixed presets. Anystring lets you set any note on any string — Drop D, Drop C, 7-string, 4-string bass, ukulele Low G, or your own custom setup.
+Most free tuners lock you into fixed presets. Anystring lets you set any note on any string — Drop D, Drop C, 7-string, 4-string bass, ukulele Low G, violin Cross A, or your own custom setup.
 
 FEATURES
 
 • Live pitch detection — start tuning and play a string
 • Strings mode — auto or manual target per string
 • Chromatic mode — nearest note with live cents
-• Built-in presets — guitar, bass, and ukulele (High G, Low G, D tuning, Baritone, Open C)
+• Built-in presets — guitar, bass, ukulele (High G, Low G, D tuning, Baritone, Open C), violin, viola, cello, and double bass
 • Custom tunings — edit any string, name it, save under My tunings
 • Reference tones — tap a string or pick a note to hear the target
 • Offline — works without an internet connection

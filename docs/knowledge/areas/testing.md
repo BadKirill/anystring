@@ -36,7 +36,7 @@ then the smallest implementation. Do not write production code and match tests a
 | ------------------------------- | ----------------------------------------------------------------------- |
 | `e2e/helpers.ts`                | Mic stub/deny/missing/unavailable, `spyReferenceTone`, storage helpers  |
 | `e2e/about.spec.ts`             | About sheet shows `package.json` version and build number               |
-| `e2e/landing.spec.ts`           | Marketing landing names ukulele and opens `/app/`                       |
+| `e2e/landing.spec.ts`           | Marketing landing names bowed strings and opens `/app/`                 |
 | `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
 | `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |
 | `e2e/mic-permissions.spec.ts`   | Denied / missing / unavailable copy + retry recover                     |
@@ -44,6 +44,7 @@ then the smallest implementation. Do not write production code and match tests a
 | `e2e/background-resume.spec.ts` | Tone + mic recovery after a 10-minute background (`stubLongBackground`) |
 | `e2e/custom-tuning.spec.ts`     | Edit/save custom                                                        |
 | `e2e/ukulele.spec.ts`           | Instrument cards + nested presets + Low G + empty My tunings copy       |
+| `e2e/bowed.spec.ts`             | Violin, viola, cello, and double bass cards; violin GDAE strings        |
 | `e2e/string-list.spec.ts`       | One-row string rail; swipe; overflow revive after app resume            |
 | `e2e/stop-tuning.spec.ts`       | Stop listening                                                          |
 | `e2e/store/screenshots.spec.ts` | Store listing PNGs with marketing frames (not in default `test:e2e`)    |

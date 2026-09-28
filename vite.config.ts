@@ -18,10 +18,10 @@ const pwa = VitePWA({
   includeAssets: ['icon.svg', 'apple-touch-icon.png'],
   manifest: {
     id: '/app/',
-    name: 'Anystring — custom guitar, bass & ukulele tuner',
+    name: 'Anystring — guitar, bass, ukulele, and bowed strings',
     short_name: 'Anystring',
     description:
-      'Free tuner for guitar, bass, and ukulele with fully editable per-string tunings.',
+      'Free tuner for guitar, bass, ukulele, violin, viola, cello, and double bass with fully editable per-string tunings.',
     theme_color: '#0d1412',
     background_color: '#0d1412',
     display: 'standalone',

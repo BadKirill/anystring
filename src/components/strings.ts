@@ -24,6 +24,10 @@ export const UI = {
   guitar: 'Guitar',
   bass: 'Bass',
   ukulele: 'Ukulele',
+  violin: 'Violin',
+  viola: 'Viola',
+  cello: 'Cello',
+  doubleBass: 'Double bass',
   myTunings: 'My tunings',
   noCustomTunings: 'No saved tunings yet — edit a string, name it, then tap Save above.',
   saveCurrent: 'Save current tuning',
@@ -38,7 +42,7 @@ export const UI = {
   about: 'About',
   aboutTitle: 'About Anystring',
   aboutTagline:
-    'Free tuner for guitar, bass, and ukulele with fully editable per-string tunings.',
+    'Free tuner for guitar, bass, ukulele, violin, viola, cello, and double bass with fully editable per-string tunings.',
   aboutPrivacy:
     'The microphone is only used while you are tuning. Audio is analysed on your device, never recorded and never uploaded. Your tunings stay in this app.',
   aboutVersion: 'Version',

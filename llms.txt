@@ -1,6 +1,6 @@
 # Anystring
 
-> Free guitar, bass, and ukulele tuner PWA with editable per-string tunings.
+> Free tuner PWA for guitar, bass, ukulele, violin, viola, cello, and double bass.
 > Live: https://badkirill.github.io/anystring/
 
 ## Agent entry (mandatory for code work)
