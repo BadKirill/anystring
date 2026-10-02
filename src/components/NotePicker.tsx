@@ -8,6 +8,7 @@ import {
   type NoteName,
   type Pitch,
 } from '../core/music'
+import type { Instrument } from '../core/tunings'
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
@@ -16,12 +17,13 @@ const OCTAVES = Array.from(
   (_, index) => MIN_OCTAVE + index,
 )
 
-function preview(pitch: Pitch): void {
-  playReferencePitch(pitch).catch(() => undefined)
+function preview(pitch: Pitch, instrument: Instrument): void {
+  playReferencePitch(pitch, instrument).catch(() => undefined)
 }
 
 interface NotePickerProps {
   initial: Pitch
+  instrument: Instrument
   onConfirm: (pitch: Pitch) => void
   onClose: () => void
 }
@@ -53,17 +55,17 @@ function ChipGrid<T extends string | number>({
   )
 }
 
-export function NotePicker({ initial, onConfirm, onClose }: NotePickerProps) {
+export function NotePicker({ initial, instrument, onConfirm, onClose }: NotePickerProps) {
   const [note, setNote] = useState<NoteName>(initial.note)
   const [octave, setOctave] = useState<number>(initial.octave)
 
   const pickNote = (next: NoteName) => {
     setNote(next)
-    preview({ note: next, octave })
+    preview({ note: next, octave }, instrument)
   }
   const pickOctave = (next: number) => {
     setOctave(next)
-    preview({ note, octave: next })
+    preview({ note, octave: next }, instrument)
   }
 
   return (

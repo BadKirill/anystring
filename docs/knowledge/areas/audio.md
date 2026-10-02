@@ -35,21 +35,21 @@ frequency instead of leaving the previous reading on screen.
 
 ## Pipeline modules
 
-| File                    | Role                                                                            |
-| ----------------------- | ------------------------------------------------------------------------------- |
-| `micStream.ts`          | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet      |
-| `capture-processor.ts`  | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)           |
-| `pitchDetector.ts`      | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                            |
-| `micWindowHandler.ts`   | Median of last 5; reject jumps &gt; 150¢ unless stable                          |
-| `micSessionControl.ts`  | `beginMicSession` / `stopMicSession` (status + teardown)                        |
-| `useMicControls.ts`     | Hook wiring start/stop + resume                                                 |
-| `usePitch.ts`           | Public `{ status, error, frequency, clarity, start, stop }`                     |
-| `pitchState.ts`         | `PitchStatus`, `PitchState`                                                     |
-| `pitchGate.ts`          | Suppress detection while reference tone plays                                   |
-| `referenceTone.ts`      | Plucked reference note; highpass is `REFERENCE_HIGHPASS_HZ` (20), below bass B0 |
-| `appResume.ts`          | Visibility / pageshow resume handlers, reports `hiddenMs`                       |
-| `audioContextResume.ts` | Bounded `resume()` + `STALE_BACKGROUND_MS` rebuild threshold                    |
-| `worklet-types.d.ts`    | Worklet typings                                                                 |
+| File                    | Role                                                                                                                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `micStream.ts`          | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet                                                                                                                 |
+| `capture-processor.ts`  | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)                                                                                                                      |
+| `pitchDetector.ts`      | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                                                                                                                                       |
+| `micWindowHandler.ts`   | Median of last 5; reject jumps &gt; 150¢ unless stable                                                                                                                                     |
+| `micSessionControl.ts`  | `beginMicSession` / `stopMicSession` (status + teardown)                                                                                                                                   |
+| `useMicControls.ts`     | Hook wiring start/stop + resume                                                                                                                                                            |
+| `usePitch.ts`           | Public `{ status, error, frequency, clarity, start, stop }`                                                                                                                                |
+| `pitchState.ts`         | `PitchStatus`, `PitchState`                                                                                                                                                                |
+| `pitchGate.ts`          | Suppress detection while reference tone plays                                                                                                                                              |
+| `referenceTone.ts`      | Instrument preview; highpass is `REFERENCE_HIGHPASS_HZ` (20), below bass B0. A new note fades the previous one out over `REFERENCE_SWITCH_FADE_S` (30 ms) so a quick switch does not click |
+| `appResume.ts`          | Visibility / pageshow resume handlers, reports `hiddenMs`                                                                                                                                  |
+| `audioContextResume.ts` | Bounded `resume()` + `STALE_BACKGROUND_MS` rebuild threshold                                                                                                                               |
+| `worklet-types.d.ts`    | Worklet typings                                                                                                                                                                            |
 
 ## Session lifecycle
 

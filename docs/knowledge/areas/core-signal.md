@@ -13,7 +13,8 @@ reference audio and tests.
 | File                 | Purpose                                                   |
 | -------------------- | --------------------------------------------------------- |
 | `pitchStabilizer.ts` | Pure state machine: lock, attack damp, decay hold, unlock |
-| `pluckedTone.ts`     | Karplus-Strong-style `synthesizePluck` + `normalizePluck` |
+| `pluckVoice.ts`      | Plucked and bowed partial recipes for every instrument    |
+| `pluckedTone.ts`     | `synthesizePluck` + `normalizePluck`                      |
 | `*.test.ts`          | Lock/unlock behavior; pluck energy shape                  |
 
 ## Stabilizer contracts (`pitchStabilizer.ts`)
@@ -35,8 +36,12 @@ Wired from `src/state/useStableAnalysis.ts` (not from audio directly).
 
 ## Pluck synth
 
-`synthesizePluck(frequency, sampleRate, durationSec)` + `normalizePluck` — used by
-`src/audio/referenceTone.ts` and detector tests.
+`synthesizePluck(frequency, sampleRate, durationSec, voice)` + `normalizePluck`.
+Each `PluckVoice` sets partial slope, body peaks, attack, and ring time.
+Guitar, bass, and ukulele decay like a pluck. Violin, viola, cello, and
+double bass hold a bow and release at the end. The first partial is the
+written frequency, so the preview stays on the note. Used by
+`src/audio/referenceTone.ts`.
 
 ## Open when
 
