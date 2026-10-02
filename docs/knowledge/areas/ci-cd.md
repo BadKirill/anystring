@@ -33,10 +33,10 @@ commit and uploads **only when that child is a version bump**. If the next
 commit on `master` is not that bump, the upload is skipped. A manual
 `workflow_dispatch` re-uploads a bump commit (`sha` defaults to `master`).
 
-| Job           | What it uploads                                                                |
-| ------------- | ------------------------------------------------------------------------------ |
-| TestFlight    | `xcodebuild` archive on `macos-26`, `exportArchive` with `destination: upload` |
-| Play internal | `gradlew bundleRelease`, then Play track `internal` (`status: completed`)      |
+| Job           | What it uploads                                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| TestFlight    | `xcodebuild` archive on `macos-26` with `TARGETED_DEVICE_FAMILY=1`, then `exportArchive` with `destination: upload` |
+| Play internal | `gradlew bundleRelease`, then Play track `internal` (`status: completed`)                                           |
 
 No Fastlane. Signing material is repository secrets, written into the runner
 and deleted at the end. Android reuses `android/keystore.properties` (gitignored).

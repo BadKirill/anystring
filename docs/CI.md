@@ -25,10 +25,10 @@ The bump job skips its own commit, so it does not loop. GitHub Actions needs per
 
 When that CI run succeeds, **Store release** uploads the bump commit:
 
-| Job           | What it uploads                                                                  |
-| ------------- | -------------------------------------------------------------------------------- |
-| TestFlight    | `xcodebuild` archive (`macos-26`) and `exportArchive` with `destination: upload` |
-| Play internal | `gradlew bundleRelease`, then the Play `internal` track                          |
+| Job           | What it uploads                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------ |
+| TestFlight    | `xcodebuild` archive (`macos-26`, `TARGETED_DEVICE_FAMILY=1`) and `exportArchive` with `destination: upload` |
+| Play internal | `gradlew bundleRelease`, then the Play `internal` track                                                      |
 
 The bump commit cannot start the workflow itself (`GITHUB_TOKEN` pushes do not trigger Actions). The workflow waits for CI on the parent commit, then takes the bump child. Re-upload from Actions → Store release (`sha` defaults to `master`). Signing uses repository secrets listed in `docs/knowledge/areas/ci-cd.md`. There is no Fastlane.
 

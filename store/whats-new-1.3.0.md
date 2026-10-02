@@ -53,6 +53,6 @@ What's New
 
 ## Builds
 
-Version **1.3.0 (14)**. First release of the 1.3 line.
+Version **1.3.0 (15)**. First release of the 1.3 line. Build 14 is 1.2.2 on master.
 
 iPhone-only (`TARGETED_DEVICE_FAMILY = 1`). Do not upload iPad screenshots.

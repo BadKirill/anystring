@@ -32,4 +32,5 @@ named command and read-back the remote result. No commit/PR wiki automation.
 ## Invariants
 
 - Mic processing filters off; pitch window 8192; `src/core` stays pure TypeScript
+- iOS builds are iPhone only (`TARGETED_DEVICE_FAMILY = 1`); never add iPad
 - `npm run check` must pass (includes knowledge check)

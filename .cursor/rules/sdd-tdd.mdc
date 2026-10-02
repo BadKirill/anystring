@@ -24,6 +24,7 @@ Skip only for docs/config/copy/format-only. Spikes are thrown away or rewritten 
 - Special cases mean the **data shape is wrong** — fix the type, not another `if`.
 - Design data first (`Pitch`, `Tuning`, `PitchState`); functions follow.
 - Never break user-visible behavior, storage keys, or audio invariants unless that *is* the spec.
+- iOS builds stay iPhone-only (`TARGETED_DEVICE_FAMILY = 1`). Never add iPad.
 - No hacks, no `any` / `!` / `@ts-ignore`, no “test later.”
 - One concern per change. Depth ≤ 3, complexity ≤ 10, function ≤ 50 lines — if ESLint fires, redesign.
 
