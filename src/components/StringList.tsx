@@ -2,7 +2,7 @@ import { useLayoutEffect } from 'react'
 
 import { playReferencePitch, warmReferenceAudio } from '../audio/referenceTone'
 import { formatPitch, pitchToMidi, type Pitch } from '../core/music'
-import type { Tuning } from '../core/tunings'
+import type { Instrument, Tuning } from '../core/tunings'
 import { useStringRailScroll } from './useStringRailScroll'
 
 function stringThickness(pitch: Pitch): number {
@@ -44,11 +44,12 @@ interface StringListProps {
 function tapString(
   index: number,
   pitch: Pitch,
+  instrument: Instrument,
   manualIndex: number | null,
   onSelect: (index: number | null) => void,
   onEdit: (index: number) => void,
 ): void {
-  void warmReferenceAudio().then(() => playReferencePitch(pitch))
+  void warmReferenceAudio().then(() => playReferencePitch(pitch, instrument))
   if (manualIndex === index) {
     onEdit(index)
   } else {
@@ -127,7 +128,14 @@ export function StringList({
             active={index === activeIndex}
             manual={index === manualIndex}
             onTap={() => {
-              tapString(index, string.pitch, manualIndex, onSelect, onEdit)
+              tapString(
+                index,
+                string.pitch,
+                tuning.instrument,
+                manualIndex,
+                onSelect,
+                onEdit,
+              )
             }}
           />
         ))}

@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { playReferencePitch } from '../audio/referenceTone'
 import { PRESET_TUNINGS } from '../core/tunings'
 import { StringList } from './StringList'
 
@@ -29,6 +30,7 @@ describe('StringList', () => {
       />,
     )
     await user.click(screen.getByRole('button', { name: /E2/ }))
+    expect(playReferencePitch).toHaveBeenCalledWith({ note: 'E', octave: 2 }, 'guitar')
     expect(onSelect).toHaveBeenCalledWith(0)
     rerender(
       <StringList

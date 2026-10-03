@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { playReferencePitch } from '../audio/referenceTone'
 import { NotePicker } from './NotePicker'
 import { UI } from './strings'
 
@@ -18,6 +19,7 @@ describe('NotePicker', () => {
     render(
       <NotePicker
         initial={{ note: 'E', octave: 2 }}
+        instrument="bass"
         onConfirm={onConfirm}
         onClose={onClose}
       />,
@@ -28,6 +30,7 @@ describe('NotePicker', () => {
     await user.click(screen.getByRole('button', { name: 'A' }))
     await user.click(screen.getByRole('button', { name: '3' }))
     await user.click(screen.getByRole('button', { name: UI.done }))
+    expect(playReferencePitch).toHaveBeenCalledWith({ note: 'A', octave: 3 }, 'bass')
     expect(onConfirm).toHaveBeenCalledWith({ note: 'A', octave: 3 })
   })
 })

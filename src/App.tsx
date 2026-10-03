@@ -177,6 +177,7 @@ function Modals({
     return (
       <NotePicker
         initial={string.pitch}
+        instrument={state.tuning.instrument}
         onConfirm={(pitch) => {
           state.editString(modal.index, pitch)
           onClose()

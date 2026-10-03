@@ -39,6 +39,8 @@ export class FakeGain extends FakeAudioNode {
   gain = {
     value: 1,
     setValueAtTime: vi.fn(),
+    linearRampToValueAtTime: vi.fn(),
+    cancelScheduledValues: vi.fn(),
   }
 }
 
@@ -48,6 +50,7 @@ export class FakeBufferSource extends FakeAudioNode {
   start = vi.fn(() => {
     this.started = true
   })
+  stop = vi.fn()
 }
 
 export class FakeMediaStreamSource extends FakeAudioNode {}
