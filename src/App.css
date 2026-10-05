@@ -92,6 +92,33 @@
   text-decoration: none;
 }
 
+.about-analytics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-analytics .chip {
+  align-self: flex-start;
+}
+
+.review-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface-raised);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+}
+
+.review-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
 .screen-label {
   background: var(--surface);
   border-radius: 999px;

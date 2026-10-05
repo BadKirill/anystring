@@ -21,4 +21,14 @@ describe('AboutSheet', () => {
     await user.click(screen.getByRole('button', { name: UI.close }))
     expect(onClose).toHaveBeenCalled()
   })
+
+  it('lets the user turn anonymous statistics off', async () => {
+    const user = userEvent.setup()
+    render(<AboutSheet onClose={vi.fn()} />)
+    const toggle = screen.getByRole('button', { name: UI.analyticsOn, pressed: true })
+    await user.click(toggle)
+    expect(
+      screen.getByRole('button', { name: UI.analyticsOff, pressed: false }),
+    ).toBeTruthy()
+  })
 })

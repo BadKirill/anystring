@@ -5,6 +5,7 @@ import {
   formatAppVersion,
   installedAppVersion,
 } from '../platform/appVersion'
+import { isAnalyticsEnabled, setAnalyticsEnabled } from '../storage/telemetryStore'
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
@@ -16,6 +17,28 @@ const LINKS = [
   { label: UI.aboutSupportLink, href: `${SITE_URL}/support.html` },
   { label: UI.aboutSourceLink, href: REPO_URL },
 ]
+
+function AnalyticsToggle() {
+  const [analyticsOn, setAnalyticsOn] = useState(isAnalyticsEnabled)
+  return (
+    <div className="about-analytics">
+      <p className="about-text">{UI.analyticsTitle}</p>
+      <p className="about-text">{UI.analyticsBody}</p>
+      <button
+        type="button"
+        className={analyticsOn ? 'chip chip-selected' : 'chip'}
+        aria-pressed={analyticsOn}
+        onClick={() => {
+          const next = !analyticsOn
+          setAnalyticsEnabled(next)
+          setAnalyticsOn(next)
+        }}
+      >
+        {analyticsOn ? UI.analyticsOn : UI.analyticsOff}
+      </button>
+    </div>
+  )
+}
 
 export function AboutSheet({ onClose }: { onClose: () => void }) {
   const [label, setLabel] = useState(() => formatAppVersion(bundledAppVersion()))
@@ -35,6 +58,7 @@ export function AboutSheet({ onClose }: { onClose: () => void }) {
       <h2>{UI.aboutTitle}</h2>
       <p className="about-text">{UI.aboutTagline}</p>
       <p className="about-text">{UI.aboutPrivacy}</p>
+      <AnalyticsToggle />
       <p className="about-version">{`${UI.aboutVersion} ${label}`}</p>
       <div className="about-links">
         {LINKS.map((link) => (

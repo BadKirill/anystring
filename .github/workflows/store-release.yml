@@ -77,6 +77,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build:native && npx cap sync ios
+        env:
+          TELEMETRYDECK_APP_ID: ${{ secrets.TELEMETRYDECK_APP_ID }}
 
       - name: Import signing
         id: signing
@@ -178,6 +180,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build:native && npx cap sync android
+        env:
+          TELEMETRYDECK_APP_ID: ${{ secrets.TELEMETRYDECK_APP_ID }}
 
       - name: Write release keystore
         env:

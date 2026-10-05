@@ -56,6 +56,7 @@ profile name are filled on the runner).
 | `ANDROID_KEY_ALIAS`               | Key alias                                                |
 | `ANDROID_KEY_PASSWORD`            | Key password                                             |
 | `PLAY_SERVICE_ACCOUNT_JSON`       | Play Console service account (release to testing tracks) |
+| `TELEMETRYDECK_APP_ID`            | Baked into web and native JS at build time               |
 
 One-time in the consoles: a TestFlight internal group, and the Play service
 account invited with release-to-testing permission. The first AAB was uploaded

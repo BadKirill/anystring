@@ -53,6 +53,7 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(release.version),
     __APP_BUILD__: JSON.stringify(String(release.buildNumber)),
+    __TELEMETRY_APP_ID__: JSON.stringify(process.env.TELEMETRYDECK_APP_ID ?? ''),
   },
   build: {
     outDir: isNativeBuild ? resolve(root, 'dist') : 'dist',

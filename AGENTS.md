@@ -70,6 +70,8 @@ Do not introduce libraries, frameworks, or patterns outside this list without an
 | Audio capture   | **Web Audio API + AudioWorklet**                                                    |
 | Pitch detection | **`pitchy`** (McLeod Pitch Method), window 4096–8192 samples                        |
 | Mobile stores   | **Capacitor** (iOS/Android wrappers around the same web build)                      |
+| Analytics       | **TelemetryDeck** (optional anonymous events; off in About)                         |
+| Store rating    | **`@capacitor-community/in-app-review`** (native); web banner with store links      |
 | Persistence     | **`localStorage`** via `src/storage/` — no backend                                  |
 | Unit tests      | **Vitest** (`jsdom` + Testing Library, v8 coverage ≥ 95%, edge-case coverage ≥ 80%) |
 | E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)                 |

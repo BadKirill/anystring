@@ -12,6 +12,7 @@ Compose tuner screen state without Redux/Zustand. Single hook surface for `App`.
 | File                     | Role                                                                   |
 | ------------------------ | ---------------------------------------------------------------------- |
 | `appState.ts`            | `useTunerState`, `TunerState`, screen tabs, draft edit, analysis route |
+| `useUsageTelemetry.ts`   | Anonymous events + review prompt after in-tune sessions                |
 | `useSavedTunings.ts`     | Custom list, picker merge, save/delete/rename                          |
 | `useStableAnalysis.ts`   | Stabilize string analysis; chromatic uses passthrough (live cents)     |
 | `customTuningActions.ts` | Factories: save draft / delete / rename                                |

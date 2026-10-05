@@ -68,6 +68,10 @@ Kept cheap by an architectural rule: **`src/core/` must be pure TypeScript — n
 - **Web Audio API + AudioWorklet** for mic capture
 - **`pitchy`** (McLeod Pitch Method) for pitch detection
 - **Capacitor** for iOS/Android store builds
+- **TelemetryDeck** for optional anonymous usage events (no audio, no names). App
+  id is `TELEMETRYDECK_APP_ID` at build time. Toggle in About. Decided 5 Oct 2026.
+- **`@capacitor-community/in-app-review`** for the native rating dialog; PWA shows
+  a store-link banner after three in-tune sessions.
 - **No backend.** Custom tunings stored in `localStorage`. Cloud sync can be added later if ever wanted.
 - **Vitest** for unit tests (`jsdom`, `@testing-library/react`, v8 coverage ≥ 95%)
 

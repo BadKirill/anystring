@@ -2,6 +2,7 @@
 
 declare const __APP_VERSION__: string
 declare const __APP_BUILD__: string
+declare const __TELEMETRY_APP_ID__: string
 
 interface AudioSession {
   type:

@@ -49,6 +49,15 @@ export const UI = {
   aboutPrivacyLink: 'Privacy policy',
   aboutSupportLink: 'Support and feedback',
   aboutSourceLink: 'Source code',
+  analyticsTitle: 'Anonymous usage statistics',
+  analyticsBody:
+    'Optional counts of screens, tunings, and whether a session reached in-tune. No audio, no names, no advertising.',
+  analyticsOn: 'On',
+  analyticsOff: 'Off',
+  reviewPrompt:
+    'Enjoying Anystring? A rating on the App Store or Google Play helps other players find it.',
+  reviewAppStore: 'App Store',
+  reviewPlayStore: 'Google Play',
   pickNote: 'Choose note',
   octave: 'Octave',
   done: 'Done',

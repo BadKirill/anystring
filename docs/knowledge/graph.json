@@ -45,6 +45,20 @@
       "roots": ["src/core/tunings/"]
     },
     {
+      "id": "analytics",
+      "title": "Analytics and review prompt",
+      "path": "docs/knowledge/areas/analytics.md",
+      "tags": ["analytics", "telemetry", "review", "privacy", "opt-out"],
+      "roots": [
+        "src/core/analytics/",
+        "src/core/review/",
+        "src/storage/telemetryStore.ts",
+        "src/platform/telemetryClient.ts",
+        "src/platform/reviewPrompt.ts",
+        "src/state/useUsageTelemetry.ts"
+      ]
+    },
+    {
       "id": "audio",
       "title": "Audio capture & pitch detection",
       "path": "docs/knowledge/areas/audio.md",
@@ -150,6 +164,8 @@
     { "from": "state", "to": "core-tunings", "rel": "analyzes" },
     { "from": "state", "to": "core-signal", "rel": "stabilizes-display" },
     { "from": "state", "to": "storage", "rel": "persists" },
+    { "from": "state", "to": "analytics", "rel": "emits-usage-events" },
+    { "from": "analytics", "to": "core-tunings", "rel": "labels-presets" },
     { "from": "components", "to": "state", "rel": "renders" },
     { "from": "components", "to": "core-music", "rel": "formats-pitch" },
     { "from": "core-tunings", "to": "core-music", "rel": "uses" },
