@@ -32,15 +32,15 @@ boundaries and small functions — not class hierarchies.
 
 ## Layer contracts
 
-| Layer              | May import                                        | Must not                                      |
-| ------------------ | ------------------------------------------------- | --------------------------------------------- |
-| `src/core/*`       | other core, nothing else                          | react, DOM, audio, components, state, storage |
-| `src/audio/*`      | core/music, core/signal (as needed), browser APIs | components UI details                         |
-| `src/platform/*`   | Capacitor, browser APIs                           | core / UI internals                           |
-| `src/storage/*`    | core/tunings, core/music types                    | React                                         |
-| `src/quality/*`    | nothing (catalog + coverage ratio)                | platform, React                               |
-| `src/state/*`      | audio hooks, core, storage                        | —                                             |
-| `src/components/*` | core types/helpers, UI only                       | pitch detection internals                     |
+| Layer              | May import                                        | Must not                                                |
+| ------------------ | ------------------------------------------------- | ------------------------------------------------------- |
+| `src/core/*`       | other core, nothing else                          | react, DOM, audio, components, state, storage, platform |
+| `src/audio/*`      | core/music, core/signal (as needed), browser APIs | components UI details                                   |
+| `src/platform/*`   | Capacitor, browser APIs                           | UI internals                                            |
+| `src/storage/*`    | core/tunings, core/music, core/review             | React                                                   |
+| `src/quality/*`    | nothing (catalog + coverage ratio)                | platform, React                                         |
+| `src/state/*`      | audio hooks, core, storage                        | —                                                       |
+| `src/components/*` | core types/helpers, UI only                       | pitch detection internals                               |
 
 ## Entry points
 
@@ -64,4 +64,5 @@ or the mic→UI pipeline shape. Prefer area pages for normal features.
 ## See also
 
 - [sdd-tdd.md](sdd-tdd.md) · [patterns-and-rules.md](patterns-and-rules.md) ·
-  [audio.md](audio.md) · [state.md](state.md) · [file-index.md](file-index.md)
+  [audio.md](audio.md) · [state.md](state.md) · [analytics.md](analytics.md) ·
+  [file-index.md](file-index.md)

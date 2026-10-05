@@ -53,7 +53,13 @@ export default tseslint.config(
               message: 'src/core must stay free of React.',
             },
             {
-              group: ['**/audio/**', '**/components/**', '**/state/**', '**/storage/**'],
+              group: [
+                '**/audio/**',
+                '**/components/**',
+                '**/state/**',
+                '**/storage/**',
+                '**/platform/**',
+              ],
               message: 'src/core must not depend on platform layers.',
             },
           ],

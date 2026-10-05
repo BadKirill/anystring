@@ -39,7 +39,7 @@ FEATURES
 
 PRIVACY
 
-Microphone audio is analysed on your device only while you are tuning. Nothing is recorded or uploaded. Your custom tunings stay on the device.
+Microphone audio is analysed on your device only while you are tuning. Nothing is recorded. Optional anonymous usage statistics (screens, tunings, in-tune sessions) can be turned off in About. Your custom tunings stay on the device.
 
 Made for players who need a clean, honest tuner — not a paywall around custom tunings.
 ```

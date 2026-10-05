@@ -47,8 +47,20 @@ export const UI = {
     'The microphone is only used while you are tuning. Audio is analysed on your device, never recorded and never uploaded. Your tunings stay in this app.',
   aboutVersion: 'Version',
   aboutPrivacyLink: 'Privacy policy',
+  privacyNotice:
+    'The privacy policy changed. Anystring may send anonymous usage statistics. Audio and your tuning names stay on this device. You can turn statistics off in About.',
+  privacyAgree: "I've read and agree",
   aboutSupportLink: 'Support and feedback',
   aboutSourceLink: 'Source code',
+  analyticsTitle: 'Anonymous usage statistics',
+  analyticsBody:
+    'Optional counts of screens, tunings, and whether a session reached in-tune. No audio, no names, no advertising.',
+  analyticsOn: 'On',
+  analyticsOff: 'Off',
+  reviewPrompt:
+    'Enjoying Anystring? A rating on the App Store or Google Play helps other players find it.',
+  reviewAppStore: 'App Store',
+  reviewPlayStore: 'Google Play',
   pickNote: 'Choose note',
   octave: 'Octave',
   done: 'Done',

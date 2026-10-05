@@ -32,13 +32,13 @@ relative asset URLs for `capacitor://localhost`. Marketing pages are web-only.
 
 ## Platform configuration
 
-| Concern        | iOS                                                                      | Android                                                                  |
-| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                           | `RECORD_AUDIO` + `MODIFY_AUDIO_SETTINGS` + `android.hardware.microphone` |
-| Orientation    | portrait only, `UIRequiresFullScreen`                                    | `android:screenOrientation="portrait"`                                   |
-| Privacy        | `App/App/PrivacyInfo.xcprivacy` (no data collected, UserDefaults CA92.1) | Data Safety form in Play Console                                         |
-| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                  | n/a                                                                      |
-| SDK target     | deployment target 15.0                                                   | `targetSdkVersion 36` (required for new apps from 31 Aug 2026)           |
+| Concern        | iOS                                                                                        | Android                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                                             | `RECORD_AUDIO` + `MODIFY_AUDIO_SETTINGS` + `android.hardware.microphone` |
+| Orientation    | portrait only, `UIRequiresFullScreen`                                                      | `android:screenOrientation="portrait"`                                   |
+| Privacy        | `PrivacyInfo.xcprivacy` Product Interaction (analytics, not tracking); UserDefaults CA92.1 | Data Safety form in Play Console                                         |
+| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                                    | n/a                                                                      |
+| SDK target     | deployment target 15.0                                                                     | `targetSdkVersion 36` (required for new apps from 31 Aug 2026)           |
 
 Android `getUserMedia` needs **both** audio permissions. `BridgeWebChromeClient`
 launches `MODIFY_AUDIO_SETTINGS` + `RECORD_AUDIO` on every `onPermissionRequest`

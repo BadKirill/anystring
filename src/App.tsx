@@ -5,6 +5,8 @@ import { AboutSheet } from './components/AboutSheet'
 import { InstallHint } from './components/InstallHint'
 import { NotePicker } from './components/NotePicker'
 import { PresetPicker } from './components/PresetPicker'
+import { PrivacyNotice } from './components/PrivacyNotice'
+import { ReviewPrompt } from './components/ReviewPrompt'
 import { StringList } from './components/StringList'
 import { TuneDirectionHint } from './components/TuneDirectionHint'
 import { TunerGauge } from './components/TunerGauge'
@@ -17,6 +19,7 @@ import {
   type TunerScreen,
   type TunerState,
 } from './state/appState'
+import { useUsageTelemetry } from './state/useUsageTelemetry'
 
 type Modal =
   | { kind: 'none' }
@@ -214,6 +217,7 @@ function StringsExtras({
 
 function App() {
   const state = useTunerState()
+  const usage = useUsageTelemetry(state)
   const [modal, setModal] = useState<Modal>({ kind: 'none' })
   const { analysis, pitch, manualStringIndex, screen } = state
   const chromatic = screen === 'chromatic'
@@ -223,7 +227,9 @@ function App() {
 
   return (
     <div className="app">
+      <PrivacyNotice />
       <InstallHint />
+      {usage.webReviewVisible && <ReviewPrompt onClose={usage.dismissWebReview} />}
       <Header
         state={state}
         onOpenPresets={() => {

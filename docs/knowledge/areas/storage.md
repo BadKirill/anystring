@@ -15,6 +15,10 @@ sessionStorage with legacy key absorption.
 | `anystring.v2.customTunings`                                               | `{ v: 2, tunings: Tuning[] }` |
 | `anystring.v2.activeTuning`                                                | Active `Tuning` JSON          |
 | `anystring.v2.customTunings.session` / `anystring.v2.activeTuning.session` | Same in sessionStorage        |
+| `anystring.v2.analyticsEnabled`                                            | `'0'` opted out; missing = on |
+| `anystring.v2.analyticsClientId`                                           | Random install id             |
+| `anystring.v2.reviewState`                                                 | Successful-session / prompt   |
+| `anystring.v2.privacyAccepted`                                             | Accepted policy date          |
 
 Legacy absorbed (pre-rename and pre-v2): `anytune.v2.customTunings`,
 `anytune.v2.activeTuning`, `anytune.customTunings`, `anytune.lastActiveTuning`
