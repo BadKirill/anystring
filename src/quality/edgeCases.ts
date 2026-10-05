@@ -552,4 +552,34 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     summary: 'The web rating prompt appears after the third in-tune session',
     testFile: 'src/state/useUsageTelemetry.test.ts',
   },
+  {
+    id: 'EC-privacy-missing',
+    area: 'privacy',
+    summary: 'A new install still needs to accept the privacy policy',
+    testFile: 'src/storage/privacyNotice.test.ts',
+  },
+  {
+    id: 'EC-privacy-stale',
+    area: 'privacy',
+    summary: 'An older privacy acceptance does not cover the current policy',
+    testFile: 'src/storage/privacyNotice.test.ts',
+  },
+  {
+    id: 'EC-privacy-current',
+    area: 'privacy',
+    summary: 'The current policy version hides the notice',
+    testFile: 'src/storage/privacyNotice.test.ts',
+  },
+  {
+    id: 'EC-privacy-quota',
+    area: 'privacy',
+    summary: 'A full store keeps the privacy notice visible',
+    testFile: 'src/storage/privacyNotice.test.ts',
+  },
+  {
+    id: 'EC-privacy-before-consent',
+    area: 'privacy',
+    summary: 'Anonymous statistics stay off until the current policy is accepted',
+    testFile: 'src/storage/privacyNotice.test.ts',
+  },
 ]

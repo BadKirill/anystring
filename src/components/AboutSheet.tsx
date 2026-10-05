@@ -5,7 +5,7 @@ import {
   formatAppVersion,
   installedAppVersion,
 } from '../platform/appVersion'
-import { isAnalyticsEnabled, setAnalyticsEnabled } from '../storage/telemetryStore'
+import { analyticsPreferenceOn, setAnalyticsEnabled } from '../storage/telemetryStore'
 import { Sheet } from './Sheet'
 import { UI } from './strings'
 
@@ -19,7 +19,7 @@ const LINKS = [
 ]
 
 function AnalyticsToggle() {
-  const [analyticsOn, setAnalyticsOn] = useState(isAnalyticsEnabled)
+  const [analyticsOn, setAnalyticsOn] = useState(analyticsPreferenceOn)
   return (
     <div className="about-analytics">
       <p className="about-text">{UI.analyticsTitle}</p>

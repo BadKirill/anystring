@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { INITIAL_REVIEW_STATE, markReviewRequested } from '../core/review'
 import { memoryStorage } from '../test/memoryStorage'
+import { acceptPrivacyNotice } from './privacyNotice'
 import {
   analyticsClientId,
   isAnalyticsEnabled,
@@ -15,11 +16,13 @@ describe('telemetryStore', () => {
     vi.stubGlobal('localStorage', memoryStorage())
   })
 
-  it('treats a missing opt-out as enabled', () => {
+  it('treats a missing opt-out as enabled after the policy is accepted', () => {
+    acceptPrivacyNotice()
     expect(isAnalyticsEnabled()).toBe(true)
   })
 
   it('EC-telemetry-optout: persists the opt-out across reads', () => {
+    acceptPrivacyNotice()
     setAnalyticsEnabled(false)
     expect(isAnalyticsEnabled()).toBe(false)
     setAnalyticsEnabled(true)

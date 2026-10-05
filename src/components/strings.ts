@@ -47,6 +47,9 @@ export const UI = {
     'The microphone is only used while you are tuning. Audio is analysed on your device, never recorded and never uploaded. Your tunings stay in this app.',
   aboutVersion: 'Version',
   aboutPrivacyLink: 'Privacy policy',
+  privacyNotice:
+    'The privacy policy changed. Anystring may send anonymous usage statistics. Audio and your tuning names stay on this device. You can turn statistics off in About.',
+  privacyAgree: "I've read and agree",
   aboutSupportLink: 'Support and feedback',
   aboutSourceLink: 'Source code',
   analyticsTitle: 'Anonymous usage statistics',

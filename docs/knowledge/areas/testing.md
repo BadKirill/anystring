@@ -38,6 +38,7 @@ then the smallest implementation. Do not write production code and match tests a
 | `e2e/about.spec.ts`             | About sheet shows `package.json` version and build number               |
 | `e2e/about-analytics.spec.ts`   | About toggle turns anonymous statistics off                             |
 | `e2e/review-prompt.spec.ts`     | Web rating banner after the third in-tune session                       |
+| `e2e/privacy-notice.spec.ts`    | Policy banner, link, and acceptance across reload                       |
 | `e2e/landing.spec.ts`           | Marketing landing names bowed strings and opens `/app/`                 |
 | `e2e/smoke.spec.ts`             | Deployed/live smoke                                                     |
 | `e2e/tuner.spec.ts`             | Strings + chromatic + low E2 with stub mic                              |

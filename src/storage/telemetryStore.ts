@@ -1,4 +1,5 @@
 import { INITIAL_REVIEW_STATE, isReviewState, type ReviewState } from '../core/review'
+import { needsPrivacyNotice, readPrivacyAccepted } from './privacyNotice'
 
 const ENABLED_KEY = 'anystring.v2.analyticsEnabled'
 const CLIENT_KEY = 'anystring.v2.analyticsClientId'
@@ -21,8 +22,12 @@ function writeRaw(key: string, value: unknown): void {
   }
 }
 
-export function isAnalyticsEnabled(): boolean {
+export function analyticsPreferenceOn(): boolean {
   return localStorage.getItem(ENABLED_KEY) !== '0'
+}
+
+export function isAnalyticsEnabled(): boolean {
+  return analyticsPreferenceOn() && !needsPrivacyNotice(readPrivacyAccepted())
 }
 
 export function setAnalyticsEnabled(enabled: boolean): void {

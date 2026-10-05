@@ -42,6 +42,7 @@ over without a jump — and without the black gap that used to sit between them.
 | `InstallHint.tsx`                              | iOS add-to-home; dismissed via localStorage, hidden on native                                    |
 | `AboutSheet.tsx`                               | Version, privacy, analytics opt-out                                                              |
 | `ReviewPrompt.tsx`                             | Web store-rating banner                                                                          |
+| `PrivacyNotice.tsx`                            | Policy-update banner until the current version is accepted                                       |
 | `useLockBodyScroll.ts`                         | Lock scroll when sheet open                                                                      |
 | `strings.ts`                                   | **All** user-facing English strings (`UI`)                                                       |
 

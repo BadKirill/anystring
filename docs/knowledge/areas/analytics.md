@@ -3,14 +3,17 @@
 Tags: `analytics`, `telemetry`, `review`, `privacy`, `opt-out`
 
 Paths: `src/core/analytics/`, `src/core/review/`, `src/storage/telemetryStore.ts`,
-`src/platform/telemetryClient.ts`, `src/platform/reviewPrompt.ts`,
-`src/state/useUsageTelemetry.ts`, `src/components/ReviewPrompt.tsx`
+`src/storage/privacyNotice.ts`, `src/platform/telemetryClient.ts`,
+`src/platform/reviewPrompt.ts`, `src/state/useUsageTelemetry.ts`,
+`src/components/ReviewPrompt.tsx`, `src/components/PrivacyNotice.tsx`
 
 ## Intent
 
 Measure how the tuner is used without audio, names, or ads. Ask for a store
 rating after three successful sessions. Both are off-device only when the user
-leaves them on; About has a toggle.
+leaves them on; About has a toggle. Events stay off until the current privacy
+policy (`2026-10-05`) is accepted from the in-app banner. The banner links to
+`https://anystring.app/privacy.html` and shows on web, PWA, and the native shell.
 
 ## Events (closed union)
 
@@ -33,11 +36,12 @@ version waits 90 days.
 
 ## Storage keys
 
-| Key                              | Meaning                               |
-| -------------------------------- | ------------------------------------- |
-| `anystring.v2.analyticsEnabled`  | `'0'` opted out; missing or `'1'` on  |
-| `anystring.v2.analyticsClientId` | random install id, hashed before send |
-| `anystring.v2.reviewState`       | `{ successfulSessions, lastRequest }` |
+| Key                              | Meaning                                |
+| -------------------------------- | -------------------------------------- |
+| `anystring.v2.analyticsEnabled`  | `'0'` opted out; missing or `'1'` on   |
+| `anystring.v2.analyticsClientId` | random install id, hashed before send  |
+| `anystring.v2.reviewState`       | `{ successfulSessions, lastRequest }`  |
+| `anystring.v2.privacyAccepted`   | accepted policy version (`2026-10-05`) |
 
 ## See also
 

@@ -5,6 +5,7 @@ import { AboutSheet } from './components/AboutSheet'
 import { InstallHint } from './components/InstallHint'
 import { NotePicker } from './components/NotePicker'
 import { PresetPicker } from './components/PresetPicker'
+import { PrivacyNotice } from './components/PrivacyNotice'
 import { ReviewPrompt } from './components/ReviewPrompt'
 import { StringList } from './components/StringList'
 import { TuneDirectionHint } from './components/TuneDirectionHint'
@@ -226,6 +227,7 @@ function App() {
 
   return (
     <div className="app">
+      <PrivacyNotice />
       <InstallHint />
       {usage.webReviewVisible && <ReviewPrompt onClose={usage.dismissWebReview} />}
       <Header
