@@ -26,25 +26,25 @@ Refresh inventory: `npm run knowledge:refresh`.
 
 ## Tag → area routing
 
-| Tags / task keywords                                                         | Read                                                           |
-| ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| pitch, mic, worklet, clarity, AGC, reference tone, start/stop listening      | [audio.md](areas/audio.md)                                     |
-| note, MIDI, Hz, cents, octave, nearestPitch                                  | [core-music.md](areas/core-music.md)                           |
-| stabilizer, pluck synth, jitter, lock                                        | [core-signal.md](areas/core-signal.md)                         |
-| tuning, preset, analyzer, string target, chromatic, custom draft, My tunings | [core-tunings.md](areas/core-tunings.md)                       |
-| analytics, telemetry, review prompt, opt-out, TelemetryDeck                  | [analytics.md](areas/analytics.md)                             |
-| gauge, sheet, picker, swipe, InstallHint, UI copy, screen tabs, splash       | [components.md](areas/components.md)                           |
-| useTunerState, draft save, manual/auto string, Strings/Chromatic screen      | [state.md](areas/state.md)                                     |
-| localStorage, v2 keys, migrate, persist                                      | [storage.md](areas/storage.md)                                 |
-| vitest, playwright, stub mic, e2e, maestro, coverage                         | [testing.md](areas/testing.md)                                 |
-| CI, deploy, Pages, workflows                                                 | [ci-cd.md](areas/ci-cd.md)                                     |
-| Capacitor, iOS, Android, native build, permissions, store submission         | [native-shell.md](areas/native-shell.md)                       |
-| eslint, prettier, complexity, stack limits                                   | [patterns-and-rules.md](areas/patterns-and-rules.md)           |
-| vite, PWA, tsconfig, package scripts                                         | [tooling.md](areas/tooling.md)                                 |
-| architecture, data flow, layers                                              | [architecture.md](areas/architecture.md)                       |
-| SDD, TDD, SOLID, Linus, spec, red-green-refactor, how to write code          | [sdd-tdd.md](areas/sdd-tdd.md)                                 |
-| edge case, edge-case coverage, 80% catalog                                   | [sdd-tdd.md](areas/sdd-tdd.md), [testing.md](areas/testing.md) |
-| “where is file X?” / full inventory                                          | [file-index.md](areas/file-index.md)                           |
+| Tags / task keywords                                                                      | Read                                                           |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| pitch, mic, worklet, clarity, AGC, reference tone, start/stop listening, autostart        | [audio.md](areas/audio.md)                                     |
+| note, MIDI, Hz, cents, octave, nearestPitch                                               | [core-music.md](areas/core-music.md)                           |
+| stabilizer, pluck synth, jitter, lock                                                     | [core-signal.md](areas/core-signal.md)                         |
+| tuning, preset, analyzer, string target, chromatic, custom draft, My tunings, string lock | [core-tunings.md](areas/core-tunings.md)                       |
+| analytics, telemetry, review prompt, opt-out, TelemetryDeck                               | [analytics.md](areas/analytics.md)                             |
+| gauge, sheet, picker, swipe, InstallHint, UI copy, screen tabs, splash                    | [components.md](areas/components.md)                           |
+| useTunerState, draft save, manual/auto string, Strings/Chromatic screen, checkmarks       | [state.md](areas/state.md)                                     |
+| localStorage, v2 keys, migrate, persist                                                   | [storage.md](areas/storage.md)                                 |
+| vitest, playwright, stub mic, e2e, maestro, coverage                                      | [testing.md](areas/testing.md)                                 |
+| CI, deploy, Pages, workflows                                                              | [ci-cd.md](areas/ci-cd.md)                                     |
+| Capacitor, iOS, Android, native build, permissions, store submission                      | [native-shell.md](areas/native-shell.md)                       |
+| eslint, prettier, complexity, stack limits                                                | [patterns-and-rules.md](areas/patterns-and-rules.md)           |
+| vite, PWA, tsconfig, package scripts                                                      | [tooling.md](areas/tooling.md)                                 |
+| architecture, data flow, layers                                                           | [architecture.md](areas/architecture.md)                       |
+| SDD, TDD, SOLID, Linus, spec, red-green-refactor, how to write code                       | [sdd-tdd.md](areas/sdd-tdd.md)                                 |
+| edge case, edge-case coverage, 80% catalog                                                | [sdd-tdd.md](areas/sdd-tdd.md), [testing.md](areas/testing.md) |
+| “where is file X?” / full inventory                                                       | [file-index.md](areas/file-index.md)                           |
 
 ## Hard constraints (always)
 

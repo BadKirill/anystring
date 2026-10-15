@@ -8,6 +8,7 @@ test.describe('live deploy smoke', () => {
     await expect(page).toHaveTitle(/Anystring/)
     await expect(page.getByRole('button', { name: 'Standard E' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Stop' })).toHaveCount(0)
     await expect(page.getByRole('button', { name: '1 E2' })).toBeVisible()
     await expect(page.getByRole('button', { name: '6 E4' })).toBeVisible()
   })

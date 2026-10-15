@@ -15,13 +15,15 @@ Compose tuner screen state without Redux/Zustand. Single hook surface for `App`.
 | `useUsageTelemetry.ts`   | Anonymous events + review prompt after in-tune sessions                |
 | `useSavedTunings.ts`     | Custom list, picker merge, save/delete/rename                          |
 | `useStableAnalysis.ts`   | Stabilize string analysis; chromatic uses passthrough (live cents)     |
+| `useStringLock.ts`       | Session checkmarks and the in-tune haptic edge                         |
 | `customTuningActions.ts` | Factories: save draft / delete / rename                                |
 | `tuningDefaults.ts`      | `defaultTuning()` from presets                                         |
 
 ## `TunerState` surface
 
 - Data: `screen` (`strings` \| `chromatic`), `tuning`, `pickerTunings`,
-  `tuningsRevision`, `manualStringIndex`, `analysis` (`DisplayAnalysis`), `pitch`
+  `tuningsRevision`, `manualStringIndex`, `analysis` (`DisplayAnalysis`),
+  `checkedStrings`, `pitch`
 - Actions: `setScreen`, `selectTuning`, `selectString`, `editString`, `saveDraft`,
   `deleteCustom`, `renameCustom`, `refreshMyTunings`
 
@@ -38,6 +40,24 @@ frequency + screen + tuning + manualStringIndex
 
 Scope reset clears stabilizer latch when screen / tuning / mode changes.
 Screen mode is session-only (not persisted).
+
+## String lock
+
+`useStringLock` steps `stepStringLock` from the **displayed** analysis, after
+`useStableAnalysis`. In tune is `direction === 'in-tune'`
+(`|cents| ≤ IN_TUNE_CENTS`). There is no second threshold.
+
+A check means the string reached in tune during this sitting. It stays after
+the note leaves. The haptic fires on the rising edge only: once when the
+analyzed string enters in tune, not again while that hold continues, and again
+only after the displayed direction leaves in tune. The platform pulse runs
+once per step, not per render.
+
+The tuning key is `tuning.id` plus the MIDI of every string. A preset change
+or a draft edit clears the checks. Nothing is written to `localStorage`.
+Chromatic does not add a check or pulse. A null string index — including a
+reference tone the pitch gate has blanked — releases the hold and does not
+pulse or mark a string. Only `stringIndex` from that analysis is checked.
 
 ## Draft lifecycle
 

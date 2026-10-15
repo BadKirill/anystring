@@ -42,7 +42,7 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
     expect(screen.getByRole('heading', { name: UI.appName })).toBeTruthy()
-    expect(screen.getByRole('button', { name: UI.startListening })).toBeTruthy()
+    expect(await screen.findByRole('button', { name: UI.stopListening })).toBeTruthy()
     await user.click(screen.getByRole('tab', { name: UI.screenChromatic }))
     expect(screen.getByRole('tab', { selected: true })).toHaveProperty(
       'textContent',
@@ -50,10 +50,10 @@ describe('App', () => {
     )
     expect(screen.queryByRole('button', { name: UI.auto })).toBeNull()
     await user.click(screen.getByRole('tab', { name: UI.screenStrings }))
-    await user.click(screen.getByRole('button', { name: UI.startListening }))
-    expect(await screen.findByRole('button', { name: UI.stopListening })).toBeTruthy()
     await user.click(screen.getByRole('button', { name: UI.stopListening }))
     expect(screen.getByRole('button', { name: UI.startListening })).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: UI.startListening }))
+    expect(await screen.findByRole('button', { name: UI.stopListening })).toBeTruthy()
   })
 
   it('opens About and the tuning picker, then edits a string', async () => {
@@ -77,11 +77,11 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: 'Mine' })).toBeTruthy()
   })
 
-  it('shows a microphone permission error', async () => {
-    const user = userEvent.setup()
+  it('shows a microphone permission error once', async () => {
     startMicSession.mockRejectedValue(new MicStreamError('permission-denied'))
     render(<App />)
-    await user.click(screen.getByRole('button', { name: UI.startListening }))
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', UI.micDenied)
+    expect(screen.getByRole('button', { name: UI.startListening })).toBeTruthy()
+    expect(startMicSession).toHaveBeenCalledTimes(1)
   })
 })

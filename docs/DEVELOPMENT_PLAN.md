@@ -33,6 +33,9 @@ Remaining:
   in `src/audio/pitchDetector.ts` and `src/core/tunings/analyzer.ts` may need tuning
   after that.
 - Developer accounts, signing, store listings, and submission.
+- **Step 10** is in the repo: the tuner starts listening on open, one haptic
+  fires when a string first reaches in tune, and that string keeps a check for
+  the sitting. Spec below.
 
 **E2E / store assets decision:** Playwright remains the deterministic web e2e
 layer (stub mic, permission error copy, reference-tone spy, chromatic/strings).
@@ -72,6 +75,9 @@ Kept cheap by an architectural rule: **`src/core/` must be pure TypeScript — n
   id is `TELEMETRYDECK_APP_ID` at build time. Toggle in About. Decided 5 Oct 2026.
 - **`@capacitor-community/in-app-review`** for the native rating dialog; PWA shows
   a store-link banner after three in-tune sessions.
+- **`@capacitor/haptics`** for the in-tune pulse on iOS and Android (step 10).
+  Web uses `navigator.vibrate` and no-ops where the browser has no vibration.
+  Decided 15 Oct 2026.
 - **No backend.** Custom tunings stored in `localStorage`. Cloud sync can be added later if ever wanted.
 - **Vitest** for unit tests (`jsdom`, `@testing-library/react`, v8 coverage ≥ 95%)
 
@@ -220,3 +226,178 @@ track.
 1. Test on at least one real Android and one real iOS phone: noisy room, quiet room, low bass strings.
 2. Tune thresholds (clarity cutoff, in-tune cents window, median filter length) based on real testing.
 3. Ensure `npm run check` is green; review test coverage of `src/core/`.
+
+### 10. Autostart, haptic lock, string checkmarks
+
+One release. Branch `feat/listen-lock` from latest `origin/master`. One PR.
+Do not bump `package.json` version; `version-bump.yml` does that on merge.
+UI copy stays English. iPhone-only. Do not add iPad.
+
+#### Read first
+
+`docs/knowledge/AGENT_PROTOCOL.md`, `INDEX.md`, then `areas/sdd-tdd.md`,
+`areas/audio.md`, `areas/state.md`, `areas/components.md`, `areas/core-tunings.md`.
+Implement only through spec → failing test → smallest code. `npm run check`
+before the PR. After the new module, `npm run knowledge:refresh`, update the
+area pages, `npm run knowledge:check`.
+
+#### Already decided
+
+- In tune means `|cents| ≤ IN_TUNE_CENTS` (5), on the **displayed** analysis
+  after `useStableAnalysis`. Do not invent a second threshold.
+- Checkmarks are for this sitting only. No new `localStorage` key. They reset
+  when the tuning identity changes: `tuning.id` plus the MIDI of every string,
+  so a draft edit clears them too.
+- A check stays on after the string leaves in-tune. It means “reached in tune”,
+  not “is in tune right now”.
+- The haptic is a rising edge. It fires when a string enters in-tune, stays
+  quiet while that string is held there, and may fire again only after the
+  displayed direction leaves in-tune. The check does not clear on that re-arm.
+- Chromatic mode has no string list: no checks, no haptic.
+- Only the analyzed `stringIndex` is marked. Two strings on the same pitch do
+  not both get a check.
+- The reference-tone pitch gate stays in front of this. A preview tone must
+  not mark or pulse a string.
+- Autostart is not a preference. There is no About toggle in this release.
+- Mic constraints do not change: AGC, noise suppression, and echo cancellation
+  stay off. The pitch window stays 8192.
+- Haptics dependency is `@capacitor/haptics` (see Stack). Do not add another
+  vibration library.
+
+#### Autostart
+
+Pure predicate, unit-tested, then called from the mic hook:
+
+```ts
+type AutoStartInput = {
+  status: 'idle' | 'starting' | 'listening' | 'error'
+  stoppedByUser: boolean
+}
+
+function shouldAutoStart(input: AutoStartInput): boolean
+```
+
+True only when `status === 'idle'` and `stoppedByUser` is false.
+
+- On mount, if `shouldAutoStart`, call the existing `start` once.
+- `stoppedByUser` is memory only. Stop sets it. It resets when the page loads
+  again, so the next open listens.
+- Do not start again after Stop until that reload.
+- `starting` or `listening`: do nothing. No second `getUserMedia`.
+- `error` (denied, missing mic): do nothing. The existing error copy and the
+  Start button stay. No retry timer.
+- iOS may reject `getUserMedia` without a user gesture on the first launch.
+  That rejection is the existing error path. Leave Start on screen. Do not
+  loop. Do not add a native `AVAudioEngine` in this PR.
+- Background resume already restarts an active session. It must not restart a
+  session the user stopped.
+
+#### String lock
+
+New pure module `src/core/tunings/stringLock.ts` plus `stringLock.test.ts`.
+
+```ts
+type StringLockState = {
+  checked: readonly number[]
+  holding: number | null
+}
+
+type StringLockInput = {
+  tuningKey: string
+  screen: 'strings' | 'chromatic'
+  stringIndex: number | null
+  inTune: boolean
+}
+
+type StringLockStep = {
+  state: StringLockState
+  pulse: boolean
+}
+
+function stepStringLock(state: StringLockState, input: StringLockInput): StringLockStep
+```
+
+`tuningKey` is `id` plus MIDI numbers. A key change returns empty `checked`,
+`holding: null`, `pulse: false`.
+
+Otherwise:
+
+| Input                                | checked              | holding    | pulse |
+| ------------------------------------ | -------------------- | ---------- | ----- |
+| chromatic, or `stringIndex === null` | unchanged            | `null`     | false |
+| in tune, index already `holding`     | unchanged            | same index | false |
+| in tune, index not `holding`         | add index if missing | that index | true  |
+| not in tune                          | unchanged            | `null`     | false |
+
+Wire the step from tuner state off the displayed string analysis. Call the
+platform pulse only when `pulse` is true. One call per step, not per render.
+
+#### Haptic adapter
+
+`src/platform/hapticPulse.ts`. Native: `Haptics.impact` light. Web:
+`navigator.vibrate(20)` when the function exists. Missing API or a thrown
+native call: return without throwing. Core must not import this module.
+
+`npx cap sync` so the plugin is in the iOS and Android projects. Commit that
+sync output (`Package.swift`, Android Gradle includes).
+
+#### Checkmark UI
+
+`StringList` gains `checked: readonly number[]`. The button name stays
+`1 E2` until that string is checked, then `1 E2, in tune`. The note label
+stays. Add a green check that is not the only signal (the name change is).
+Do not replace the active or manual highlight. Chromatic screen renders no
+string list, so it needs no check UI.
+
+Copy for the suffix lives in `src/components/strings.ts` (`in tune` already
+exists as `UI.inTune`).
+
+#### Edge cases
+
+Add these to `src/quality/edgeCases.ts` and name a test with each id:
+
+| Id                     | Expected                                                     |
+| ---------------------- | ------------------------------------------------------------ |
+| `EC-autostart-idle`    | idle and not stopped → start                                 |
+| `EC-autostart-stopped` | after Stop → do not start                                    |
+| `EC-autostart-busy`    | starting or listening → do not start again                   |
+| `EC-autostart-denied`  | error → do not start again                                   |
+| `EC-lock-first`        | first in-tune on a string checks it and pulses               |
+| `EC-lock-hold`         | staying in tune does not pulse again                         |
+| `EC-lock-rearm`        | leaving in tune, then returning, pulses again; check remains |
+| `EC-lock-switch`       | a different string can check and pulse on its own            |
+| `EC-lock-chromatic`    | chromatic changes nothing and does not pulse                 |
+| `EC-lock-silent`       | null string index clears the hold and does not pulse         |
+| `EC-lock-tuning`       | a new tuning key clears checks                               |
+| `EC-lock-duplicate`    | only the analyzed index is checked                           |
+| `EC-haptic-missing`    | no `vibrate` and no native plugin → no throw                 |
+
+#### Tests that will lie if left alone
+
+Playwright currently expects **Start tuning** on first paint, then clicks it.
+After this change a granted stub mic is already **Stop**. Update the app
+specs (`e2e/tuner.spec.ts`, `stop-tuning.spec.ts`, `mic-permissions.spec.ts`,
+`background-resume.spec.ts`, `custom-tuning.spec.ts`, `reference-tone.spec.ts`,
+`review-prompt.spec.ts`, `landing.spec.ts`, `e2e/smoke.spec.ts`).
+`e2e/store/screenshots.spec.ts` must not click Start if that click now means
+Stop; the framed shots should still show a listening tuner.
+
+Denied-mic specs still expect Start and the error, and they must not see a
+retry storm.
+
+#### Out of scope
+
+A4 calibration, numeric Hz readout, localization, a haptics toggle, persisting
+checks, autostart on the marketing page, store screenshots of the checkmark,
+and any backend.
+
+#### Done when
+
+- `npm run check` is green, including the new edge-case ids.
+- Opening the tuner with a granted mic shows Stop without a tap.
+- Stop stays stopped until reload.
+- A denied mic shows the current error once.
+- On the Strings screen, the first stable in-tune locks a check on that
+  string and one haptic pulse; holding the note does not pulse again.
+- Changing preset or editing a string pitch clears the checks.
+- Chromatic does neither.

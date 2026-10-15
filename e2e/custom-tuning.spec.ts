@@ -72,7 +72,6 @@ test('editing a string note creates a custom tuning and tunes against it', async
   await expect(page.getByRole('button', { name: '1 G#1' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Custom' })).toBeVisible()
 
-  await page.getByRole('button', { name: 'Start tuning' }).click()
   await expect(page.getByText('String 1 (G#1): in tune')).toBeVisible()
 })
 

@@ -1,9 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { MicStreamError } from './micStream'
 import { useMicControls } from './useMicControls'
-import type { PitchState } from './pitchState'
+import type { PitchState, PitchStatus } from './pitchState'
 import type { MicSession } from './micStream'
 import { STALE_BACKGROUND_MS } from './audioContextResume'
 import { installAppResumeHandlers } from './appResume'
@@ -26,6 +26,11 @@ function fakeSession(): MicSession {
 }
 
 describe('useMicControls', () => {
+  beforeEach(() => {
+    startMicSession.mockReset()
+    startMicSession.mockResolvedValue(fakeSession())
+  })
+
   it('starts listening and stops back to idle', async () => {
     const session = fakeSession()
     startMicSession.mockResolvedValue(session)
@@ -39,9 +44,8 @@ describe('useMicControls', () => {
           clarity: null,
         }
         states.push(typeof update === 'function' ? update(prev) : update)
-      }),
+      }, 'idle'),
     )
-    result.current.start()
     await waitFor(() => {
       expect(states.some((state) => state.status === 'listening')).toBe(true)
     })
@@ -54,7 +58,7 @@ describe('useMicControls', () => {
   it('surfaces a mic error from startMicSession', async () => {
     startMicSession.mockRejectedValue(new MicStreamError('permission-denied'))
     const states: PitchState[] = []
-    const { result } = renderHook(() =>
+    renderHook(() =>
       useMicControls((update) => {
         const prev: PitchState = {
           status: 'idle',
@@ -63,9 +67,8 @@ describe('useMicControls', () => {
           clarity: null,
         }
         states.push(typeof update === 'function' ? update(prev) : update)
-      }),
+      }, 'idle'),
     )
-    result.current.start()
     await waitFor(() => {
       expect(states.some((state) => state.error === 'permission-denied')).toBe(true)
     })
@@ -76,7 +79,7 @@ describe('useMicControls', () => {
     vi.spyOn(Date, 'now').mockImplementation(() => now)
     startMicSession.mockResolvedValue(fakeSession())
     installAppResumeHandlers()
-    const { result } = renderHook(() => useMicControls(vi.fn()))
+    const { result } = renderHook(() => useMicControls(vi.fn(), 'idle'))
     result.current.start()
     await waitFor(() => {
       expect(startMicSession).toHaveBeenCalled()
@@ -98,10 +101,15 @@ describe('useMicControls', () => {
     })
   })
 
-  it('does nothing on resume when the mic is idle', async () => {
+  it('does not resume a session the user stopped', async () => {
     installAppResumeHandlers()
+    startMicSession.mockResolvedValue(fakeSession())
+    const { result } = renderHook(() => useMicControls(vi.fn(), 'idle'))
+    await waitFor(() => {
+      expect(startMicSession).toHaveBeenCalled()
+    })
+    result.current.stop()
     startMicSession.mockClear()
-    renderHook(() => useMicControls(vi.fn()))
     Object.defineProperty(document, 'visibilityState', {
       configurable: true,
       get: () => 'hidden',
@@ -116,6 +124,57 @@ describe('useMicControls', () => {
     expect(startMicSession).not.toHaveBeenCalled()
   })
 
+  it('EC-autostart-idle starts once from idle when the user has not stopped', async () => {
+    startMicSession.mockResolvedValue(fakeSession())
+    renderHook(() => useMicControls(vi.fn(), 'idle'))
+    await waitFor(() => {
+      expect(startMicSession).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  it('EC-autostart-stopped does not start again after Stop', async () => {
+    startMicSession.mockResolvedValue(fakeSession())
+    const setState = vi.fn()
+    const { result, rerender } = renderHook(
+      ({ status }: { status: PitchStatus }) => useMicControls(setState, status),
+      { initialProps: { status: 'idle' as PitchStatus } },
+    )
+    await waitFor(() => {
+      expect(startMicSession).toHaveBeenCalledTimes(1)
+    })
+    rerender({ status: 'listening' })
+    result.current.stop()
+    startMicSession.mockClear()
+    rerender({ status: 'idle' })
+    await Promise.resolve()
+    expect(startMicSession).not.toHaveBeenCalled()
+  })
+
+  it('EC-autostart-busy does not start again while starting or listening', async () => {
+    for (const status of ['starting', 'listening'] as const) {
+      startMicSession.mockClear()
+      const { result } = renderHook(() => useMicControls(vi.fn(), status))
+      result.current.start()
+      await Promise.resolve()
+      expect(startMicSession).not.toHaveBeenCalled()
+    }
+  })
+
+  it('EC-autostart-denied does not start again from an error', async () => {
+    startMicSession.mockRejectedValue(new MicStreamError('permission-denied'))
+    const setState = vi.fn()
+    const { rerender } = renderHook(
+      ({ status }: { status: PitchStatus }) => useMicControls(setState, status),
+      { initialProps: { status: 'idle' as PitchStatus } },
+    )
+    await waitFor(() => {
+      expect(startMicSession).toHaveBeenCalledTimes(1)
+    })
+    rerender({ status: 'error' })
+    await Promise.resolve()
+    expect(startMicSession).toHaveBeenCalledTimes(1)
+  })
+
   it('restarts when a short background resume fails', async () => {
     let now = 1_000
     vi.spyOn(Date, 'now').mockImplementation(() => now)
@@ -123,7 +182,7 @@ describe('useMicControls', () => {
     session.resume = vi.fn(async () => false)
     startMicSession.mockResolvedValue(session)
     installAppResumeHandlers()
-    const { result } = renderHook(() => useMicControls(vi.fn()))
+    const { result } = renderHook(() => useMicControls(vi.fn(), 'idle'))
     result.current.start()
     await waitFor(() => {
       expect(startMicSession).toHaveBeenCalled()
@@ -151,7 +210,7 @@ describe('useMicControls', () => {
       onLost = lost
       return fakeSession()
     })
-    const { result } = renderHook(() => useMicControls(vi.fn()))
+    const { result } = renderHook(() => useMicControls(vi.fn(), 'idle'))
     result.current.start()
     await waitFor(() => {
       expect(onLost).toBeDefined()

@@ -72,6 +72,7 @@ Do not introduce libraries, frameworks, or patterns outside this list without an
 | Mobile stores   | **Capacitor** (iOS/Android wrappers around the same web build)                      |
 | Analytics       | **TelemetryDeck** (optional anonymous events; off in About)                         |
 | Store rating    | **`@capacitor-community/in-app-review`** (native); web banner with store links      |
+| Haptics         | **`@capacitor/haptics`** light impact; web `navigator.vibrate(20)`                  |
 | Persistence     | **`localStorage`** via `src/storage/` — no backend                                  |
 | Unit tests      | **Vitest** (`jsdom` + Testing Library, v8 coverage ≥ 95%, edge-case coverage ≥ 80%) |
 | E2E tests       | **Playwright** (local dev server + live smoke against GitHub Pages)                 |
@@ -84,8 +85,9 @@ Do not introduce libraries, frameworks, or patterns outside this list without an
 
 ```
 src/core/music/     — pure TS: notes, frequency, cents
-src/core/tunings/   — pure TS: Tuning model, presets, analyzer
+src/core/tunings/   — pure TS: Tuning model, presets, analyzer, string lock
 src/audio/          — mic capture, AudioWorklet, pitchy wrapper
+src/platform/       — Capacitor adapters (version, audio session, haptics)
 src/components/     — React UI
 src/state/          — app state hooks
 src/storage/        — localStorage persistence

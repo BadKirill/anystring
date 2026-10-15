@@ -25,6 +25,7 @@ describe('StringList', () => {
         tuning={tuning}
         activeIndex={0}
         manualIndex={null}
+        checked={[]}
         onSelect={onSelect}
         onEdit={onEdit}
       />,
@@ -37,6 +38,7 @@ describe('StringList', () => {
         tuning={tuning}
         activeIndex={0}
         manualIndex={0}
+        checked={[]}
         onSelect={onSelect}
         onEdit={onEdit}
       />,
@@ -55,6 +57,7 @@ describe('StringList', () => {
         tuning={tuning}
         activeIndex={null}
         manualIndex={null}
+        checked={[]}
         onSelect={vi.fn()}
         onEdit={vi.fn()}
       />,
@@ -68,5 +71,28 @@ describe('StringList', () => {
     Object.defineProperty(rail, 'scrollWidth', { configurable: true, value: 400 })
     fireEvent.scroll(rail)
     expect(rail.className).toContain('string-list-overflow')
+  })
+
+  it('names a checked string as in tune and keeps the active highlight', () => {
+    const tuning = PRESET_TUNINGS[0]
+    if (!tuning) {
+      throw new Error('expected at least one preset tuning')
+    }
+    const { container } = render(
+      <StringList
+        tuning={tuning}
+        activeIndex={0}
+        manualIndex={0}
+        checked={[0]}
+        onSelect={vi.fn()}
+        onEdit={vi.fn()}
+      />,
+    )
+    const button = screen.getByRole('button', { name: '1 E2, in tune' })
+    expect(button.className).toContain('string-active')
+    expect(button.className).toContain('string-manual')
+    expect(button.querySelector('.string-note')?.textContent).toBe('E2')
+    expect(container.querySelector('.string-check')).toBeTruthy()
+    expect(screen.getByRole('button', { name: '2 A2' })).toBeTruthy()
   })
 })

@@ -13,6 +13,7 @@ test('landing names fretted and bowed instruments and opens the tuner', async ({
   await page.getByRole('link', { name: 'Open tuner' }).click()
   await expect(page.getByRole('button', { name: 'Standard E' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Stop' })).toHaveCount(0)
   await page.getByRole('button', { name: 'Standard E' }).click()
   await expect(page.getByRole('button', { name: 'Ukulele' })).toBeVisible()
 })

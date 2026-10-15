@@ -29,21 +29,21 @@ Mic → AudioWorklet (8192) → pitchy → stabilize
 Presets + custom editor → storage → active Tuning → string analyzer
 ```
 
-| Layer        | Path                                      | Role                                            |
-| ------------ | ----------------------------------------- | ----------------------------------------------- |
-| Platform     | `src/platform/`                           | Native-vs-web runtime, installed app version    |
-| Core music   | `src/core/music/`                         | Notes, MIDI, Hz, cents, nearestPitch — pure TS  |
-| Core signal  | `src/core/signal/`                        | Pitch display stabilizer, pluck synth           |
-| Core tunings | `src/core/tunings/`                       | Tuning model, presets, analyzer, custom helpers |
-| Analytics    | `src/core/analytics/`, `src/core/review/` | Event union, session/review policy              |
-| Audio        | `src/audio/`                              | Mic, worklet, pitchy, reference tone, hooks     |
-| Components   | `src/components/`                         | React UI                                        |
-| State        | `src/state/`                              | `useTunerState` and helpers                     |
-| Storage      | `src/storage/`                            | localStorage v2 + legacy migration              |
-| E2E          | `e2e/`, `.maestro/`, `store/`             | Playwright + Maestro + store screenshots        |
-| Quality      | `src/quality/`                            | Edge-case catalog and the 80% coverage gate     |
-| Docs         | `docs/`                                   | Plan, CI, this knowledge tree                   |
-| Agent rules  | `AGENTS.md`, `.cursor/rules/`             | Workflow + SDD/TDD + style                      |
+| Layer        | Path                                      | Role                                           |
+| ------------ | ----------------------------------------- | ---------------------------------------------- |
+| Platform     | `src/platform/`                           | Native-vs-web runtime, version, haptics        |
+| Core music   | `src/core/music/`                         | Notes, MIDI, Hz, cents, nearestPitch — pure TS |
+| Core signal  | `src/core/signal/`                        | Pitch display stabilizer, pluck synth          |
+| Core tunings | `src/core/tunings/`                       | Tuning model, presets, analyzer, string lock   |
+| Analytics    | `src/core/analytics/`, `src/core/review/` | Event union, session/review policy             |
+| Audio        | `src/audio/`                              | Mic, worklet, pitchy, reference tone, hooks    |
+| Components   | `src/components/`                         | React UI                                       |
+| State        | `src/state/`                              | `useTunerState` and helpers                    |
+| Storage      | `src/storage/`                            | localStorage v2 + legacy migration             |
+| E2E          | `e2e/`, `.maestro/`, `store/`             | Playwright + Maestro + store screenshots       |
+| Quality      | `src/quality/`                            | Edge-case catalog and the 80% coverage gate    |
+| Docs         | `docs/`                                   | Plan, CI, this knowledge tree                  |
+| Agent rules  | `AGENTS.md`, `.cursor/rules/`             | Workflow + SDD/TDD + style                     |
 
 **Portability rule:** `src/core/**` must not import React, DOM, or
 `audio` / `components` / `state` / `storage` (ESLint).
@@ -51,7 +51,8 @@ Presets + custom editor → storage → active Tuning → string analyzer
 ## 3. Stack (allowed only)
 
 Vite, React 19, TypeScript strict, `vite-plugin-pwa`, Web Audio + AudioWorklet,
-`pitchy` (MPM), Capacitor 8 (iOS + Android shells), TelemetryDeck (anonymous
+`pitchy` (MPM), Capacitor 8 (iOS + Android shells), `@capacitor/haptics`
+(light in-tune pulse; web uses `navigator.vibrate`), TelemetryDeck (anonymous
 events), `@capacitor-community/in-app-review`, localStorage, Vitest
 (jsdom, Testing Library, 95% line coverage, 80% edge-case coverage),
 Playwright, Maestro (native shell), ESLint (`typescript-eslint` strict + sonarjs), Prettier.

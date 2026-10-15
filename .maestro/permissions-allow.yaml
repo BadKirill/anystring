@@ -9,7 +9,6 @@ name: Mic permission allowed → listening
 - extendedWaitUntil:
     visible: 'Anystring'
     timeout: 30000
-- tapOn: 'Start tuning'
 - extendedWaitUntil:
     visible: 'Stop'
     timeout: 15000

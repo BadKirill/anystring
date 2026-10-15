@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { pitchToFrequency } from '../core/music'
@@ -92,5 +92,27 @@ describe('useTunerState', () => {
     })
     expect(result.current.tuning.id).toBe('guitar-drop-d')
     expect(result.current.manualStringIndex).toBeNull()
+  })
+
+  it('checks the displayed in-tune string and clears that check when the pitch changes', async () => {
+    const e2 = pitchToFrequency({ note: 'E', octave: 2 })
+    usePitch.mockReturnValue({
+      status: 'listening',
+      error: null,
+      frequency: e2,
+      clarity: 0.95,
+      start: vi.fn(),
+      stop: vi.fn(),
+    })
+    const { result } = renderHook(() => useTunerState())
+    await waitFor(() => {
+      expect(result.current.checkedStrings).toEqual([0])
+    })
+    act(() => {
+      result.current.editString(0, { note: 'F', octave: 2 })
+    })
+    await waitFor(() => {
+      expect(result.current.checkedStrings).toEqual([])
+    })
   })
 })

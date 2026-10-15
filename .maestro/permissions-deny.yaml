@@ -11,7 +11,6 @@ name: Mic permission denied → error copy (Android)
 - extendedWaitUntil:
     visible: 'Anystring'
     timeout: 30000
-- tapOn: 'Start tuning'
 - extendedWaitUntil:
     visible: '.*record audio.*'
     timeout: 15000

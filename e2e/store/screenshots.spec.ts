@@ -48,7 +48,7 @@ async function openApp(page: Page, hz = A2_HZ): Promise<void> {
 }
 
 async function startTuning(page: Page, expected: string | RegExp): Promise<void> {
-  await page.getByRole('button', { name: 'Start tuning' }).click()
+  await expect(page.getByRole('button', { name: 'Stop' })).toBeVisible()
   await expect(page.getByText(expected)).toBeVisible()
 }
 

@@ -18,7 +18,8 @@ import {
 } from './micSessionControl'
 import { createMicWindowHandler } from './micWindowHandler'
 import type { MicSession } from './micStream'
-import type { PitchState } from './pitchState'
+import { shouldAutoStart } from './autoStart'
+import type { PitchState, PitchStatus } from './pitchState'
 
 function buildRefs(
   active: RefObject<boolean>,
@@ -52,7 +53,22 @@ function useMicResume(
   }, [activeRef, getRefs, restartRef])
 }
 
-export function useMicControls(setState: Dispatch<SetStateAction<PitchState>>): {
+function useAutoStart(
+  status: PitchStatus,
+  stoppedByUser: RefObject<boolean>,
+  start: () => void,
+): void {
+  useEffect(() => {
+    if (shouldAutoStart({ status, stoppedByUser: stoppedByUser.current })) {
+      start()
+    }
+  }, [status, start, stoppedByUser])
+}
+
+export function useMicControls(
+  setState: Dispatch<SetStateAction<PitchState>>,
+  status: PitchStatus,
+): {
   start: () => void
   stop: () => void
 } {
@@ -60,6 +76,7 @@ export function useMicControls(setState: Dispatch<SetStateAction<PitchState>>): 
   const recentRef = useRef<number[]>([])
   const activeRef = useRef(false)
   const generationRef = useRef(0)
+  const stoppedByUserRef = useRef(false)
   const restartRef = useRef<() => void>(() => undefined)
   const handleWindow = useMemo(
     () => createMicWindowHandler(() => activeRef.current, recentRef.current, setState),
@@ -82,22 +99,29 @@ export function useMicControls(setState: Dispatch<SetStateAction<PitchState>>): 
   }, [restart])
 
   const stop = useCallback(() => {
+    stoppedByUserRef.current = true
     stopMicSession(getRefs(), setState)
   }, [getRefs, setState])
 
   const start = useCallback(() => {
+    if (status === 'starting' || status === 'listening') {
+      return
+    }
     activeRef.current = true
-
     restart()
-  }, [restart])
+  }, [restart, status])
+
+  useAutoStart(status, stoppedByUserRef, start)
 
   useMicResume(activeRef, getRefs, restartRef)
 
+  // Unmount is not a user Stop. StrictMode replays effects, and marking
+  // stoppedByUser here would leave the replayed open silent.
   useEffect(() => {
     return () => {
-      stop()
+      stopMicSession(getRefs(), setState)
     }
-  }, [stop])
+  }, [getRefs, setState])
 
   return { start, stop }
 }

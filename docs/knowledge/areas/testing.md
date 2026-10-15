@@ -94,6 +94,8 @@ copy strings stay Playwright assertions (`e2e/mic-permissions.spec.ts`).
 - Mic stubbed with oscillators before `page.goto` so worklet→pitch→UI is deterministic.
 - Reference tones counted via `AudioBufferSourceNode.start` spy (oscillator stubs do not count).
 - First mic prompt is the **OS** dialog — no in-app pre-permission screen.
+  A granted stub mic is already **Stop** on first paint. Denied, missing, and
+  unavailable mics still show Start and the error, once.
 - E2E / test files relax max-lines / cognitive complexity in ESLint.
 - Unit tests must fail when the behavior is wrong (no vacuous `if (!x) return`
   after `toBeDefined()`, no unseeded `Math.random` in pitch tests).

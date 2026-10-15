@@ -10,17 +10,13 @@ name: Reference tone tap + screen smoke
     timeout: 30000
 - tapOn: '1 E2'
 - extendedWaitUntil:
-    visible: 'Start tuning'
-    timeout: 10000
+    visible: 'Stop'
+    timeout: 15000
 - tapOn: 'Chromatic'
 - extendedWaitUntil:
     visible: 'Chromatic'
     timeout: 10000
 - tapOn: 'Strings'
-- extendedWaitUntil:
-    visible: 'Start tuning'
-    timeout: 15000
-- tapOn: 'Start tuning'
 - extendedWaitUntil:
     visible: 'Stop'
     timeout: 15000
@@ -28,3 +24,7 @@ name: Reference tone tap + screen smoke
 - extendedWaitUntil:
     visible: 'Start tuning'
     timeout: 10000
+- tapOn: 'Start tuning'
+- extendedWaitUntil:
+    visible: 'Stop'
+    timeout: 15000

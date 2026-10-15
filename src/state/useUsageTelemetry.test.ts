@@ -22,6 +22,7 @@ function tuner(overrides: Partial<TunerState> = {}): TunerState {
     tuningsRevision: 0,
     manualStringIndex: null,
     analysis: null,
+    checkedStrings: [],
     pitch: {
       status: 'idle',
       error: null,
