@@ -96,6 +96,22 @@ export function iosMarketingVersions(pbxproj: string): string[] {
   return [...pbxproj.matchAll(/MARKETING_VERSION = ([^;]+);/g)].map((match) => match[1])
 }
 
+const DUO_ORIENTATIONS = [
+  'UIInterfaceOrientationPortrait',
+  'UIInterfaceOrientationLandscapeLeft',
+  'UIInterfaceOrientationLandscapeRight',
+] as const
+
+export function duoShellErrors(infoPlist: string): string[] {
+  const fullscreen = infoPlist.includes('<key>UIRequiresFullScreen</key>')
+    ? ['UIRequiresFullScreen blocks iPhone Duo resizing']
+    : []
+  const missing = DUO_ORIENTATIONS.filter(
+    (orientation) => !infoPlist.includes(orientation),
+  ).map((orientation) => `missing ${orientation}`)
+  return [...fullscreen, ...missing]
+}
+
 export function iphoneOnlyErrors(pbxproj: string, infoPlist: string): string[] {
   const families = [...pbxproj.matchAll(/TARGETED_DEVICE_FAMILY = ([^;]+);/g)].map(
     (match) => match[1],

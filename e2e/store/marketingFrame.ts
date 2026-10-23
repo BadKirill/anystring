@@ -5,6 +5,26 @@ import sharp from 'sharp'
 
 export type StorePlatform = 'ios' | 'android'
 
+export interface StoreFrame {
+  readonly folder: string
+  readonly width: number
+  readonly height: number
+  readonly platform: StorePlatform
+}
+
+const STORE_FRAMES: Record<string, StoreFrame> = {
+  'ios-6.7': { folder: 'ios', width: 1290, height: 2796, platform: 'ios' },
+  'android-phone': { folder: 'android', width: 1080, height: 1920, platform: 'android' },
+  'duo-outer': { folder: 'duo-outer', width: 1398, height: 2034, platform: 'ios' },
+  'duo-inner': { folder: 'duo-inner', width: 2007, height: 2853, platform: 'ios' },
+  'duo-landscape': {
+    folder: 'duo-landscape',
+    width: 2853,
+    height: 2007,
+    platform: 'ios',
+  },
+}
+
 export interface MarketingCopy {
   eyebrow: string
   headline: string
@@ -179,8 +199,11 @@ body {
 }
 `
 
-export function storePlatformFromProject(projectName: string): StorePlatform {
-  return projectName.startsWith('ios') ? 'ios' : 'android'
+export function storeFrameFromProject(projectName: string): StoreFrame {
+  if (!Object.hasOwn(STORE_FRAMES, projectName)) {
+    throw new Error(`Unknown store screenshot project ${projectName}`)
+  }
+  return STORE_FRAMES[projectName]
 }
 
 function escapeHtml(value: string): string {
@@ -285,6 +308,8 @@ export async function captureFramedScreenshot(
     copy: MarketingCopy
     platform: StorePlatform
     outputPath: string
+    width: number
+    height: number
   },
 ): Promise<void> {
   const viewport = page.viewportSize()
@@ -303,26 +328,25 @@ export async function captureFramedScreenshot(
     aspectRatio: `${String(viewport.width)} / ${String(viewport.height)}`,
   })
   const frame = await renderFramePage(page, html)
-  await mkdir(path.dirname(options.outputPath), { recursive: true })
-  await frame.screenshot({
-    path: options.outputPath,
+  const framed = await frame.screenshot({
     fullPage: false,
     animations: 'disabled',
     type: 'png',
   })
   await frame.close()
+  await mkdir(path.dirname(options.outputPath), { recursive: true })
+  // Device pixels can land one short of the App Store size. Stretch to the spec.
+  await sharp(framed)
+    .resize(options.width, options.height, { fit: 'fill' })
+    .png()
+    .toFile(options.outputPath)
 }
 
 export async function assertStorePngSize(
   filePath: string,
-  platform: StorePlatform,
+  frame: StoreFrame,
 ): Promise<void> {
   const meta = await sharp(filePath).metadata()
-  if (platform === 'ios') {
-    expect(meta.width).toBe(1290)
-    expect(meta.height).toBe(2796)
-    return
-  }
-  expect(meta.width).toBe(1080)
-  expect(meta.height).toBe(1920)
+  expect(meta.width).toBe(frame.width)
+  expect(meta.height).toBe(frame.height)
 }

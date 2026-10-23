@@ -65,6 +65,8 @@ iOS always suspends `AudioContext` while backgrounded. That is **not** treated
 as a dead stream: `watchContextSuspend` / track `ended` ignore events while
 `document.visibilityState === 'hidden'`. On foreground, `resumeMicSession`
 soft-resumes the existing context; only a failed resume rebuilds the session.
+A window resize (Duo fold) only calls that soft resume and does not rebuild
+the detector.
 
 ## Long background (10+ min)
 

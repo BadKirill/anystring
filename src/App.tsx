@@ -11,6 +11,7 @@ import { StringList } from './components/StringList'
 import { TuneDirectionHint } from './components/TuneDirectionHint'
 import { TunerGauge } from './components/TunerGauge'
 import { UI } from './components/strings'
+import { layoutDataset, layoutStyle, useTunerLayout } from './components/useTunerLayout'
 import { formatPitch } from './core/music'
 import {
   DRAFT_TUNING_ID,
@@ -221,41 +222,46 @@ function App() {
   const [modal, setModal] = useState<Modal>({ kind: 'none' })
   const { analysis, pitch, manualStringIndex, screen } = state
   const chromatic = screen === 'chromatic'
+  const layout = useTunerLayout(chromatic ? 1 : 2)
   const closeModal = () => {
     setModal({ kind: 'none' })
   }
+  const strings = !chromatic && <StringsExtras state={state} setModal={setModal} />
 
   return (
-    <div className="app">
-      <PrivacyNotice />
-      <InstallHint />
-      {usage.webReviewVisible && <ReviewPrompt onClose={usage.dismissWebReview} />}
-      <Header
-        state={state}
-        onOpenPresets={() => {
-          state.refreshMyTunings()
-          setModal({ kind: 'presets' })
-        }}
-        onOpenAbout={() => {
-          setModal({ kind: 'about' })
-        }}
-      />
-      <ScreenTabs state={state} />
-      <ModeControls state={state} />
-      <TunerGauge
-        cents={gaugeCentsFor(analysis)}
-        targetLabel={gaugeTargetLabel(state, analysis)}
-        inTune={analysis?.direction === 'in-tune'}
-        chromatic={chromatic}
-      />
-      <TuneDirectionHint
-        pitch={pitch}
-        analysis={analysis}
-        tuning={state.tuning}
-        manualMode={manualStringIndex !== null}
-        chromatic={chromatic}
-      />
-      {!chromatic && <StringsExtras state={state} setModal={setModal} />}
+    <div className="app" style={layoutStyle(layout)} {...layoutDataset(layout)}>
+      <div className="layout-primary">
+        <PrivacyNotice />
+        <InstallHint />
+        {usage.webReviewVisible && <ReviewPrompt onClose={usage.dismissWebReview} />}
+        <Header
+          state={state}
+          onOpenPresets={() => {
+            state.refreshMyTunings()
+            setModal({ kind: 'presets' })
+          }}
+          onOpenAbout={() => {
+            setModal({ kind: 'about' })
+          }}
+        />
+        <ScreenTabs state={state} />
+        <ModeControls state={state} />
+        <TunerGauge
+          cents={gaugeCentsFor(analysis)}
+          targetLabel={gaugeTargetLabel(state, analysis)}
+          inTune={analysis?.direction === 'in-tune'}
+          chromatic={chromatic}
+        />
+        <TuneDirectionHint
+          pitch={pitch}
+          analysis={analysis}
+          tuning={state.tuning}
+          manualMode={manualStringIndex !== null}
+          chromatic={chromatic}
+        />
+        {layout.kind === 'split' ? null : strings}
+      </div>
+      {layout.kind === 'split' ? <div className="layout-secondary">{strings}</div> : null}
       {!chromatic && <Modals state={state} modal={modal} onClose={closeModal} />}
       {modal.kind === 'about' && <AboutSheet onClose={closeModal} />}
     </div>

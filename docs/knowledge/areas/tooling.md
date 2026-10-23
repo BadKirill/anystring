@@ -28,32 +28,32 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 
 ## Config files
 
-| File                                                         | Notes                                                      |
-| ------------------------------------------------------------ | ---------------------------------------------------------- |
-| `vite.config.ts`                                             | Vite, PWA, Vitest (jsdom + 95% coverage thresholds)        |
-| `capacitor.config.ts`                                        | `com.badkirill.anystring`, app name, `webDir: 'dist'`      |
-| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                             |
-| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability             |
-| `.prettierrc` / `.prettierignore`                            | Format ownership                                           |
-| `playwright.config.ts`                                       | E2E; live URL override via env; ignores `e2e/store/**`     |
-| `playwright.store.config.ts`                                 | Store screenshot viewports (iOS 6.7" + Android phone)      |
-| `.maestro/`                                                  | Native UI flows (permissions, reference tap, backup shots) |
-| `index.html`                                                 | Marketing landing (web)                                    |
-| `app/index.html`                                             | Tuner SPA shell (web `/app/` + native)                     |
-| `public/CNAME`                                               | Custom domain `anystring.app` for GitHub Pages             |
-| `public/privacy.html` / `public/support.html`                | Store-required static pages                                |
-| `store/screenshots/`                                         | App Store / Play listing PNGs                              |
-| `store/play-listing/COPY.md`                                 | Google Play listing name/descriptions                      |
-| `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens    |
-| `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp version; pick the store-release commit    |
-| `scripts/resolveReleaseCommit.ts`                            | Print the bump commit to upload, or nothing                |
-| `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                     |
-| `scripts/bumpAppVersion.ts`                                  | CLI for `npm run version:*`                                |
-| `scripts/native-e2e.sh`                                      | Capacitor debug build/install + Maestro                    |
-| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                        |
-| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                        |
-| `scripts/sync-knowledge-wiki.mjs`                            | GitHub Wiki mirror (explicit)                              |
-| `scripts/sync-notion-wiki.mjs`                               | Notion Wiki mirror (explicit)                              |
+| File                                                         | Notes                                                                           |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `vite.config.ts`                                             | Vite, PWA, Vitest (jsdom + 95% coverage thresholds)                             |
+| `capacitor.config.ts`                                        | `com.badkirill.anystring`, app name, `webDir: 'dist'`                           |
+| `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` | Project references; strict app                                                  |
+| `eslint.config.js`                                           | strictTypeChecked + sonarjs + core portability                                  |
+| `.prettierrc` / `.prettierignore`                            | Format ownership                                                                |
+| `playwright.config.ts`                                       | E2E; live URL override via env; ignores `e2e/store/**`                          |
+| `playwright.store.config.ts`                                 | Store screenshot viewports (iOS 6.7", Duo outer/inner/landscape, Android phone) |
+| `.maestro/`                                                  | Native UI flows (permissions, reference tap, backup shots)                      |
+| `index.html`                                                 | Marketing landing (web)                                                         |
+| `app/index.html`                                             | Tuner SPA shell (web `/app/` + native)                                          |
+| `public/CNAME`                                               | Custom domain `anystring.app` for GitHub Pages                                  |
+| `public/privacy.html` / `public/support.html`                | Store-required static pages                                                     |
+| `store/screenshots/`                                         | App Store / Play listing PNGs                                                   |
+| `store/play-listing/COPY.md`                                 | Google Play listing name/descriptions                                           |
+| `scripts/generate-icons.mjs`                                 | PWA icons plus iOS/Android app icons and splash screens                         |
+| `scripts/appReleaseVersion.ts` / `.test.ts`                  | Parse/bump/stamp version; pick the store-release commit                         |
+| `scripts/resolveReleaseCommit.ts`                            | Print the bump commit to upload, or nothing                                     |
+| `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                                          |
+| `scripts/bumpAppVersion.ts`                                  | CLI for `npm run version:*`                                                     |
+| `scripts/native-e2e.sh`                                      | Capacitor debug build/install + Maestro                                         |
+| `scripts/refresh-file-index.mjs`                             | Auto file inventory                                                             |
+| `scripts/check-knowledge.mjs`                                | Knowledge integrity                                                             |
+| `scripts/sync-knowledge-wiki.mjs`                            | GitHub Wiki mirror (explicit)                                                   |
+| `scripts/sync-notion-wiki.mjs`                               | Notion Wiki mirror (explicit)                                                   |
 
 ## PWA
 

@@ -6,7 +6,7 @@ import {
   STORE_CAPTURE_CSS,
   assertStorePngSize,
   captureFramedScreenshot,
-  storePlatformFromProject,
+  storeFrameFromProject,
   type MarketingCopy,
 } from './marketingFrame'
 
@@ -18,8 +18,8 @@ const CHROMATIC_FLAT_HZ = 108.9
 const OUT_ROOT = path.join(process.cwd(), 'store', 'screenshots')
 const SETTLE_MS = 700
 
-function platformFromTest(): ReturnType<typeof storePlatformFromProject> {
-  return storePlatformFromProject(test.info().project.name)
+function frameFromTest(): ReturnType<typeof storeFrameFromProject> {
+  return storeFrameFromProject(test.info().project.name)
 }
 
 async function settle(): Promise<void> {
@@ -30,10 +30,16 @@ async function settle(): Promise<void> {
 
 async function shot(page: Page, basename: string, copy: MarketingCopy): Promise<void> {
   await settle()
-  const platform = platformFromTest()
-  const outputPath = path.join(OUT_ROOT, platform, `${basename}.png`)
-  await captureFramedScreenshot(page, { copy, platform, outputPath })
-  await assertStorePngSize(outputPath, platform)
+  const frame = frameFromTest()
+  const outputPath = path.join(OUT_ROOT, frame.folder, `${basename}.png`)
+  await captureFramedScreenshot(page, {
+    copy,
+    platform: frame.platform,
+    outputPath,
+    width: frame.width,
+    height: frame.height,
+  })
+  await assertStorePngSize(outputPath, frame)
 }
 
 async function openApp(page: Page, hz = A2_HZ): Promise<void> {

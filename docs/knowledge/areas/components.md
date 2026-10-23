@@ -16,6 +16,13 @@ modals.
 TunerGauge (♭/# marks, live cents, no latch-to-center) → hint with cents /
 flat·sharp. No StringList, Auto, or tuning picker.
 
+**iPhone Duo layout** (`tunerLayout`): a phone, the outer display, or a Split
+View half stays one column (`stack`). The open inner display in portrait widens
+that column (`grow`). A crease, or a regular window wider than it is tall,
+puts the gauge and the string list on opposite sides (`split`). Chromatic mode
+has no list, so a crease shifts that single pane off the hinge (`avoid`).
+Sheets stay inside the pane that owns them.
+
 ## Launch cover
 
 `index.html` ships the cover markup plus inlined styles so it paints on the
