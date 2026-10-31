@@ -25,20 +25,22 @@ relative asset URLs for `capacitor://localhost`. Marketing pages are web-only.
 ## Toolchain
 
 - Node **22+** (Capacitor 8 requirement, `engines.node`).
-- Xcode 26+ for App Store uploads; iOS project uses Swift Package Manager, no CocoaPods.
+- Xcode 26+ for App Store uploads; Xcode 27.1 fills the Duo display (Device Hub).
+  The TestFlight job selects `Xcode_27.1.app` when that image is installed and
+  otherwise keeps the runner default. iOS project uses Swift Package Manager, no CocoaPods.
 - Android CLI builds need **JDK 21**; the system JDK 17 fails with
   `invalid source release: 21`. Use Android Studio's bundled runtime:
   `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew assembleDebug`.
 
 ## Platform configuration
 
-| Concern        | iOS                                                                                        | Android                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                                             | `RECORD_AUDIO` + `MODIFY_AUDIO_SETTINGS` + `android.hardware.microphone` |
-| Orientation    | portrait only, `UIRequiresFullScreen`                                                      | `android:screenOrientation="portrait"`                                   |
-| Privacy        | `PrivacyInfo.xcprivacy` Product Interaction (analytics, not tracking); UserDefaults CA92.1 | Data Safety form in Play Console                                         |
-| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                                    | n/a                                                                      |
-| SDK target     | deployment target 15.0                                                                     | `targetSdkVersion 36` (required for new apps from 31 Aug 2026)           |
+| Concern        | iOS                                                                                                                 | Android                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Mic permission | `NSMicrophoneUsageDescription` in `Info.plist`                                                                      | `RECORD_AUDIO` + `MODIFY_AUDIO_SETTINGS` + `android.hardware.microphone` |
+| Orientation    | portrait on compact windows; landscape only when the window is regular-width (Duo inner). No `UIRequiresFullScreen` | `android:screenOrientation="portrait"`                                   |
+| Privacy        | `PrivacyInfo.xcprivacy` Product Interaction (analytics, not tracking); UserDefaults CA92.1                          | Data Safety form in Play Console                                         |
+| Encryption     | `ITSAppUsesNonExemptEncryption = false`                                                                             | n/a                                                                      |
+| SDK target     | deployment target 15.0                                                                                              | `targetSdkVersion 36` (required for new apps from 31 Aug 2026)           |
 
 Android `getUserMedia` needs **both** audio permissions. `BridgeWebChromeClient`
 launches `MODIFY_AUDIO_SETTINGS` + `RECORD_AUDIO` on every `onPermissionRequest`
@@ -65,6 +67,12 @@ and `buildNumber` (store integer, e.g. `9`). That is the only source of truth.
   `master` after the bump commit so About matches the binary.
 - iOS builds are iPhone only: `TARGETED_DEVICE_FAMILY = 1` in both Debug and
   Release, and `Info.plist` has no `UISupportedInterfaceOrientations~ipad`.
+  iPhone Duo is still that family. `UIRequiresFullScreen` is absent so the
+  window can resize when the device folds. `TunerBridgeViewController` allows
+  landscape only while `horizontalSizeClass == .regular`, so a normal iPhone
+  stays portrait. The web view is the controller's root view and tracks the
+  scene bounds. `FoldPlugin` reads `reservedRegionsWithKind:options:` at
+  runtime when iOS 27 provides it and otherwise reports no crease.
   The TestFlight archive passes the same setting
   (`TARGETED_DEVICE_FAMILY=1`). A universal (`"1,2"`) binary makes App Store
   Connect require a 13-inch iPad screenshot. Do not add iPad. Vitest fails if

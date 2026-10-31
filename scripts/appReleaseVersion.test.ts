@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest'
 import {
   androidUsesPackageJson,
   bumpReleaseVersion,
+  duoShellErrors,
   iosBuildNumbers,
   iosMarketingVersions,
   iphoneOnlyErrors,
@@ -89,6 +90,25 @@ describe('iphoneOnlyErrors', () => {
       ),
     ).toEqual(['Info.plist still declares iPad orientations'])
     expect(iphoneOnlyErrors('', '')).toEqual(['TARGETED_DEVICE_FAMILY missing'])
+  })
+})
+
+describe('duoShellErrors', () => {
+  it('requires resizing and landscape while staying portrait-capable', () => {
+    expect(
+      duoShellErrors(
+        '<key>UIRequiresFullScreen</key><string>UIInterfaceOrientationPortrait</string>',
+      ),
+    ).toEqual([
+      'UIRequiresFullScreen blocks iPhone Duo resizing',
+      'missing UIInterfaceOrientationLandscapeLeft',
+      'missing UIInterfaceOrientationLandscapeRight',
+    ])
+    expect(
+      duoShellErrors(
+        'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight',
+      ),
+    ).toEqual([])
   })
 })
 
@@ -238,6 +258,12 @@ describe('repo release versions', () => {
     )
     const infoPlist = readFileSync(join(ROOT, 'ios/App/App/Info.plist'), 'utf8')
     expect(iphoneOnlyErrors(pbxproj, infoPlist)).toEqual([])
+    expect(duoShellErrors(infoPlist)).toEqual([])
+    const storyboard = readFileSync(
+      join(ROOT, 'ios/App/App/Base.lproj/Main.storyboard'),
+      'utf8',
+    )
+    expect(storyboard).toContain('TunerBridgeViewController')
   })
 
   it('uploads that bump commit to TestFlight and Play internal after CI', () => {
@@ -250,6 +276,7 @@ describe('repo release versions', () => {
     expect(workflow).toContain('resolveReleaseCommit.ts')
     expect(workflow).toContain('tracks: internal')
     expect(workflow).toContain('macos-26')
+    expect(workflow).toContain('Xcode_27.1.app')
     expect(workflow).toContain('TARGETED_DEVICE_FAMILY=1')
     expect(exportOptions).toContain('<string>upload</string>')
     expect(exportOptions).toContain('<string>app-store-connect</string>')

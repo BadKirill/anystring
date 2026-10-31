@@ -25,6 +25,42 @@ export default defineConfig({
       },
     },
     {
+      name: 'duo-outer',
+      use: {
+        viewport: { width: 466, height: 678 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        launchOptions: {
+          args: ['--autoplay-policy=no-user-gesture-required'],
+        },
+      },
+    },
+    {
+      name: 'duo-inner',
+      use: {
+        viewport: { width: 669, height: 951 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        launchOptions: {
+          args: ['--autoplay-policy=no-user-gesture-required'],
+        },
+      },
+    },
+    {
+      name: 'duo-landscape',
+      use: {
+        viewport: { width: 951, height: 669 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+        launchOptions: {
+          args: ['--autoplay-policy=no-user-gesture-required'],
+        },
+      },
+    },
+    {
       name: 'android-phone',
       use: {
         viewport: { width: 432, height: 768 },
