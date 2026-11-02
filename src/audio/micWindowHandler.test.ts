@@ -101,6 +101,26 @@ describe('createMicWindowHandler', () => {
     handler(a4, SAMPLE_RATE)
     handler(a4, SAMPLE_RATE)
     handler(pluckedTone(82.41), SAMPLE_RATE)
+    expect(recent).toHaveLength(2)
+    handler(pluckedTone(82.41), SAMPLE_RATE)
     expect(recent).toHaveLength(0)
+    expect(states[states.length - 1]?.frequency).toBeNull()
+  })
+
+  it('EC-bass-wobble keeps a low E after one jumped window', () => {
+    const states: PitchState[] = []
+    const setState = vi.fn((update: PitchState | ((prev: PitchState) => PitchState)) => {
+      const next = typeof update === 'function' ? update(emptyState()) : update
+      states.push(next)
+    })
+    const recent: number[] = []
+    const handler = createMicWindowHandler(() => true, recent, setState)
+    const low = pluckedTone(41.2)
+    handler(low, SAMPLE_RATE)
+    handler(low, SAMPLE_RATE)
+    handler(pluckedTone(82.41), SAMPLE_RATE)
+    expect(recent).toEqual([expect.closeTo(41.2, 0), expect.closeTo(41.2, 0)])
+    handler(low, SAMPLE_RATE)
+    expect(states[states.length - 1]?.frequency).toBeCloseTo(41.2, 0)
   })
 })

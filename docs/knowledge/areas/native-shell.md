@@ -96,8 +96,11 @@ store icon drops the SVG corner radius because both platforms mask their own.
 ## Runtime seam
 
 `src/platform/runtime.ts` exposes `isNativePlatform()`; `src/platform/appVersion.ts`
-reads installed native version via `@capacitor/app`. Only `src/platform/` imports
-Capacitor. The PWA install hint is hidden when `isNativePlatform()` is true.
+reads installed native version via `@capacitor/app`. `src/platform/hapticPulse.ts`
+fires one light `Haptics.impact` on iOS and Android, or `navigator.vibrate(20)`
+on the web, and returns without throwing when the API is missing. Only
+`src/platform/` imports Capacitor. The PWA install hint is hidden when
+`isNativePlatform()` is true.
 
 ## iOS microphone risk (open)
 
@@ -162,8 +165,10 @@ Playwright stubs — see [testing.md](testing.md).
 | `npm run cap:build:android-debug` | Sync + `gradlew assembleDebug` (JDK 21)    |
 | `npm run test:e2e:native`         | `scripts/native-e2e.sh` build/install/test |
 
-First microphone prompt is the **system** dialog on `Start tuning` (no custom
-pre-permission UI). Denied path shows `UI.micDenied` and returns to Start.
+First microphone prompt is the **system** dialog when the tuner opens
+(autostart calls `getUserMedia`). There is no custom pre-permission UI. If the
+system rejects that call, the existing error copy stays with the Start button
+and nothing retries until the user taps Start. Denied path shows `UI.micDenied`.
 
 ## Open when
 

@@ -1,13 +1,15 @@
 import { useCallback, useState } from 'react'
 
 import { usePitch } from '../audio/usePitch'
-import { pitchesEqual, type Pitch } from '../core/music'
+import { pitchesEqual, pitchToMidi, type Pitch } from '../core/music'
 import {
   analyze,
   analyzeChromatic,
   analyzeString,
+  tuningLockKey,
   type ChromaticAnalysis,
   type StringAnalysis,
+  type StringLockInput,
   type Tuning,
 } from '../core/tunings'
 import { DRAFT_TUNING_ID } from '../core/tunings/custom'
@@ -16,6 +18,7 @@ import { readActiveTuning, writeActiveTuning } from '../storage/customTuningsSto
 import { defaultTuning } from './tuningDefaults'
 import { useSavedTunings } from './useSavedTunings'
 import { useStableAnalysis } from './useStableAnalysis'
+import { useStringLock } from './useStringLock'
 
 export { DRAFT_TUNING_ID }
 
@@ -45,6 +48,7 @@ export interface TunerState {
   tuningsRevision: number
   manualStringIndex: number | null
   analysis: DisplayAnalysis | null
+  checkedStrings: readonly number[]
   pitch: ReturnType<typeof usePitch>
   selectTuning: (tuning: Tuning) => void
   selectString: (index: number | null) => void
@@ -98,6 +102,26 @@ function analysisMode(screen: TunerScreen): 'stabilize' | 'passthrough' {
   return screen === 'chromatic' ? 'passthrough' : 'stabilize'
 }
 
+function stringLockInput(
+  screen: TunerScreen,
+  analysis: DisplayAnalysis | null,
+  tuning: Tuning,
+): StringLockInput {
+  const tuningKey = tuningLockKey(
+    tuning.id,
+    tuning.strings.map((string) => pitchToMidi(string.pitch)),
+  )
+  if (screen === 'chromatic' || analysis?.kind !== 'string') {
+    return { tuningKey, screen, stringIndex: null, inTune: false }
+  }
+  return {
+    tuningKey,
+    screen,
+    stringIndex: analysis.stringIndex,
+    inTune: analysis.direction === 'in-tune',
+  }
+}
+
 export function useTunerState(): TunerState {
   const [screen, setScreen] = useState<TunerScreen>('strings')
   const [tuning, setTuning] = useState<Tuning>(
@@ -117,6 +141,7 @@ export function useTunerState(): TunerState {
     scope,
     analysisMode(screen),
   )
+  const checkedStrings = useStringLock(stringLockInput(screen, analysis, tuning))
 
   const selectTuning = useCallback((next: Tuning) => {
     setTuning(next)
@@ -136,6 +161,7 @@ export function useTunerState(): TunerState {
     tuningsRevision: saved.tuningsRevision,
     manualStringIndex,
     analysis,
+    checkedStrings,
     pitch,
     selectTuning,
     selectString: setManualStringIndex,

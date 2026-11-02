@@ -6,10 +6,11 @@ test('stop tuning updates the button immediately', async ({ page }) => {
   await stubMicrophone(page, 110)
   await page.goto(APP_URL)
 
-  await page.getByRole('button', { name: 'Start tuning' }).click()
   await expect(page.getByRole('button', { name: 'Stop' })).toBeVisible()
 
   await page.getByRole('button', { name: 'Stop' }).click()
   await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Stop' })).not.toBeVisible()
+  await page.waitForTimeout(400)
+  await expect(page.getByRole('button', { name: 'Stop' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
 })

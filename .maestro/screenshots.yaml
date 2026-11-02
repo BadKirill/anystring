@@ -25,7 +25,6 @@ name: Native store screenshot pass (backup)
 - tapOn: 'Chromatic'
 - takeScreenshot: native-04-chromatic
 - tapOn: 'Strings'
-- tapOn: 'Start tuning'
 - extendedWaitUntil:
     visible: 'Stop'
     timeout: 15000

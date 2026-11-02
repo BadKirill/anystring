@@ -36,7 +36,7 @@ over without a jump — and without the black gap that used to sit between them.
 | File                                           | Role                                                                                             |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `TunerGauge.tsx`                               | SVG needle ±50¢, green in-tune                                                                   |
-| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow swipes                                        |
+| `StringList.tsx`                               | One-row string buttons + thickness gauge; overflow swipes; in-tune checks                        |
 | `stringRailOverflow.ts`                        | Overflow metrics for the string rail                                                             |
 | `reviveOverflowScroll.ts`                      | Re-enable WebView overflow after Android recents/resume                                          |
 | `TuneDirectionHint.tsx`                        | Direction / idle / mic error copy (string + chromatic)                                           |
@@ -68,6 +68,9 @@ over without a jump — and without the black gap that used to sit between them.
   empty-state copy cannot sit under headers.
 - String rail: after the app returns from the background, `reviveOverflowScroll`
   toggles overflow so Chromium/WebView swipe scrolling starts again.
+- A checked string keeps its note label and its active or manual highlight.
+  The button name gains `, in tune` (`UI.inTune`) and a green check. Chromatic
+  renders no string list.
 
 ## Open when
 

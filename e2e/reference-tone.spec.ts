@@ -44,7 +44,6 @@ test.describe('reference tone playback', () => {
     await stubMicrophone(page, 110)
     await page.goto(APP_URL)
 
-    await page.getByRole('button', { name: 'Start tuning' }).click()
     await expect(page.getByText('String 2 (A2): in tune')).toBeVisible()
 
     await page.getByRole('button', { name: '2 A2' }).click()

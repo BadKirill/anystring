@@ -19,17 +19,20 @@ Path: `src/audio/`
 
 ## Amplitude gate (`minRmsFor`)
 
-Quiet WKWebView hum (~40 Hz, high clarity, tiny RMS) is rejected before it can
-look like a Demiurge F1. Real plucks sit well above these floors.
+Quiet WKWebView hum (~40 Hz, high clarity, RMS about 0.0035) is rejected before
+it can look like a low bass note. A phone mic delivers the bass low E quieter
+than a guitar string, so the floor under 55 Hz sits just above that hum.
 
 | Frequency  | Min RMS |
 | ---------- | ------- |
-| &lt; 55 Hz | 0.012   |
+| &lt; 55 Hz | 0.006   |
 | &lt; 90 Hz | 0.008   |
 | else       | 0.005   |
 
 `detectPitch` also subtracts DC bias, and `micWindowHandler` waits for 3 agreeing
 windows (~250 ms) before publishing a frequency so a single hum spike cannot flash.
+One window that jumps more than 150 cents is ignored. A second such jump, or any
+silent window, clears the history.
 While a reference tone suppresses detection, the handler clears the published
 frequency instead of leaving the previous reading on screen.
 
@@ -40,9 +43,10 @@ frequency instead of leaving the previous reading on screen.
 | `micStream.ts`          | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet                                                                                                                 |
 | `capture-processor.ts`  | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)                                                                                                                      |
 | `pitchDetector.ts`      | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                                                                                                                                       |
-| `micWindowHandler.ts`   | Median of last 5; reject jumps &gt; 150¢ unless stable                                                                                                                                     |
+| `micWindowHandler.ts`   | Median of last 5; one jump &gt; 150¢ is ignored, a second jump or silence clears                                                                                                           |
 | `micSessionControl.ts`  | `beginMicSession` / `stopMicSession` (status + teardown)                                                                                                                                   |
-| `useMicControls.ts`     | Hook wiring start/stop + resume                                                                                                                                                            |
+| `useMicControls.ts`     | Hook wiring start/stop + resume + autostart                                                                                                                                                |
+| `autoStart.ts`          | `shouldAutoStart`: idle and not stopped by the user                                                                                                                                        |
 | `usePitch.ts`           | Public `{ status, error, frequency, clarity, start, stop }`                                                                                                                                |
 | `pitchState.ts`         | `PitchStatus`, `PitchState`                                                                                                                                                                |
 | `pitchGate.ts`          | Suppress detection while reference tone plays                                                                                                                                              |
@@ -94,7 +98,21 @@ precautionary (it still covers real devices, which cut background mic capture).
 
 `useMicControls`: Start always rebuilds the session (dead/suspended sessions can
 leave a non-null ref). Unmount stop is separate from resume registration so
-dependency churn does not kill the mic.
+dependency churn does not kill the mic. Unmount does not set `stoppedByUser`.
+
+## Autostart
+
+`shouldAutoStart({ status, stoppedByUser })` is true only when `status` is
+`idle` and the user has not pressed Stop. On mount, `useMicControls` calls the
+existing `start` once when that is true.
+
+`stoppedByUser` is memory only. Stop sets it. The next page load starts again.
+`starting`, `listening`, and `error` do not call `start` again, and there is no
+retry timer. A denied or missing mic keeps the existing error copy and the
+Start button. Background resume still restarts an active session and does not
+restart one the user stopped.
+
+Mic constraints and the 8192-sample window are unchanged.
 
 `referenceTone.warmReferenceAudio` rebuilds the shared context if resume fails
 after long idle.

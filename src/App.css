@@ -301,6 +301,12 @@
   font-weight: 700;
 }
 
+.string-check {
+  width: 14px;
+  height: 14px;
+  color: var(--in-tune);
+}
+
 .string-active {
   border-color: var(--accent);
 }

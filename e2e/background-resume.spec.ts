@@ -38,7 +38,6 @@ test.describe('recovery after a long background', () => {
     await stubLongBackground(page)
     await page.goto(APP_URL)
 
-    await page.getByRole('button', { name: 'Start tuning' }).click()
     await expect(page.getByText('String 1 (E2): in tune')).toBeVisible()
 
     await simulateBackground(page, TEN_MINUTES_MS)

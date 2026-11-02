@@ -208,6 +208,7 @@ function StringsExtras({
       tuning={tuning}
       activeIndex={targetIndex}
       manualIndex={manualStringIndex}
+      checked={state.checkedStrings}
       onSelect={state.selectString}
       onEdit={(index) => {
         setModal({ kind: 'edit', index })

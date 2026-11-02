@@ -19,6 +19,7 @@ getUserMedia (AGC/NS/EC OFF)
   → screen chromatic: analyzeChromatic(frequency)  // nearest 12-TET note
   → stabilizePitchDisplay (attack lock, decay hold)
   → TunerGauge / TuneDirectionHint / (StringList on strings screen)
+  → stepStringLock on the displayed string analysis (checks + one haptic edge)
 ```
 
 Parallel path: presets + string edits → `Tuning` → storage (`active` + custom list)
@@ -39,7 +40,7 @@ boundaries and small functions — not class hierarchies.
 | `src/platform/*`   | Capacitor, browser APIs                           | UI internals                                            |
 | `src/storage/*`    | core/tunings, core/music, core/review             | React                                                   |
 | `src/quality/*`    | nothing (catalog + coverage ratio)                | platform, React                                         |
-| `src/state/*`      | audio hooks, core, storage                        | —                                                       |
+| `src/state/*`      | audio hooks, core, storage, haptic adapter        | —                                                       |
 | `src/components/*` | core types/helpers, UI only                       | pitch detection internals                               |
 
 ## Entry points

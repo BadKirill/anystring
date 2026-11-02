@@ -3,6 +3,7 @@ import { useLayoutEffect } from 'react'
 import { playReferencePitch, warmReferenceAudio } from '../audio/referenceTone'
 import { formatPitch, pitchToMidi, type Pitch } from '../core/music'
 import type { Instrument, Tuning } from '../core/tunings'
+import { UI } from './strings'
 import { useStringRailScroll } from './useStringRailScroll'
 
 function stringThickness(pitch: Pitch): number {
@@ -33,12 +34,34 @@ function StringGauge({ pitch, active }: { pitch: Pitch; active: boolean }) {
 
 interface StringListProps {
   tuning: Tuning
-
   activeIndex: number | null
-
   manualIndex: number | null
+  checked: readonly number[]
   onSelect: (index: number | null) => void
   onEdit: (index: number) => void
+}
+
+function stringControlName(index: number, pitch: Pitch, checked: boolean): string {
+  const label = `${String(index + 1)} ${formatPitch(pitch)}`
+  if (!checked) {
+    return label
+  }
+  return `${label}, ${UI.inTune}`
+}
+
+function StringCheck() {
+  return (
+    <svg className="string-check" viewBox="0 0 16 16" aria-hidden="true">
+      <path
+        d="M3.5 8.5 6.5 11.5 12.5 4.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
 
 function tapString(
@@ -75,12 +98,14 @@ function StringItem({
   pitch,
   active,
   manual,
+  checked,
   onTap,
 }: {
   index: number
   pitch: Pitch
   active: boolean
   manual: boolean
+  checked: boolean
   onTap: () => void
 }) {
   const classes = [
@@ -93,9 +118,15 @@ function StringItem({
   return (
     <div className="string-item">
       <StringGauge pitch={pitch} active={active} />
-      <button type="button" className={classes} onClick={onTap}>
+      <button
+        type="button"
+        className={classes}
+        aria-label={stringControlName(index, pitch, checked)}
+        onClick={onTap}
+      >
         <span className="string-number">{index + 1}</span>
         <span className="string-note">{formatPitch(pitch)}</span>
+        {checked ? <StringCheck /> : null}
       </button>
     </div>
   )
@@ -105,6 +136,7 @@ export function StringList({
   tuning,
   activeIndex,
   manualIndex,
+  checked,
   onSelect,
   onEdit,
 }: StringListProps) {
@@ -127,6 +159,7 @@ export function StringList({
             pitch={string.pitch}
             active={index === activeIndex}
             manual={index === manualIndex}
+            checked={checked.includes(index)}
             onTap={() => {
               tapString(
                 index,

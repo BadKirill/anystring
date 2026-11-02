@@ -17,12 +17,13 @@ predicates.
 
 ## Modules
 
-| File          | Key API                                                                                                                              |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `presets.ts`  | `PRESET_TUNINGS`, `presetsFor`, `toggleExpandedInstruments`, `DEFAULT_TUNING_ID` (`guitar-standard`). Picker order is `INSTRUMENTS`. |
-| `analyzer.ts` | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`          |
-| `custom.ts`   | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`             |
-| `index.ts`    | barrel                                                                                                                               |
+| File            | Key API                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `presets.ts`    | `PRESET_TUNINGS`, `presetsFor`, `toggleExpandedInstruments`, `DEFAULT_TUNING_ID` (`guitar-standard`). Picker order is `INSTRUMENTS`. |
+| `analyzer.ts`   | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`          |
+| `custom.ts`     | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`             |
+| `stringLock.ts` | `tuningLockKey`, `stepStringLock` — session checks and the in-tune haptic edge                                                       |
+| `index.ts`      | barrel                                                                                                                               |
 
 Built-in presets, low string to high:
 
@@ -43,6 +44,10 @@ Built-in presets, low string to high:
 - Manual: fixed string index via `analyzeString`.
 - Chromatic: nearest 12-TET note via `nearestPitch` → `ChromaticAnalysis` (no tuning).
 - Direction: `tighten` (flat) / `loosen` (sharp) / `in-tune` (|¢| ≤ 5).
+- `stepStringLock` marks only the analyzed string index for the current
+  sitting. The key is the tuning id plus each string's MIDI, so a draft edit
+  clears the checks. Holding in tune does not pulse again. Chromatic and a
+  null index do not pulse.
 
 ## Custom / draft rules
 

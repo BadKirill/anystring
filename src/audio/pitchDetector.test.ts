@@ -100,6 +100,15 @@ describe('detectPitch', () => {
     expect(detectPitch(quietNoise(1), SAMPLE_RATE)).toBeNull()
   })
 
+  it('EC-bass-quiet publishes a low E that is quieter than the old 0.012 floor', () => {
+    const quiet = pluckedTone(41.2, 0.015)
+    const level = signalRms(quiet)
+    expect(level).toBeGreaterThan(signalRms(quietRumble(40, 0.005)))
+    expect(level).toBeLessThan(0.012)
+    const reading = detectPitch(quiet, SAMPLE_RATE)
+    expect(reading?.frequency).toBeCloseTo(41.2, 0)
+  })
+
   it('EC-hum-rms rejects quiet WKWebView-like bass hum that pitchy finds with high clarity', () => {
     const hum = quietRumble(40, 0.005)
     expect(signalRms(hum)).toBeLessThan(minRmsFor(40))
@@ -114,8 +123,10 @@ describe('detectPitch', () => {
 })
 
 describe('pitch gates', () => {
-  it('EC-rms-floor asks for a louder floor under 55 Hz than at guitar range', () => {
-    expect(minRmsFor(43)).toBeGreaterThan(minRmsFor(82))
+  it('EC-rms-floor keeps the low-bass floor above hum and below a quiet pluck', () => {
+    const hum = signalRms(quietRumble(40, 0.005))
+    expect(minRmsFor(41.2)).toBeGreaterThan(hum)
+    expect(minRmsFor(41.2)).toBeLessThan(signalRms(pluckedTone(41.2, 0.015)))
     expect(minRmsFor(82)).toBeGreaterThan(minRmsFor(440))
   })
 

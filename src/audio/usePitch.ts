@@ -12,6 +12,6 @@ export function usePitch(): PitchState & { start: () => void; stop: () => void }
     frequency: null,
     clarity: null,
   })
-  const controls = useMicControls(setState)
+  const controls = useMicControls(setState, state.status)
   return { ...state, ...controls }
 }
