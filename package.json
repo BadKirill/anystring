@@ -1,8 +1,8 @@
 {
   "name": "anystring",
   "private": true,
-  "version": "1.4.0",
-  "buildNumber": 21,
+  "version": "1.4.1",
+  "buildNumber": 22,
   "type": "module",
   "engines": {
     "node": ">=22"
