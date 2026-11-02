@@ -356,6 +356,26 @@ describe('useMicControls', () => {
     })
   })
 
+  it('EC-duo-fold-resume resumes the live context when the window resizes', async () => {
+    const session = fakeSession()
+    session.resume = vi.fn(async () => false)
+    startMicSession.mockResolvedValue(session)
+    const { result } = renderHook(() => useMicControls(vi.fn(), 'idle'))
+    startMicSession.mockClear()
+    window.dispatchEvent(new Event('resize'))
+    expect(startMicSession).not.toHaveBeenCalled()
+    result.current.start()
+    await waitFor(() => {
+      expect(startMicSession).toHaveBeenCalled()
+    })
+    startMicSession.mockClear()
+    window.dispatchEvent(new Event('resize'))
+    await waitFor(() => {
+      expect(session.resume).toHaveBeenCalled()
+    })
+    expect(startMicSession).not.toHaveBeenCalled()
+  })
+
   it('restarts when the live stream is lost', async () => {
     let onLost: (() => void) | undefined
     startMicSession.mockImplementation(async (_onWindow, lost?: () => void) => {

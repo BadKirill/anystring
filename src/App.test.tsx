@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import App from './App'
 import { UI } from './components/strings'
+import { readLayoutSpace } from './components/useTunerLayout'
 import { memoryStorage } from './test/memoryStorage'
 import type { MicSession } from './audio/micStream'
 import { MicStreamError } from './audio/micStream'
@@ -21,6 +22,18 @@ vi.mock('./audio/referenceTone', () => ({
   playReferencePitch: vi.fn(() => Promise.resolve()),
   warmReferenceAudio: vi.fn(() => Promise.resolve()),
 }))
+
+function setViewport(width: number, height: number): void {
+  Object.defineProperty(window, 'visualViewport', {
+    configurable: true,
+    value: {
+      width,
+      height,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    },
+  })
+}
 
 function session(): MicSession {
   return {
@@ -78,6 +91,38 @@ describe('App', () => {
     await user.type(screen.getByPlaceholderText(UI.namePlaceholder), 'Mine')
     await user.click(screen.getByRole('button', { name: UI.save }))
     expect(screen.getByRole('button', { name: 'Mine' })).toBeTruthy()
+  })
+
+  it('reads the window size when the visual viewport is missing', () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 466 })
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 678 })
+    Object.defineProperty(window, 'visualViewport', { configurable: true, value: null })
+    expect(readLayoutSpace()).toEqual({ width: 466, height: 678 })
+  })
+
+  it('follows a resize from the phone column into the landscape split', () => {
+    setViewport(390, 844)
+    render(<App />)
+    expect(document.querySelector('.app')?.getAttribute('data-layout')).toBe('stack')
+    setViewport(951, 669)
+    act(() => {
+      window.dispatchEvent(new Event('resize'))
+    })
+    expect(document.querySelector('.app')?.getAttribute('data-layout')).toBe('split')
+  })
+
+  it('widens on the inner portrait display and splits the string list in landscape', () => {
+    setViewport(669, 951)
+    const portrait = render(<App />)
+    expect(document.querySelector('.app')?.getAttribute('data-layout')).toBe('grow')
+    expect(document.querySelector('.layout-secondary')).toBeNull()
+    portrait.unmount()
+    setViewport(951, 669)
+    render(<App />)
+    const app = document.querySelector('.app')
+    expect(app?.getAttribute('data-layout')).toBe('split')
+    expect(app?.getAttribute('data-axis')).toBe('horizontal')
+    expect(document.querySelector('.layout-secondary')).not.toBeNull()
   })
 
   it('shows a microphone permission error once and retries only from the button', async () => {

@@ -11,6 +11,47 @@
   padding-left: calc(16px + env(safe-area-inset-left));
 }
 
+.app[data-layout='grow'] {
+  width: min(100%, 640px);
+}
+
+.app[data-layout='grow'] .gauge svg {
+  width: min(100%, 520px);
+}
+
+.app[data-layout='split'] {
+  width: min(100%, 960px);
+  display: grid;
+  align-items: start;
+  gap: var(--fold-gap, 0px);
+}
+
+.app[data-layout='split'][data-axis='horizontal'] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.app[data-layout='avoid'] {
+  margin-right: auto;
+}
+
+.app[data-layout='avoid'][data-axis='horizontal'] {
+  width: calc((100% - var(--fold-gap, 0px)) / 2);
+}
+
+.layout-primary,
+.layout-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.app[data-layout='stack'] .layout-primary,
+.app[data-layout='grow'] .layout-primary,
+.app[data-layout='avoid'] .layout-primary {
+  display: contents;
+}
+
 .install-hint,
 .privacy-notice {
   display: flex;
@@ -348,6 +389,23 @@
   align-items: flex-end;
   justify-content: center;
   z-index: 10;
+}
+
+.app[data-layout='split'][data-axis='horizontal'] .overlay,
+.app[data-layout='avoid'][data-axis='horizontal'] .overlay {
+  right: auto;
+  width: calc((100vw - var(--fold-gap, 0px)) / 2);
+}
+
+.app[data-layout='split'][data-axis='vertical'] .overlay,
+.app[data-layout='avoid'][data-axis='vertical'] .overlay {
+  bottom: auto;
+  height: calc((100dvh - var(--fold-gap, 0px)) / 2);
+}
+
+.app[data-layout='split'] .sheet,
+.app[data-layout='avoid'] .sheet {
+  width: 100%;
 }
 
 .sheet {

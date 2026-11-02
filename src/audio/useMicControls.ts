@@ -30,6 +30,21 @@ function buildRefs(
   return { active, session, recent, generation }
 }
 
+function useFoldResume(activeRef: RefObject<boolean>, getRefs: () => SessionRefs): void {
+  useEffect(() => {
+    const onResize = (): void => {
+      if (!activeRef.current) {
+        return
+      }
+      void resumeMicSession(getRefs())
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+    }
+  }, [activeRef, getRefs])
+}
+
 function useMicResume(
   activeRef: RefObject<boolean>,
   getRefs: () => SessionRefs,
@@ -114,6 +129,7 @@ export function useMicControls(
   useAutoStart(status, stoppedByUserRef, start)
 
   useMicResume(activeRef, getRefs, restartRef)
+  useFoldResume(activeRef, getRefs)
 
   // Unmount is not a user Stop. StrictMode replays effects, and marking
   // stoppedByUser here would leave the replayed open silent.

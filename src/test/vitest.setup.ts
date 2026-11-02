@@ -44,6 +44,22 @@ Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
 
 vi.stubGlobal('ResizeObserver', ImmediateResizeObserver)
 
+function phoneViewport(): void {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 })
+  Object.defineProperty(window, 'innerHeight', { configurable: true, value: 844 })
+  Object.defineProperty(window, 'visualViewport', {
+    configurable: true,
+    value: {
+      width: 390,
+      height: 844,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    },
+  })
+}
+
+phoneViewport()
+
 afterEach(() => {
   cleanup()
   localStorage.clear()
@@ -52,6 +68,7 @@ afterEach(() => {
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   vi.stubGlobal('ResizeObserver', ImmediateResizeObserver)
+  phoneViewport()
   Object.defineProperty(document, 'visibilityState', {
     configurable: true,
     get: () => 'visible',

@@ -118,6 +118,16 @@ jobs:
           echo "profile_name=$name" >> "$GITHUB_OUTPUT"
           echo "keychain_path=$keychain" >> "$GITHUB_OUTPUT"
 
+      - name: Use Xcode 27.1 when the runner has it
+        run: |
+          set -euo pipefail
+          if [ -d /Applications/Xcode_27.1.app ]; then
+            sudo xcode-select -s /Applications/Xcode_27.1.app
+          else
+            echo "Xcode 27.1 is not installed; Device Hub Duo checks stay local."
+            xcodebuild -version
+          fi
+
       - name: Archive and upload to TestFlight
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

@@ -215,6 +215,15 @@ values. A push to `master` runs `.github/workflows/version-bump.yml`, which
 applies `npm run version:patch` and pushes the result. `minor` / `major` /
 `build` stay manual. Store archives are cut from `master` after that commit.
 
+**iPhone Duo:** the binary stays iPhone-only (`TARGETED_DEVICE_FAMILY = 1`).
+Full-screen resizing needs the iOS 27.1 SDK (Xcode 27.1, Device Hub). The
+shell does not set `UIRequiresFullScreen`. Landscape is allowed only when the
+window's horizontal size class is regular, so current iPhones stay portrait.
+Layout is chosen from the window size and, on iOS 27, the hinge reserved
+region — not from `UIScreen` or device orientation. Store frames for the outer
+display (1398×2034) and inner display (2007×2853, plus landscape 2853×2007)
+come from `npm run screenshots:store`.
+
 **Store upload:** GitHub Actions (`.github/workflows/store-release.yml`), not
 Fastlane. After CI succeeds on `master`, the workflow uploads the version-bump
 commit: Xcode `exportArchive` (`destination: upload`) to TestFlight, and
