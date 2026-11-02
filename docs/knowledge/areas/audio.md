@@ -19,17 +19,20 @@ Path: `src/audio/`
 
 ## Amplitude gate (`minRmsFor`)
 
-Quiet WKWebView hum (~40 Hz, high clarity, tiny RMS) is rejected before it can
-look like a Demiurge F1. Real plucks sit well above these floors.
+Quiet WKWebView hum (~40 Hz, high clarity, RMS about 0.0035) is rejected before
+it can look like a low bass note. A phone mic delivers the bass low E quieter
+than a guitar string, so the floor under 55 Hz sits just above that hum.
 
 | Frequency  | Min RMS |
 | ---------- | ------- |
-| &lt; 55 Hz | 0.012   |
+| &lt; 55 Hz | 0.006   |
 | &lt; 90 Hz | 0.008   |
 | else       | 0.005   |
 
 `detectPitch` also subtracts DC bias, and `micWindowHandler` waits for 3 agreeing
 windows (~250 ms) before publishing a frequency so a single hum spike cannot flash.
+One window that jumps more than 150 cents is ignored. A second such jump, or any
+silent window, clears the history.
 While a reference tone suppresses detection, the handler clears the published
 frequency instead of leaving the previous reading on screen.
 
@@ -40,7 +43,7 @@ frequency instead of leaving the previous reading on screen.
 | `micStream.ts`          | Start session, typed `MicError` / `MicStreamError`, AudioContext + worklet                                                                                                                 |
 | `capture-processor.ts`  | Ring buffer; post Float32 window every ~4096 frames (~85 ms @ 48 kHz)                                                                                                                      |
 | `pitchDetector.ts`      | `detectPitch`, `minClarityFor`, `frequencyJumpCents`                                                                                                                                       |
-| `micWindowHandler.ts`   | Median of last 5; reject jumps &gt; 150¢ unless stable                                                                                                                                     |
+| `micWindowHandler.ts`   | Median of last 5; one jump &gt; 150¢ is ignored, a second jump or silence clears                                                                                                           |
 | `micSessionControl.ts`  | `beginMicSession` / `stopMicSession` (status + teardown)                                                                                                                                   |
 | `useMicControls.ts`     | Hook wiring start/stop + resume + autostart                                                                                                                                                |
 | `autoStart.ts`          | `shouldAutoStart`: idle and not stopped by the user                                                                                                                                        |

@@ -13,6 +13,7 @@ describe('shouldAutoStart', () => {
 
   it('EC-autostart-busy is false while capture is starting or already listening', () => {
     expect(shouldAutoStart({ status: 'starting', stoppedByUser: false })).toBe(false)
+    expect(shouldAutoStart({ status: 'starting', stoppedByUser: true })).toBe(false)
     expect(shouldAutoStart({ status: 'listening', stoppedByUser: false })).toBe(false)
     expect(shouldAutoStart({ status: 'listening', stoppedByUser: true })).toBe(false)
   })

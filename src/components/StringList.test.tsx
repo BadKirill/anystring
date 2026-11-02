@@ -89,10 +89,67 @@ describe('StringList', () => {
       />,
     )
     const button = screen.getByRole('button', { name: '1 E2, in tune' })
+    expect(button.getAttribute('aria-label')).toBe('1 E2, in tune')
     expect(button.className).toContain('string-active')
     expect(button.className).toContain('string-manual')
     expect(button.querySelector('.string-note')?.textContent).toBe('E2')
-    expect(container.querySelector('.string-check')).toBeTruthy()
-    expect(screen.getByRole('button', { name: '2 A2' })).toBeTruthy()
+    expect(button.querySelectorAll('.string-check')).toHaveLength(1)
+    expect(button.querySelector('.string-check')?.getAttribute('aria-hidden')).toBe(
+      'true',
+    )
+    const second = screen.getByRole('button', { name: '2 A2' })
+    expect(second.getAttribute('aria-label')).toBe('2 A2')
+    expect(second.querySelector('.string-check')).toBeNull()
+    expect(container.querySelectorAll('.string-check')).toHaveLength(1)
+  })
+
+  it('draws one check on every reached string and none on the others', () => {
+    const tuning = PRESET_TUNINGS[0]
+    if (!tuning) {
+      throw new Error('expected at least one preset tuning')
+    }
+    const { container } = render(
+      <StringList
+        tuning={tuning}
+        activeIndex={5}
+        manualIndex={null}
+        checked={[0, 5]}
+        onSelect={vi.fn()}
+        onEdit={vi.fn()}
+      />,
+    )
+    const low = screen.getByRole('button', { name: '1 E2, in tune' })
+    const high = screen.getByRole('button', { name: '6 E4, in tune' })
+    expect(low.className).not.toContain('string-active')
+    expect(high.className).toContain('string-active')
+    expect(high.className).not.toContain('string-manual')
+    expect(low.querySelector('.string-note')?.textContent).toBe('E2')
+    expect(high.querySelector('.string-note')?.textContent).toBe('E4')
+    expect(
+      screen.getByRole('button', { name: '2 A2' }).querySelector('.string-check'),
+    ).toBeNull()
+    expect(container.querySelectorAll('.string-check')).toHaveLength(2)
+  })
+
+  it('leaves every string unnamed as in tune when none are checked', () => {
+    const tuning = PRESET_TUNINGS[0]
+    if (!tuning) {
+      throw new Error('expected at least one preset tuning')
+    }
+    const { container } = render(
+      <StringList
+        tuning={tuning}
+        activeIndex={null}
+        manualIndex={null}
+        checked={[]}
+        onSelect={vi.fn()}
+        onEdit={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('button', { name: '1 E2' }).getAttribute('aria-label')).toBe(
+      '1 E2',
+    )
+    expect(screen.queryByRole('button', { name: '1 E2, in tune' })).toBeNull()
+    expect(container.querySelectorAll('.string-check')).toHaveLength(0)
   })
 })

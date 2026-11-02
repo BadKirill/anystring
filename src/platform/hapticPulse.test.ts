@@ -43,30 +43,52 @@ describe('pulseHaptic', () => {
     const vibrate = vi.fn(() => true)
     setVibrate(vibrate)
     pulseHaptic()
+    expect(vibrate).toHaveBeenCalledTimes(1)
     expect(vibrate).toHaveBeenCalledWith(20)
     expect(impact).not.toHaveBeenCalled()
   })
 
-  it('uses a light impact on a native shell', () => {
+  it('does not throw when vibrate reports that it did not run', () => {
+    const vibrate = vi.fn(() => false)
+    setVibrate(vibrate)
+    expect(() => {
+      pulseHaptic()
+    }).not.toThrow()
+    expect(vibrate).toHaveBeenCalledTimes(1)
+    expect(vibrate).toHaveBeenCalledWith(20)
+    expect(impact).not.toHaveBeenCalled()
+  })
+
+  it('EC-haptic-native taps once with a light impact and does not vibrate', () => {
     isNativePlatform.mockReturnValue(true)
+    const vibrate = vi.fn(() => true)
+    setVibrate(vibrate)
     pulseHaptic()
+    expect(impact).toHaveBeenCalledTimes(1)
     expect(impact).toHaveBeenCalledWith({ style: 'LIGHT' })
+    expect(vibrate).not.toHaveBeenCalled()
   })
 
   it('swallows a native impact that throws or rejects', async () => {
     isNativePlatform.mockReturnValue(true)
+    const vibrate = vi.fn(() => true)
+    setVibrate(vibrate)
     impact.mockImplementation(() => {
       throw new Error('plugin missing')
     })
     expect(() => {
       pulseHaptic()
     }).not.toThrow()
+    expect(impact).toHaveBeenCalledTimes(1)
+    expect(vibrate).not.toHaveBeenCalled()
 
     impact.mockReturnValue(Promise.reject(new Error('plugin missing')))
     expect(() => {
       pulseHaptic()
     }).not.toThrow()
     await Promise.resolve()
+    expect(impact).toHaveBeenCalledTimes(2)
+    expect(vibrate).not.toHaveBeenCalled()
   })
 
   it('swallows a browser vibrate that throws', () => {

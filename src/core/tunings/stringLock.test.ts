@@ -39,9 +39,9 @@ describe('stepStringLock', () => {
   })
 
   it('EC-lock-hold stays quiet while that string is still in tune', () => {
-    const step = stepStringLock(locked(0), input({ inTune: true }))
-    expect(step.state.checked).toEqual([0])
-    expect(step.state.holding).toBe(0)
+    const held = locked(0)
+    const step = stepStringLock(held, input({ inTune: true }))
+    expect(step.state).toBe(held)
     expect(step.pulse).toBe(false)
   })
 
@@ -53,6 +53,7 @@ describe('stepStringLock', () => {
 
     const again = stepStringLock(released.state, input({ inTune: true }))
     expect(again.state.checked).toEqual([0])
+    expect(again.state.checked).toBe(released.state.checked)
     expect(again.state.holding).toBe(0)
     expect(again.pulse).toBe(true)
   })
@@ -111,8 +112,114 @@ describe('stepStringLock', () => {
       stringIndex: analysis === null ? null : analysis.stringIndex,
       inTune: analysis?.direction === 'in-tune',
     })
-    expect(analysis?.stringIndex).toBe(0)
-    expect(step.state.checked).toEqual([0])
+    expect(analysis).toEqual({
+      stringIndex: 0,
+      cents: 0,
+      direction: 'in-tune',
+    })
+    expect(step.state).toEqual({
+      checked: [0],
+      holding: 0,
+      tuningKey: key,
+    })
+    expect(step.state.checked).not.toContain(1)
     expect(step.pulse).toBe(true)
+  })
+
+  it('builds the key from the tuning id and the MIDI list in order', () => {
+    expect(tuningLockKey('guitar-standard', [40, 45, 50, 55, 59, 64])).toBe(
+      'guitar-standard:40,45,50,55,59,64',
+    )
+    expect(tuningLockKey('guitar-standard', [])).toBe('guitar-standard:')
+    expect(tuningLockKey('guitar-standard', [40, 45])).not.toBe(
+      tuningLockKey('guitar-standard', [45, 40]),
+    )
+  })
+
+  it('does not check a string that is out of tune', () => {
+    const state = initialStringLock(KEY)
+    expect(stepStringLock(state, input({ stringIndex: 4, inTune: false }))).toEqual({
+      state,
+      pulse: false,
+    })
+  })
+
+  it('keeps the same state when chromatic arrives with nothing held', () => {
+    const state = initialStringLock(KEY)
+    expect(
+      stepStringLock(state, input({ screen: 'chromatic', stringIndex: 0, inTune: true })),
+    ).toEqual({ state, pulse: false })
+  })
+
+  it('keeps the same state when the index is null and nothing is held', () => {
+    const state = initialStringLock(KEY)
+    expect(stepStringLock(state, input({ stringIndex: null, inTune: true }))).toEqual({
+      state,
+      pulse: false,
+    })
+  })
+
+  it('releases the hold without checking a different string that is out of tune', () => {
+    const held = locked(0)
+    const step = stepStringLock(held, input({ stringIndex: 3, inTune: false }))
+    expect(step.state.checked).toBe(held.checked)
+    expect(step.state.checked).toEqual([0])
+    expect(step.state.holding).toBeNull()
+    expect(step.pulse).toBe(false)
+  })
+
+  it('does not lock on the step that changes the tuning key', () => {
+    const nextKey = tuningLockKey('guitar-drop-d', [38, 45, 50, 55, 59, 64])
+    const cleared = stepStringLock(
+      locked(0),
+      input({ tuningKey: nextKey, stringIndex: 1, inTune: true }),
+    )
+    expect(cleared).toEqual({
+      state: { checked: [], holding: null, tuningKey: nextKey },
+      pulse: false,
+    })
+    const following = stepStringLock(
+      cleared.state,
+      input({ tuningKey: nextKey, stringIndex: 1, inTune: true }),
+    )
+    expect(following.state.checked).toEqual([1])
+    expect(following.state.holding).toBe(1)
+    expect(following.pulse).toBe(true)
+  })
+
+  it('clears checks when the tuning key changes on the chromatic screen', () => {
+    const nextKey = tuningLockKey('other-id', [40, 45, 50, 55, 59, 64])
+    const step = stepStringLock(
+      locked(0),
+      input({
+        tuningKey: nextKey,
+        screen: 'chromatic',
+        stringIndex: 0,
+        inTune: true,
+      }),
+    )
+    expect(step).toEqual({
+      state: { checked: [], holding: null, tuningKey: nextKey },
+      pulse: false,
+    })
+  })
+
+  it('clears every check when only the id changes', () => {
+    const nextKey = tuningLockKey('other-id', [40, 45, 50, 55, 59, 64])
+    const step = stepStringLock(locked(0), input({ tuningKey: nextKey, inTune: true }))
+    expect(step.state.checked).toEqual([])
+    expect(step.state.holding).toBeNull()
+    expect(step.state.tuningKey).toBe(nextKey)
+    expect(step.pulse).toBe(false)
+  })
+
+  it('clears every check when only the MIDI list changes', () => {
+    const both = stepStringLock(locked(0), input({ stringIndex: 2, inTune: true })).state
+    expect(both.checked).toEqual([0, 2])
+    const midiKey = tuningLockKey('guitar-standard', [40, 45, 51, 55, 59, 64])
+    const cleared = stepStringLock(both, input({ tuningKey: midiKey, inTune: true }))
+    expect(cleared.state.checked).toEqual([])
+    expect(cleared.state.holding).toBeNull()
+    expect(cleared.pulse).toBe(false)
   })
 })

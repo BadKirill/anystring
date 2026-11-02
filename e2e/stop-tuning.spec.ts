@@ -10,5 +10,7 @@ test('stop tuning updates the button immediately', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Stop' }).click()
   await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Stop' })).not.toBeVisible()
+  await page.waitForTimeout(400)
+  await expect(page.getByRole('button', { name: 'Stop' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Start tuning' })).toBeVisible()
 })

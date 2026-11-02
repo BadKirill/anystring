@@ -11,7 +11,7 @@ const MAX_FREQUENCY_HZ = 1000
 
 const MIN_RMS_DEFAULT = 0.005
 const MIN_RMS_BELOW_90_HZ = 0.008
-const MIN_RMS_BELOW_55_HZ = 0.012
+const MIN_RMS_BELOW_55_HZ = 0.006
 
 const detectors = new Map<number, PitchDetector<Float32Array>>()
 

@@ -53,4 +53,19 @@ describe('App pitch display', () => {
     await user.click(screen.getByRole('tab', { name: UI.screenChromatic }))
     expect(container.querySelector('.gauge-note')?.textContent).toBe('A4')
   })
+
+  it('marks the in-tune string and hides those buttons on the chromatic screen', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    const low = await screen.findByRole('button', { name: '1 E2, in tune' })
+    expect(low.querySelectorAll('.string-check')).toHaveLength(1)
+    expect(low.querySelector('.string-check')?.getAttribute('aria-hidden')).toBe('true')
+    expect(
+      screen.getByRole('button', { name: '2 A2' }).querySelector('.string-check'),
+    ).toBeNull()
+    expect(container.querySelectorAll('.string-check')).toHaveLength(1)
+    await user.click(screen.getByRole('tab', { name: UI.screenChromatic }))
+    expect(screen.queryByRole('button', { name: '1 E2, in tune' })).toBeNull()
+    expect(container.querySelectorAll('.string-check')).toHaveLength(0)
+  })
 })

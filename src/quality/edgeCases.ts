@@ -16,13 +16,19 @@ export const EDGE_CASES: readonly EdgeCase[] = [
   {
     id: 'EC-rms-floor',
     area: 'audio',
-    summary: 'Bass needs a higher RMS floor than guitar',
+    summary: 'The low-bass RMS floor stays above hum and below a quiet pluck',
     testFile: 'src/audio/pitchDetector.test.ts',
   },
   {
     id: 'EC-hum-rms',
     area: 'audio',
     summary: 'Quiet low-frequency hum is rejected',
+    testFile: 'src/audio/pitchDetector.test.ts',
+  },
+  {
+    id: 'EC-bass-quiet',
+    area: 'audio',
+    summary: 'A quiet low-E pluck below the old 0.012 floor is published',
     testFile: 'src/audio/pitchDetector.test.ts',
   },
   {
@@ -46,7 +52,13 @@ export const EDGE_CASES: readonly EdgeCase[] = [
   {
     id: 'EC-jump-150',
     area: 'audio',
-    summary: 'A jump above 150 cents clears the median history',
+    summary: 'Silence clears history; one jump above 150 cents does not',
+    testFile: 'src/audio/micWindowHandler.test.ts',
+  },
+  {
+    id: 'EC-bass-wobble',
+    area: 'audio',
+    summary: 'One jumped window does not drop a forming low-E reading',
     testFile: 'src/audio/micWindowHandler.test.ts',
   },
   {
@@ -659,5 +671,96 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     area: 'platform',
     summary: 'Missing vibration and a missing native plugin do not throw',
     testFile: 'src/platform/hapticPulse.test.ts',
+  },
+  {
+    id: 'EC-haptic-native',
+    area: 'platform',
+    summary: 'A native device gets one light impact and no web vibration',
+    testFile: 'src/platform/hapticPulse.test.ts',
+  },
+  {
+    id: 'EC-lock-cents',
+    area: 'tuning',
+    summary:
+      'A displayed reading within five cents checks; past five cents does not start a check',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-lock-manual',
+    area: 'tuning',
+    summary: 'A manually selected string is the only index that can check',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-lock-preset',
+    area: 'tuning',
+    summary: 'Changing preset clears checks even when the new string is in tune',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-lock-same-note',
+    area: 'tuning',
+    summary: 'Saving a string at the same pitch keeps its check',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-autostart-button',
+    area: 'audio',
+    summary: 'After Stop, only the Start button opens the microphone again',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-autostart-fresh',
+    area: 'audio',
+    summary: 'A new page load listens again after the previous page was stopped',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-autostart-strict',
+    area: 'audio',
+    summary: 'A StrictMode replay still opens the microphone',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-lock-gated',
+    area: 'tuning',
+    summary: 'A missing frequency does not check or pulse, and an existing check stays',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-autostart-return',
+    area: 'audio',
+    summary: 'Falling back to idle without Stop listens again',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-autostart-unmount',
+    area: 'audio',
+    summary: 'Leaving the page stops the live capture',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-resume-short',
+    area: 'audio',
+    summary: 'A short background keeps the capture when resume succeeds',
+    testFile: 'src/audio/useMicControls.test.ts',
+  },
+  {
+    id: 'EC-lock-return',
+    area: 'tuning',
+    summary: 'Returning from chromatic to an in-tune string pulses once',
+    testFile: 'src/state/useStringLock.test.ts',
+  },
+  {
+    id: 'EC-lock-save',
+    area: 'tuning',
+    summary: 'Saving a draft under a new id clears checks while the note stays in tune',
+    testFile: 'src/state/appState.test.ts',
+  },
+  {
+    id: 'EC-lock-rename',
+    area: 'tuning',
+    summary: 'Renaming a tuning keeps its checks',
+    testFile: 'src/state/appState.test.ts',
   },
 ]
