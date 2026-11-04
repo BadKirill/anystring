@@ -165,6 +165,13 @@ ratings stay an average, because Apple does not publish the histogram or the
 time of a star-only rating. Written reviews include the date, stars, title, and
 text. Google Play does not publish this on a public page.
 
+`npm run store:ratings:publish` sends that same snapshot to TelemetryDeck as
+`store.ratings`, `store.reviews`, and one `store.country` signal per rated
+storefront. The snapshot time is when the report ran. A star-only rating still
+has no public timestamp; a written review keeps its own date in the signal
+text. The reporter is one stable user, `anystring-store-report`. A daily
+Actions run repeats the publish after merge.
+
 | Script                            | Effect                                     |
 | --------------------------------- | ------------------------------------------ |
 | `npm run cap:build:ios-sim`       | Sync + `xcodebuild` Debug for Simulator    |

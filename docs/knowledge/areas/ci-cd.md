@@ -62,6 +62,12 @@ One-time in the consoles: a TestFlight internal group, and the Play service
 account invited with release-to-testing permission. The first AAB was uploaded
 by hand, so the Play Developer API accepts later uploads.
 
+## Store ratings (`store-ratings.yml`) — daily on `master`
+
+`npm run store:ratings:publish` with `TELEMETRYDECK_APP_ID`. Sends the public
+App Store snapshot. `workflow_dispatch` runs the same job. It does not build
+or upload a store binary.
+
 ## Deploy (`deploy.yml`) — push to `master`
 
 1. Build Vite → Pages artifact (`base: /`, landing + `/app` tuner)

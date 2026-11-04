@@ -27,6 +27,7 @@
     "test:e2e:native": "bash scripts/native-e2e.sh",
     "screenshots:store": "playwright test --config=playwright.store.config.ts",
     "store:ratings": "node --experimental-strip-types scripts/printStoreRatings.ts",
+    "store:ratings:publish": "node --experimental-strip-types scripts/publishStoreRatings.ts",
     "check": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run knowledge:check",
     "knowledge:refresh": "node scripts/refresh-file-index.mjs",
     "knowledge:check": "node scripts/check-knowledge.mjs",
