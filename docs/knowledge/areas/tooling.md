@@ -49,6 +49,8 @@ Tags: `vite`, `pwa`, `typescript`, `npm`
 | `scripts/resolveReleaseCommit.ts`                            | Print the bump commit to upload, or nothing                                     |
 | `scripts/stampNativeVersion.ts`                              | Write iOS versions from `package.json`                                          |
 | `scripts/bumpAppVersion.ts`                                  | CLI for `npm run version:*`                                                     |
+| `scripts/storeRatings.ts` / `printStoreRatings.ts`           | `npm run store:ratings` — App Store counts, exact single stars, written reviews |
+| `scripts/storeTelemetry.ts` / `publishStoreRatings.ts`       | `npm run store:ratings:publish` — same snapshot as TelemetryDeck signals        |
 | `scripts/native-e2e.sh`                                      | Capacitor debug build/install + Maestro                                         |
 | `scripts/refresh-file-index.mjs`                             | Auto file inventory                                                             |
 | `scripts/check-knowledge.mjs`                                | Knowledge integrity                                                             |

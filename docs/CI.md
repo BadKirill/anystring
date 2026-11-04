@@ -32,6 +32,8 @@ When that CI run succeeds, **Store release** uploads the bump commit:
 
 The bump commit cannot start the workflow itself (`GITHUB_TOKEN` pushes do not trigger Actions). The workflow waits for CI on the parent commit, then takes the bump child. Re-upload from Actions → Store release (`sha` defaults to `master`). Signing uses repository secrets listed in `docs/knowledge/areas/ci-cd.md`. There is no Fastlane.
 
+**Store ratings** is a separate daily job. It publishes the public App Store snapshot to TelemetryDeck. It does not build or upload an app binary. Run it by hand from Actions → Store ratings.
+
 Pushes to `master` also run the **Deploy** workflow:
 
 | Job                   | What it runs                                                         |

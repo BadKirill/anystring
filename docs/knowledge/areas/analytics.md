@@ -28,6 +28,13 @@ Ingest is TelemetryDeck (`POST https://nom.telemetrydeck.com/v2/`) with a
 SHA-256 client hash. App id is `__TELEMETRY_APP_ID__` from `TELEMETRYDECK_APP_ID`.
 A blank id is a no-op (CI, local without secrets).
 
+Public App Store counts are a separate server snapshot
+(`npm run store:ratings:publish`, ingest v3). They are not sent by the app.
+`store.ratings` carries the total. `store.reviews` carries the written-review
+count and text. `store.country` carries one storefront, labeled with its star
+or its average. The time on those signals is the report run. Written reviews
+keep the date Apple published inside the text.
+
 ## Review
 
 Three in-tune listen sessions → native StoreKit / Play In-App Review, or a web

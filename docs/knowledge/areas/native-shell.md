@@ -159,6 +159,19 @@ Maestro is the chosen Capacitor UI automation tool (not Appium/Detox). Flows und
 `.maestro/` exercise OS mic allow/deny and shell smoke. Pitch detection stays on
 Playwright stubs — see [testing.md](testing.md).
 
+`npm run store:ratings` prints App Store rating counts for the storefronts in
+`scripts/storeRatings.ts`. A storefront with one rating shows that star. Several
+ratings stay an average, because Apple does not publish the histogram or the
+time of a star-only rating. Written reviews include the date, stars, title, and
+text. Google Play does not publish this on a public page.
+
+`npm run store:ratings:publish` sends that same snapshot to TelemetryDeck as
+`store.ratings`, `store.reviews`, and one `store.country` signal per rated
+storefront. The snapshot time is when the report ran. A star-only rating still
+has no public timestamp; a written review keeps its own date in the signal
+text. The reporter is one stable user, `anystring-store-report`. A daily
+Actions run repeats the publish after merge.
+
 | Script                            | Effect                                     |
 | --------------------------------- | ------------------------------------------ |
 | `npm run cap:build:ios-sim`       | Sync + `xcodebuild` Debug for Simulator    |
