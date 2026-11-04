@@ -159,6 +159,12 @@ Maestro is the chosen Capacitor UI automation tool (not Appium/Detox). Flows und
 `.maestro/` exercise OS mic allow/deny and shell smoke. Pitch detection stays on
 Playwright stubs — see [testing.md](testing.md).
 
+`npm run store:ratings` prints App Store rating counts for the storefronts in
+`scripts/storeRatings.ts`. A storefront with one rating shows that star. Several
+ratings stay an average, because Apple does not publish the histogram or the
+time of a star-only rating. Written reviews include the date, stars, title, and
+text. Google Play does not publish this on a public page.
+
 | Script                            | Effect                                     |
 | --------------------------------- | ------------------------------------------ |
 | `npm run cap:build:ios-sim`       | Sync + `xcodebuild` Debug for Simulator    |
