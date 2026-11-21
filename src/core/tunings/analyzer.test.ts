@@ -50,12 +50,12 @@ describe('analyze', () => {
     expect(analyze(nearHigh, DEMIURGE)?.stringIndex).toBe(1)
   })
 
-  it('EC-intune-5 treats offsets within 5 cents as in tune and 6 cents as out', () => {
+  it('EC-intune-8 treats offsets within 8 cents as in tune and 9 cents as out', () => {
     const target = pitchToFrequency({ note: 'G#', octave: 2 })
-    const fourCentsSharp = target * 2 ** (4 / 1200)
-    const sixCentsSharp = target * 2 ** (6 / 1200)
-    expect(analyze(fourCentsSharp, DEMIURGE)?.direction).toBe('in-tune')
-    expect(analyze(sixCentsSharp, DEMIURGE)?.direction).toBe('loosen')
+    const eightCentsSharp = target * 2 ** (8 / 1200)
+    const nineCentsSharp = target * 2 ** (9 / 1200)
+    expect(analyze(eightCentsSharp, DEMIURGE)?.direction).toBe('in-tune')
+    expect(analyze(nineCentsSharp, DEMIURGE)?.direction).toBe('loosen')
   })
 
   it('EC-empty-tuning returns null for a tuning with no strings', () => {
@@ -101,12 +101,12 @@ describe('analyzeChromatic', () => {
     expect(analyzeChromatic(a4 * 1.02).direction).toBe('loosen')
   })
 
-  it('treats offsets within 5 cents as in tune and 6 cents as out', () => {
+  it('EC-intune-8 treats chromatic offsets within 8 cents as in tune and 9 cents as out', () => {
     const target = pitchToFrequency({ note: 'E', octave: 2 })
-    const fourCentsSharp = target * 2 ** (4 / 1200)
-    const sixCentsSharp = target * 2 ** (6 / 1200)
-    expect(analyzeChromatic(fourCentsSharp).direction).toBe('in-tune')
-    expect(analyzeChromatic(sixCentsSharp).direction).toBe('loosen')
+    const eightCentsSharp = target * 2 ** (8 / 1200)
+    const nineCentsSharp = target * 2 ** (9 / 1200)
+    expect(analyzeChromatic(eightCentsSharp).direction).toBe('in-tune')
+    expect(analyzeChromatic(nineCentsSharp).direction).toBe('loosen')
   })
 
   it('EC-chromatic-boundary picks the nearer note between two semitones', () => {

@@ -17,10 +17,11 @@ export interface ChromaticAnalysis {
   direction: TuneDirection
 }
 
-export const IN_TUNE_CENTS = 5
+export const IN_TUNE_CENTS = 8
 
-function directionFor(cents: number): TuneDirection {
-  if (Math.abs(cents) <= IN_TUNE_CENTS) {
+export function tuneDirection(cents: number): TuneDirection {
+  const comparable = Math.round(cents * 1_000_000) / 1_000_000
+  if (Math.abs(comparable) <= IN_TUNE_CENTS) {
     return 'in-tune'
   }
   return cents < 0 ? 'tighten' : 'loosen'
@@ -36,7 +37,7 @@ export function analyzeString(
     return null
   }
   const cents = centsBetween(frequency, pitchToFrequency(string.pitch))
-  return { stringIndex, cents, direction: directionFor(cents) }
+  return { stringIndex, cents, direction: tuneDirection(cents) }
 }
 
 export function analyze(frequency: number, tuning: Tuning): StringAnalysis | null {
@@ -53,12 +54,12 @@ export function analyze(frequency: number, tuning: Tuning): StringAnalysis | nul
   return {
     stringIndex: best.index,
     cents: best.cents,
-    direction: directionFor(best.cents),
+    direction: tuneDirection(best.cents),
   }
 }
 
 export function analyzeChromatic(frequency: number): ChromaticAnalysis {
   const pitch = nearestPitch(frequency)
   const cents = centsBetween(frequency, pitchToFrequency(pitch))
-  return { pitch, cents, direction: directionFor(cents) }
+  return { pitch, cents, direction: tuneDirection(cents) }
 }

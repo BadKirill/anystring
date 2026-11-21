@@ -252,7 +252,7 @@ area pages, `npm run knowledge:check`.
 
 #### Already decided
 
-- In tune means `|cents| ≤ IN_TUNE_CENTS` (5), on the **displayed** analysis
+- In tune means `|cents| ≤ IN_TUNE_CENTS` (8), on the **displayed** analysis
   after `useStableAnalysis`. Do not invent a second threshold.
 - Checkmarks are for this sitting only. No new `localStorage` key. They reset
   when the tuning identity changes: `tuning.id` plus the MIDI of every string,

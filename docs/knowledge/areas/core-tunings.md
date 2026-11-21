@@ -20,7 +20,7 @@ predicates.
 | File            | Key API                                                                                                                              |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `presets.ts`    | `PRESET_TUNINGS`, `presetsFor`, `toggleExpandedInstruments`, `DEFAULT_TUNING_ID` (`guitar-standard`). Picker order is `INSTRUMENTS`. |
-| `analyzer.ts`   | `IN_TUNE_CENTS = 5`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`          |
+| `analyzer.ts`   | `IN_TUNE_CENTS = 8`, `analyze`, `analyzeString`, `analyzeChromatic`, `TuneDirection`, `StringAnalysis`, `ChromaticAnalysis`          |
 | `custom.ts`     | `DRAFT_TUNING_ID`, `isSavedCustomTuning`, `isDraftTuning`, `isUnmodifiedPreset`, `belongsInMyTunings`, `appearsInPicker`             |
 | `stringLock.ts` | `tuningLockKey`, `stepStringLock` — session checks and the in-tune haptic edge                                                       |
 | `index.ts`      | barrel                                                                                                                               |
@@ -43,7 +43,7 @@ Built-in presets, low string to high:
 - Every preset string stays inside the 25–1000 Hz detection band (violin E5 through double-bass B0 / C1).
 - Manual: fixed string index via `analyzeString`.
 - Chromatic: nearest 12-TET note via `nearestPitch` → `ChromaticAnalysis` (no tuning).
-- Direction: `tighten` (flat) / `loosen` (sharp) / `in-tune` (|¢| ≤ 5).
+- Direction: `tighten` (flat) / `loosen` (sharp) / `in-tune` (|¢| ≤ 8).
 - `stepStringLock` marks only the analyzed string index for the current
   sitting. The key is the tuning id plus each string's MIDI, so a draft edit
   clears the checks. Holding in tune does not pulse again. Chromatic and a

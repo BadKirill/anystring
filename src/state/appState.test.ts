@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { pitchToFrequency, type Pitch } from '../core/music'
-import { PRESET_TUNINGS, type Tuning } from '../core/tunings'
+import { IN_TUNE_CENTS, PRESET_TUNINGS, type Tuning } from '../core/tunings'
 import { pulseHaptic } from '../platform/hapticPulse'
 import { memoryStorage } from '../test/memoryStorage'
 import { useTunerState } from './appState'
@@ -49,10 +49,10 @@ function expectStringReading(
   expect(analysis.stringIndex).toBe(stringIndex)
   expect(analysis.direction).toBe(direction)
   if (direction === 'in-tune') {
-    expect(Math.abs(analysis.cents)).toBeLessThanOrEqual(5)
+    expect(Math.abs(analysis.cents)).toBeLessThanOrEqual(IN_TUNE_CENTS)
     return
   }
-  expect(Math.abs(analysis.cents)).toBeGreaterThan(5)
+  expect(Math.abs(analysis.cents)).toBeGreaterThan(IN_TUNE_CENTS)
 }
 
 describe('useTunerState', () => {
@@ -159,8 +159,8 @@ describe('useTunerState', () => {
     expect(pulseHaptic).toHaveBeenCalledTimes(1)
   })
 
-  it('EC-lock-cents checks inside five cents and keeps the check past five', async () => {
-    hear(detuned(E2, -6))
+  it('EC-lock-cents checks inside eight cents and keeps the check past eight', async () => {
+    hear(detuned(E2, -9))
     const flat = renderHook(() => useTunerState())
     await act(async () => undefined)
     expectStringReading(flat.result.current.analysis, 'tighten', 0)
@@ -168,7 +168,8 @@ describe('useTunerState', () => {
     expect(pulseHaptic).not.toHaveBeenCalled()
     flat.unmount()
 
-    hear(detuned(E2, 6))
+    // A sharp attack is pulled toward the note, so 9¢ still displays inside ±8.
+    hear(detuned(E2, 12))
     const sharp = renderHook(() => useTunerState())
     await act(async () => undefined)
     expectStringReading(sharp.result.current.analysis, 'loosen', 0)
@@ -176,7 +177,7 @@ describe('useTunerState', () => {
     expect(pulseHaptic).not.toHaveBeenCalled()
     sharp.unmount()
 
-    hear(detuned(E2, -4))
+    hear(detuned(E2, -8))
     const { result, rerender } = renderHook(() => useTunerState())
     await waitFor(() => {
       expect(result.current.checkedStrings).toEqual([0])

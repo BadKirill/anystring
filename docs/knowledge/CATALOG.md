@@ -78,7 +78,7 @@ planned), alternate pitch libs, CSS frameworks, other test runners, ad SDKs.
 See [sdd-tdd](areas/sdd-tdd.md) and [patterns-and-rules](areas/patterns-and-rules.md). Summary:
 
 - Spec first, then a failing test, then code. Do not implement-then-match-tests.
-- Mic processing filters off; window 8192; in-tune ±5 cents.
+- Mic processing filters off; window 8192; in-tune ±8 cents.
 - Complexity budgets enforced by ESLint — do not disable.
 - `npm run check` must pass; one branch/PR per change.
 - Edge-case coverage ≥ 80% (`src/quality/edgeCases.ts`). Every feature researches

@@ -28,7 +28,7 @@ reference audio and tests.
 | `SHARP_ATTACK_THRESHOLD` | 6                   | Cents above which attack damp applies |
 | `SHARP_DAMPING`          | 0.35                | Multiply sharp cents during attack    |
 | `MIN_CLARITY`            | 0.5                 | Ignore weaker updates                 |
-| in-tune                  | `IN_TUNE_CENTS` (5) | From analyzer                         |
+| in-tune                  | `IN_TUNE_CENTS` (8) | From analyzer                         |
 
 API: `initialPitchStabilizerState`, `stabilizePitchDisplay(input) → { cents, direction, state }`.
 

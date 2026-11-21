@@ -1,4 +1,4 @@
-import { IN_TUNE_CENTS, type TuneDirection } from '../tunings/analyzer'
+import { IN_TUNE_CENTS, tuneDirection, type TuneDirection } from '../tunings/analyzer'
 
 export interface PitchStabilizerState {
   consecutiveInTune: number
@@ -40,13 +40,6 @@ const SHARP_ATTACK_THRESHOLD = 6
 const SHARP_DAMPING = 0.35
 const MIN_CLARITY = 0.5
 
-function directionFor(cents: number): TuneDirection {
-  if (Math.abs(cents) <= IN_TUNE_CENTS) {
-    return 'in-tune'
-  }
-  return cents < 0 ? 'tighten' : 'loosen'
-}
-
 function dampAttackSharpness(cents: number, nowMs: number, attackEndsMs: number): number {
   if (nowMs >= attackEndsMs || cents <= SHARP_ATTACK_THRESHOLD) {
     return cents
@@ -77,7 +70,7 @@ function applyInTuneProgress(
   }
   return {
     cents: displayCents,
-    direction: directionFor(displayCents),
+    direction: tuneDirection(displayCents),
     state: next,
   }
 }
@@ -96,7 +89,7 @@ function applyOutOfTuneReading(
   }
   return {
     cents: displayCents,
-    direction: directionFor(displayCents),
+    direction: tuneDirection(displayCents),
     state: next,
   }
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { IN_TUNE_CENTS } from '../tunings/analyzer'
 import { initialPitchStabilizerState, stabilizePitchDisplay } from './pitchStabilizer'
 
 const NOW = 1_000
@@ -12,7 +13,8 @@ function stabilize(
 ) {
   return stabilizePitchDisplay(state, {
     cents,
-    direction: cents < -5 ? 'tighten' : cents > 5 ? 'loosen' : 'in-tune',
+    direction:
+      cents < -IN_TUNE_CENTS ? 'tighten' : cents > IN_TUNE_CENTS ? 'loosen' : 'in-tune',
     clarity,
     nowMs,
     hasSignal: true,

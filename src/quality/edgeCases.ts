@@ -140,9 +140,9 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     testFile: 'src/audio/appResume.test.ts',
   },
   {
-    id: 'EC-intune-5',
+    id: 'EC-intune-8',
     area: 'tuning',
-    summary: '5 cents is in tune and 6 cents is not',
+    summary: '8 cents is in tune and 9 cents is not',
     testFile: 'src/core/tunings/analyzer.test.ts',
   },
   {
@@ -682,7 +682,7 @@ export const EDGE_CASES: readonly EdgeCase[] = [
     id: 'EC-lock-cents',
     area: 'tuning',
     summary:
-      'A displayed reading within five cents checks; past five cents does not start a check',
+      'A displayed reading within eight cents checks; past eight cents does not start a check',
     testFile: 'src/state/appState.test.ts',
   },
   {
